@@ -1,4 +1,5 @@
 (function () {
+  window.__softwarebicosAppLoaded = true;
   const ns = window.SoftwareBicos || {};
   const calculos = ns.calculos || {};
   const recomendador = ns.recomendador || {};
@@ -2220,6 +2221,36 @@
     popularPresetAeronave(catalogo);
   }
 
+  async function preencherPresetAeronaveDireto() {
+    if (!presetAeronaveSelect || presetAeronaveSelect.options.length > 1) return;
+    try {
+      const resp = await fetch("/js/data/aeronaves_fluxometro.json", { cache: "no-store" });
+      if (!resp.ok) return;
+      const data = await resp.json();
+      const normalizado = normalizarDadosAeronaves(data);
+      const lista = normalizado && Array.isArray(normalizado.aeronaves) ? normalizado.aeronaves : [];
+      if (!lista.length) return;
+
+      while (presetAeronaveSelect.options.length > 1) {
+        presetAeronaveSelect.remove(1);
+      }
+      const frag = document.createDocumentFragment();
+      lista.forEach((item) => {
+        const opt = document.createElement("option");
+        opt.value = item.modelo;
+        const vmin = Number.isFinite(Number(item.vminKmh)) ? Number(item.vminKmh) : 0;
+        const vmed = Number.isFinite(Number(item.vmedKmh)) ? Number(item.vmedKmh) : 0;
+        const vmax = Number.isFinite(Number(item.vmaxKmh)) ? Number(item.vmaxKmh) : 0;
+        opt.textContent = `${item.modelo} (${n(vmin, 0)}/${n(vmed, 0)}/${n(vmax, 0)} km/h)`;
+        frag.appendChild(opt);
+      });
+      presetAeronaveSelect.appendChild(frag);
+      window.__softwarebicosPresetCount = presetAeronaveSelect.options.length;
+    } catch (_error) {
+      // fallback silencioso
+    }
+  }
+
   function mesclarCurvasPonta(base, extra) {
     if (!Array.isArray(extra) || !extra.length) return Array.isArray(base) ? base : [];
     if (!Array.isArray(base) || !base.length) return extra;
@@ -2283,6 +2314,9 @@
       window.setTimeout(() => {
         garantirPresetAeronaveCarregado(catalogo);
       }, 350);
+      window.setTimeout(() => {
+        preencherPresetAeronaveDireto();
+      }, 500);
       if (presetAeronaveSelect && presetAeronaveSelect.options.length <= 1) {
         console.warn("[softwarebicos] Presets de aeronave nao carregados ou vazios.");
       }
