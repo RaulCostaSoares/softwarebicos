@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n="title_home">Home - Calculadoras Travicar</title>
+  <link rel="stylesheet" href="styles_colunas.css" />
+</head>
+<body data-pagina="home" data-design="compact">
+  <main class="layout">
+    <header class="topo">
+      <div class="topo-nav topo-nav-config">
+        <a class="topo-link topo-link-site" href="https://travicar.com.br/">TRAVICAR</a>
+        <h1 class="topo-title-center" data-i18n="header_home">CALCULADORAS TRAVICAR</h1>
+        <div class="topo-links">
+          <select class="design-switch" aria-label="Design">
+            <option value="modern">Design moderno</option>
+            <option value="compact">Design compacto</option>
+          </select>
+          <a class="topo-link is-active" href="home_compacto.html" aria-current="page" data-i18n="nav_home">HOME</a>
+          <a class="topo-link" href="bicos_hidraulicos.html" data-i18n="nav_bicos">BICOS</a>
+          <a class="topo-link" href="atomizadores.html" data-i18n="nav_atomizadores">ATOMIZADORES</a>
+          <a class="topo-link" href="configuracoes.html" data-i18n="nav_configuracoes">CONFIGURACOES</a>
+          <select class="lang-switch" aria-label="Idioma">
+            <option value="pt">PT</option>
+            <option value="en">EN</option>
+            <option value="es">ES</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <section class="panel home-panel">
+      <h2 data-i18n="home_intro">Escolha qual calculadora voce quer usar</h2>
+      <div class="home-grid">
+        <a class="home-card" href="bicos_hidraulicos.html">
+          <h3 data-i18n="home_card_bicos_title">Calibracao geral - bicos</h3>
+          <p data-i18n="home_card_bicos_desc">Recomendacoes e calibracao para bicos hidraulicos.</p>
+        </a>
+        <a class="home-card" href="atomizadores.html">
+          <h3 data-i18n="home_card_atomizadores_title">Calibracao geral - atomizadores</h3>
+          <p data-i18n="home_card_atomizadores_desc">Recomendacoes e calibracao para atomizadores rotativos.</p>
+        </a>
+        <a class="home-card" href="configuracoes.html">
+          <h3 data-i18n="home_card_configuracoes_title">O que o seu bico pode fazer</h3>
+          <p data-i18n="home_card_configuracoes_desc">
+            Faixas de taxa e ajustes possiveis com o equipamento selecionado.
+          </p>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <script defer src="js/i18n.js"></script>
+  <script defer src="js/home_design.js"></script>
+</body>
+</html>

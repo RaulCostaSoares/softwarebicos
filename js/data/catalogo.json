@@ -1,0 +1,1607 @@
+[
+  {
+    "id": "90088",
+    "nome": "Pulverizador jato plano 90088",
+    "categoria": "bico",
+    "familia": "leque",
+    "tipoJato": "leque",
+    "vazaoMinLMin": 1.2,
+    "vazaoMaxLMin": 15,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Niple 1/8\"",
+    "ajuste": {
+      "modo": "orificio",
+      "passos": 4
+    },
+    "observacao": "Defletor 30/55/90 graus. Tabela por orificio (30/40/50/60 psi).",
+    "curvasOrificio": [
+      {
+        "orificioMm": 1.57,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 1.8 },
+          { "psi": 40, "vazaoLMin": 2.15 },
+          { "psi": 50, "vazaoLMin": 2.5 },
+          { "psi": 60, "vazaoLMin": 2.75 }
+        ]
+      },
+      {
+        "orificioMm": 1.98,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 2.55 },
+          { "psi": 40, "vazaoLMin": 3.0 },
+          { "psi": 50, "vazaoLMin": 3.4 },
+          { "psi": 60, "vazaoLMin": 3.75 }
+        ]
+      },
+      {
+        "orificioMm": 2.36,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 3.6 },
+          { "psi": 40, "vazaoLMin": 4.3 },
+          { "psi": 50, "vazaoLMin": 4.85 },
+          { "psi": 60, "vazaoLMin": 5.3 }
+        ]
+      },
+      {
+        "orificioMm": 3.17,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 6.65 },
+          { "psi": 40, "vazaoLMin": 7.5 },
+          { "psi": 50, "vazaoLMin": 8.65 },
+          { "psi": 60, "vazaoLMin": 9.4 }
+        ]
+      },
+      {
+        "orificioMm": 4.36,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 10.7 },
+          { "psi": 40, "vazaoLMin": 12.45 },
+          { "psi": 50, "vazaoLMin": 13.75 },
+          { "psi": 60, "vazaoLMin": 15.0 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "90088A",
+    "nome": "Pulverizador jato plano 90088A",
+    "categoria": "bico",
+    "familia": "leque",
+    "tipoJato": "leque",
+    "vazaoMinLMin": 1.2,
+    "vazaoMaxLMin": 15,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Niple 1/8\"",
+    "ajuste": {
+      "modo": "orificio",
+      "passos": 4
+    },
+    "observacao": "Serie 90088A com tabela por orificio (30/40/50/60 psi).",
+    "curvasOrificio": [
+      {
+        "orificioMm": 1.57,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 1.8 },
+          { "psi": 40, "vazaoLMin": 2.15 },
+          { "psi": 50, "vazaoLMin": 2.5 },
+          { "psi": 60, "vazaoLMin": 2.75 }
+        ]
+      },
+      {
+        "orificioMm": 1.98,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 2.55 },
+          { "psi": 40, "vazaoLMin": 3.0 },
+          { "psi": 50, "vazaoLMin": 3.4 },
+          { "psi": 60, "vazaoLMin": 3.75 }
+        ]
+      },
+      {
+        "orificioMm": 2.36,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 3.6 },
+          { "psi": 40, "vazaoLMin": 4.3 },
+          { "psi": 50, "vazaoLMin": 4.85 },
+          { "psi": 60, "vazaoLMin": 5.3 }
+        ]
+      },
+      {
+        "orificioMm": 3.17,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 6.65 },
+          { "psi": 40, "vazaoLMin": 7.5 },
+          { "psi": 50, "vazaoLMin": 8.65 },
+          { "psi": 60, "vazaoLMin": 9.4 }
+        ]
+      },
+      {
+        "orificioMm": 4.36,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 10.7 },
+          { "psi": 40, "vazaoLMin": 12.45 },
+          { "psi": 50, "vazaoLMin": 13.75 },
+          { "psi": 60, "vazaoLMin": 15.0 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "TT90300",
+    "nome": "Pulverizador Plano TT03",
+    "categoria": "bico",
+    "familia": "leque",
+    "tipoJato": "leque",
+    "vazaoMinLMin": 1.8,
+    "vazaoMaxLMin": 15,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Niple 1/8\"",
+    "ajuste": {
+      "modo": "orificio",
+      "passos": 4
+    },
+    "observacao": "Sistema rapido de regulagem. Tabela por orificio (30/40/50/60 psi).",
+    "curvasOrificio": [
+      {
+        "orificioMm": 1.57,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 1.8 },
+          { "psi": 40, "vazaoLMin": 2.15 },
+          { "psi": 50, "vazaoLMin": 2.5 },
+          { "psi": 60, "vazaoLMin": 2.75 }
+        ]
+      },
+      {
+        "orificioMm": 1.98,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 2.55 },
+          { "psi": 40, "vazaoLMin": 3.0 },
+          { "psi": 50, "vazaoLMin": 3.4 },
+          { "psi": 60, "vazaoLMin": 3.75 }
+        ]
+      },
+      {
+        "orificioMm": 2.36,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 3.6 },
+          { "psi": 40, "vazaoLMin": 4.3 },
+          { "psi": 50, "vazaoLMin": 4.85 },
+          { "psi": 60, "vazaoLMin": 5.3 }
+        ]
+      },
+      {
+        "orificioMm": 3.17,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 6.65 },
+          { "psi": 40, "vazaoLMin": 7.5 },
+          { "psi": 50, "vazaoLMin": 8.65 },
+          { "psi": 60, "vazaoLMin": 9.4 }
+        ]
+      },
+      {
+        "orificioMm": 4.36,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 10.7 },
+          { "psi": 40, "vazaoLMin": 12.45 },
+          { "psi": 50, "vazaoLMin": 13.75 },
+          { "psi": 60, "vazaoLMin": 15.0 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "TT11",
+    "nome": "Pulverizador TT11",
+    "categoria": "bico",
+    "familia": "leque",
+    "tipoJato": "leque-solido",
+    "vazaoMinLMin": 1,
+    "vazaoMaxLMin": 13.9,
+    "pressaoMinPsi": null,
+    "pressaoMaxPsi": null,
+    "conexao": "Niple 1/8\"",
+    "ajuste": {
+      "modo": "angulo",
+      "valores": [
+        0,
+        15,
+        30,
+        45,
+        60,
+        75,
+        90
+      ]
+    },
+    "observacao": "Jato plano 40/80 graus e jato solido 0 grau. Tabela por ponta colorida (30/40/50/60 psi).",
+    "maxPontasSugeridas": 3,
+    "curvasPontaColorida": [
+      {
+        "codigo": "4004",
+        "cor": "vermelho",
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 1.3 },
+          { "psi": 40, "vazaoLMin": 1.55 },
+          { "psi": 50, "vazaoLMin": 1.7 },
+          { "psi": 60, "vazaoLMin": 1.85 }
+        ]
+      },
+      {
+        "codigo": "4006",
+        "cor": "cinza-claro",
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 2.0 },
+          { "psi": 40, "vazaoLMin": 2.25 },
+          { "psi": 50, "vazaoLMin": 2.55 },
+          { "psi": 60, "vazaoLMin": 2.75 }
+        ]
+      },
+      {
+        "codigo": "4008",
+        "cor": "branco",
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 2.6 },
+          { "psi": 40, "vazaoLMin": 3.0 },
+          { "psi": 50, "vazaoLMin": 3.35 },
+          { "psi": 60, "vazaoLMin": 3.7 }
+        ]
+      },
+      {
+        "codigo": "4010",
+        "cor": "cinza-escuro",
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 3.3 },
+          { "psi": 40, "vazaoLMin": 3.8 },
+          { "psi": 50, "vazaoLMin": 4.3 },
+          { "psi": 60, "vazaoLMin": 4.65 }
+        ]
+      },
+      {
+        "codigo": "4012",
+        "cor": "laranja",
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 3.8 },
+          { "psi": 40, "vazaoLMin": 4.55 },
+          { "psi": 50, "vazaoLMin": 5.15 },
+          { "psi": 60, "vazaoLMin": 5.5 }
+        ]
+      },
+      {
+        "codigo": "4015",
+        "cor": "verde",
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 4.9 },
+          { "psi": 40, "vazaoLMin": 5.7 },
+          { "psi": 50, "vazaoLMin": 6.35 },
+          { "psi": 60, "vazaoLMin": 6.9 }
+        ]
+      },
+      {
+        "codigo": "4020",
+        "cor": "bege",
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 6.55 },
+          { "psi": 40, "vazaoLMin": 7.55 },
+          { "psi": 50, "vazaoLMin": 8.5 },
+          { "psi": 60, "vazaoLMin": 9.25 }
+        ]
+      },
+      {
+        "codigo": "4025",
+        "cor": "azul",
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 8.2 },
+          { "psi": 40, "vazaoLMin": 9.45 },
+          { "psi": 50, "vazaoLMin": 10.6 },
+          { "psi": 60, "vazaoLMin": 11.5 }
+        ]
+      },
+      {
+        "codigo": "4030",
+        "cor": "marrom",
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 9.85 },
+          { "psi": 40, "vazaoLMin": 11.3 },
+          { "psi": 50, "vazaoLMin": 13.4 },
+          { "psi": 60, "vazaoLMin": 13.9 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "TT09",
+    "nome": "Pulverizador TT09",
+    "categoria": "bico",
+    "familia": "leque",
+    "tipoJato": "leque-solido",
+    "vazaoMinLMin": 1.8,
+    "vazaoMaxLMin": 15,
+    "pressaoMinPsi": null,
+    "pressaoMaxPsi": null,
+    "conexao": "Niple 1/8\"",
+    "ajuste": {
+      "modo": "orificio",
+      "passos": 4
+    },
+    "observacao": "Angulo do jato 0/5/30 graus. Tabela por orificio (30/40/50/60 psi).",
+    "curvasOrificio": [
+      {
+        "orificioMm": 1.57,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 1.8 },
+          { "psi": 40, "vazaoLMin": 2.15 },
+          { "psi": 50, "vazaoLMin": 2.5 },
+          { "psi": 60, "vazaoLMin": 2.75 }
+        ]
+      },
+      {
+        "orificioMm": 1.98,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 2.55 },
+          { "psi": 40, "vazaoLMin": 3.0 },
+          { "psi": 50, "vazaoLMin": 3.4 },
+          { "psi": 60, "vazaoLMin": 3.75 }
+        ]
+      },
+      {
+        "orificioMm": 2.36,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 3.6 },
+          { "psi": 40, "vazaoLMin": 4.3 },
+          { "psi": 50, "vazaoLMin": 4.85 },
+          { "psi": 60, "vazaoLMin": 5.3 }
+        ]
+      },
+      {
+        "orificioMm": 3.17,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 6.65 },
+          { "psi": 40, "vazaoLMin": 7.5 },
+          { "psi": 50, "vazaoLMin": 8.65 },
+          { "psi": 60, "vazaoLMin": 9.4 }
+        ]
+      },
+      {
+        "orificioMm": 4.36,
+        "pontos": [
+          { "psi": 30, "vazaoLMin": 10.7 },
+          { "psi": 40, "vazaoLMin": 12.45 },
+          { "psi": 50, "vazaoLMin": 13.75 },
+          { "psi": 60, "vazaoLMin": 15.0 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "90500",
+    "nome": "Pulverizador eletrostático bico jato cônico cerâmico",
+    "categoria": "bico",
+    "familia": "conico",
+    "tipoJato": "conico-vazio",
+    "vazaoMinLMin": 0.16,
+    "vazaoMaxLMin": 3.11,
+    "pressaoMinPsi": 29,
+    "pressaoMaxPsi": 145,
+    "conexao": "Niple 1/8\"",
+    "ajuste": {
+      "modo": "pressao"
+    },
+    "observacao": "Jato conico vazio eletrostatico. Ponta ceramica SPE. Angulo de operacao 0 graus.",
+    "curvasPontaColorida": [
+      {
+        "codigo": "SPE-0",
+        "cor": "cinza",
+        "pontos": [
+          { "psi": 29, "vazaoLMin": 0.162 },
+          { "psi": 43.5, "vazaoLMin": 0.196 },
+          { "psi": 58, "vazaoLMin": 0.225 },
+          { "psi": 72.5, "vazaoLMin": 0.245 },
+          { "psi": 87, "vazaoLMin": 0.27 },
+          { "psi": 101.5, "vazaoLMin": 0.285 },
+          { "psi": 116, "vazaoLMin": 0.3 },
+          { "psi": 130.5, "vazaoLMin": 0.32 },
+          { "psi": 145, "vazaoLMin": 0.335 }
+        ]
+      },
+      {
+        "codigo": "SPE-1",
+        "cor": "azul",
+        "pontos": [
+          { "psi": 29, "vazaoLMin": 0.22 },
+          { "psi": 43.5, "vazaoLMin": 0.265 },
+          { "psi": 58, "vazaoLMin": 0.3 },
+          { "psi": 72.5, "vazaoLMin": 0.335 },
+          { "psi": 87, "vazaoLMin": 0.36 },
+          { "psi": 101.5, "vazaoLMin": 0.39 },
+          { "psi": 116, "vazaoLMin": 0.41 },
+          { "psi": 130.5, "vazaoLMin": 0.435 },
+          { "psi": 145, "vazaoLMin": 0.455 }
+        ]
+      },
+      {
+        "codigo": "SPE-2",
+        "cor": "bege",
+        "pontos": [
+          { "psi": 29, "vazaoLMin": 0.325 },
+          { "psi": 43.5, "vazaoLMin": 0.395 },
+          { "psi": 58, "vazaoLMin": 0.45 },
+          { "psi": 72.5, "vazaoLMin": 0.496 },
+          { "psi": 87, "vazaoLMin": 0.54 },
+          { "psi": 101.5, "vazaoLMin": 0.58 },
+          { "psi": 116, "vazaoLMin": 0.615 },
+          { "psi": 130.5, "vazaoLMin": 0.65 },
+          { "psi": 145, "vazaoLMin": 0.685 }
+        ]
+      },
+      {
+        "codigo": "SPE-3",
+        "cor": "cinza-escuro",
+        "pontos": [
+          { "psi": 29, "vazaoLMin": 0.43 },
+          { "psi": 43.5, "vazaoLMin": 0.525 },
+          { "psi": 58, "vazaoLMin": 0.603 },
+          { "psi": 72.5, "vazaoLMin": 0.671 },
+          { "psi": 87, "vazaoLMin": 0.732 },
+          { "psi": 101.5, "vazaoLMin": 0.788 },
+          { "psi": 116, "vazaoLMin": 0.84 },
+          { "psi": 130.5, "vazaoLMin": 0.888 },
+          { "psi": 145, "vazaoLMin": 0.934 }
+        ]
+      },
+      {
+        "codigo": "SPE-4",
+        "cor": "verde",
+        "pontos": [
+          { "psi": 29, "vazaoLMin": 0.54 },
+          { "psi": 43.5, "vazaoLMin": 0.66 },
+          { "psi": 58, "vazaoLMin": 0.753 },
+          { "psi": 72.5, "vazaoLMin": 0.838 },
+          { "psi": 87, "vazaoLMin": 0.915 },
+          { "psi": 101.5, "vazaoLMin": 0.985 },
+          { "psi": 116, "vazaoLMin": 1.05 },
+          { "psi": 130.5, "vazaoLMin": 1.11 },
+          { "psi": 145, "vazaoLMin": 1.17 }
+        ]
+      },
+      {
+        "codigo": "SPE-5",
+        "cor": "amarelo",
+        "pontos": [
+          { "psi": 29, "vazaoLMin": 0.645 },
+          { "psi": 43.5, "vazaoLMin": 0.79 },
+          { "psi": 58, "vazaoLMin": 0.904 },
+          { "psi": 72.5, "vazaoLMin": 1.01 },
+          { "psi": 87, "vazaoLMin": 1.1 },
+          { "psi": 101.5, "vazaoLMin": 1.18 },
+          { "psi": 116, "vazaoLMin": 1.26 },
+          { "psi": 130.5, "vazaoLMin": 1.33 },
+          { "psi": 145, "vazaoLMin": 1.4 }
+        ]
+      },
+      {
+        "codigo": "SPE-6",
+        "cor": "vermelho",
+        "pontos": [
+          { "psi": 29, "vazaoLMin": 0.965 },
+          { "psi": 43.5, "vazaoLMin": 1.18 },
+          { "psi": 58, "vazaoLMin": 1.37 },
+          { "psi": 72.5, "vazaoLMin": 1.53 },
+          { "psi": 87, "vazaoLMin": 1.67 },
+          { "psi": 101.5, "vazaoLMin": 1.8 },
+          { "psi": 116, "vazaoLMin": 1.93 },
+          { "psi": 130.5, "vazaoLMin": 2.04 },
+          { "psi": 145, "vazaoLMin": 2.15 }
+        ]
+      },
+      {
+        "codigo": "SPE-7",
+        "cor": "laranja",
+        "pontos": [
+          { "psi": 29, "vazaoLMin": 1.29 },
+          { "psi": 43.5, "vazaoLMin": 1.58 },
+          { "psi": 58, "vazaoLMin": 1.82 },
+          { "psi": 72.5, "vazaoLMin": 2.03 },
+          { "psi": 87, "vazaoLMin": 2.23 },
+          { "psi": 101.5, "vazaoLMin": 2.4 },
+          { "psi": 116, "vazaoLMin": 2.57 },
+          { "psi": 130.5, "vazaoLMin": 2.72 },
+          { "psi": 145, "vazaoLMin": 2.87 }
+        ]
+      },
+      {
+        "codigo": "SPE-8",
+        "cor": "grafite",
+        "pontos": [
+          { "psi": 29, "vazaoLMin": 1.4 },
+          { "psi": 43.5, "vazaoLMin": 1.71 },
+          { "psi": 58, "vazaoLMin": 1.97 },
+          { "psi": 72.5, "vazaoLMin": 2.2 },
+          { "psi": 87, "vazaoLMin": 2.41 },
+          { "psi": 101.5, "vazaoLMin": 2.6 },
+          { "psi": 116, "vazaoLMin": 2.78 },
+          { "psi": 130.5, "vazaoLMin": 2.95 },
+          { "psi": 145, "vazaoLMin": 3.11 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "CORE25",
+    "nome": "CORE 25",
+    "categoria": "core",
+    "familia": "conico",
+    "tipoJato": "conico-vazio",
+    "vazaoMinLMin": 0.45,
+    "vazaoMaxLMin": 4.4,
+    "pressaoMinPsi": null,
+    "pressaoMaxPsi": null,
+    "conexao": "Montado em corpo de bico compativel",
+    "ajuste": {
+      "modo": "pressao"
+    },
+    "observacao": "Inserto com disco difusor. Requer porta-bico escolhido pelo operador.",
+    "curvasDisco": [
+      {
+        "disco": "D2",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 0.45 },
+          { "psi": 30, "vazaoLMin": 0.54 },
+          { "psi": 40, "vazaoLMin": 0.6 },
+          { "psi": 50, "vazaoLMin": 0.65 },
+          { "psi": 60, "vazaoLMin": 0.712 }
+        ]
+      },
+      {
+        "disco": "D3",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 0.55 },
+          { "psi": 30, "vazaoLMin": 0.65 },
+          { "psi": 40, "vazaoLMin": 0.73 },
+          { "psi": 50, "vazaoLMin": 0.812 },
+          { "psi": 60, "vazaoLMin": 0.95 }
+        ]
+      },
+      {
+        "disco": "D4",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 0.95 },
+          { "psi": 30, "vazaoLMin": 1.12 },
+          { "psi": 40, "vazaoLMin": 1.21 },
+          { "psi": 50, "vazaoLMin": 1.33 },
+          { "psi": 60, "vazaoLMin": 1.44 }
+        ]
+      },
+      {
+        "disco": "D5",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 1.18 },
+          { "psi": 30, "vazaoLMin": 1.38 },
+          { "psi": 40, "vazaoLMin": 1.56 },
+          { "psi": 50, "vazaoLMin": 1.73 },
+          { "psi": 60, "vazaoLMin": 1.85 }
+        ]
+      },
+      {
+        "disco": "D6",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 1.4 },
+          { "psi": 30, "vazaoLMin": 1.64 },
+          { "psi": 40, "vazaoLMin": 1.87 },
+          { "psi": 50, "vazaoLMin": 2.09 },
+          { "psi": 60, "vazaoLMin": 2.27 }
+        ]
+      },
+      {
+        "disco": "D7",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 1.68 },
+          { "psi": 30, "vazaoLMin": 1.8 },
+          { "psi": 40, "vazaoLMin": 2.11 },
+          { "psi": 50, "vazaoLMin": 2.35 },
+          { "psi": 60, "vazaoLMin": 2.55 }
+        ]
+      },
+      {
+        "disco": "D8",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 1.75 },
+          { "psi": 30, "vazaoLMin": 2.02 },
+          { "psi": 40, "vazaoLMin": 2.3 },
+          { "psi": 50, "vazaoLMin": 2.55 },
+          { "psi": 60, "vazaoLMin": 2.8 }
+        ]
+      },
+      {
+        "disco": "D10",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 2.15 },
+          { "psi": 30, "vazaoLMin": 2.52 },
+          { "psi": 40, "vazaoLMin": 2.9 },
+          { "psi": 50, "vazaoLMin": 3.24 },
+          { "psi": 60, "vazaoLMin": 3.52 }
+        ]
+      },
+      {
+        "disco": "D12",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 2.43 },
+          { "psi": 30, "vazaoLMin": 3.05 },
+          { "psi": 40, "vazaoLMin": 3.26 },
+          { "psi": 50, "vazaoLMin": 3.68 },
+          { "psi": 60, "vazaoLMin": 4.05 }
+        ]
+      },
+      {
+        "disco": "D14",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 2.71 },
+          { "psi": 30, "vazaoLMin": 3.18 },
+          { "psi": 40, "vazaoLMin": 3.65 },
+          { "psi": 50, "vazaoLMin": 4.06 },
+          { "psi": 60, "vazaoLMin": 4.4 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "CORE45",
+    "nome": "CORE 45",
+    "categoria": "core",
+    "familia": "conico",
+    "tipoJato": "conico-vazio",
+    "vazaoMinLMin": 0.56,
+    "vazaoMaxLMin": 7.98,
+    "pressaoMinPsi": null,
+    "pressaoMaxPsi": null,
+    "conexao": "Montado em corpo de bico compativel",
+    "ajuste": {
+      "modo": "pressao"
+    },
+    "observacao": "Inserto com disco difusor. Requer porta-bico escolhido pelo operador.",
+    "curvasDisco": [
+      {
+        "disco": "D2",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 0.56 },
+          { "psi": 30, "vazaoLMin": 0.64 },
+          { "psi": 40, "vazaoLMin": 0.733 },
+          { "psi": 50, "vazaoLMin": 0.79 },
+          { "psi": 60, "vazaoLMin": 0.833 }
+        ]
+      },
+      {
+        "disco": "D3",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 0.827 },
+          { "psi": 30, "vazaoLMin": 0.94 },
+          { "psi": 40, "vazaoLMin": 1.03 },
+          { "psi": 50, "vazaoLMin": 1.14 },
+          { "psi": 60, "vazaoLMin": 1.23 }
+        ]
+      },
+      {
+        "disco": "D4",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 1.33 },
+          { "psi": 30, "vazaoLMin": 1.55 },
+          { "psi": 40, "vazaoLMin": 1.73 },
+          { "psi": 50, "vazaoLMin": 1.88 },
+          { "psi": 60, "vazaoLMin": 2.01 }
+        ]
+      },
+      {
+        "disco": "D5",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 1.67 },
+          { "psi": 30, "vazaoLMin": 1.8 },
+          { "psi": 40, "vazaoLMin": 2.07 },
+          { "psi": 50, "vazaoLMin": 2.31 },
+          { "psi": 60, "vazaoLMin": 2.52 }
+        ]
+      },
+      {
+        "disco": "D6",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 1.98 },
+          { "psi": 30, "vazaoLMin": 2.28 },
+          { "psi": 40, "vazaoLMin": 2.59 },
+          { "psi": 50, "vazaoLMin": 2.87 },
+          { "psi": 60, "vazaoLMin": 3.15 }
+        ]
+      },
+      {
+        "disco": "D7",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 2.34 },
+          { "psi": 30, "vazaoLMin": 2.65 },
+          { "psi": 40, "vazaoLMin": 3.05 },
+          { "psi": 50, "vazaoLMin": 3.38 },
+          { "psi": 60, "vazaoLMin": 3.71 }
+        ]
+      },
+      {
+        "disco": "D8",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 2.65 },
+          { "psi": 30, "vazaoLMin": 3.18 },
+          { "psi": 40, "vazaoLMin": 3.73 },
+          { "psi": 50, "vazaoLMin": 3.98 },
+          { "psi": 60, "vazaoLMin": 4.35 }
+        ]
+      },
+      {
+        "disco": "D10",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 3.52 },
+          { "psi": 30, "vazaoLMin": 4.12 },
+          { "psi": 40, "vazaoLMin": 4.73 },
+          { "psi": 50, "vazaoLMin": 5.29 },
+          { "psi": 60, "vazaoLMin": 5.79 }
+        ]
+      },
+      {
+        "disco": "D12",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 4.22 },
+          { "psi": 30, "vazaoLMin": 4.91 },
+          { "psi": 40, "vazaoLMin": 5.67 },
+          { "psi": 50, "vazaoLMin": 6.25 },
+          { "psi": 60, "vazaoLMin": 6.83 }
+        ]
+      },
+      {
+        "disco": "D14",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 4.86 },
+          { "psi": 30, "vazaoLMin": 5.89 },
+          { "psi": 40, "vazaoLMin": 6.46 },
+          { "psi": 50, "vazaoLMin": 7.19 },
+          { "psi": 60, "vazaoLMin": 7.98 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "CORE46",
+    "nome": "CORE 46",
+    "categoria": "core",
+    "familia": "conico",
+    "tipoJato": "conico-vazio",
+    "vazaoMinLMin": 0.5,
+    "vazaoMaxLMin": 14.21,
+    "pressaoMinPsi": null,
+    "pressaoMaxPsi": null,
+    "conexao": "Montado em corpo de bico compativel",
+    "ajuste": {
+      "modo": "pressao"
+    },
+    "observacao": "Inserto com disco difusor. Requer porta-bico escolhido pelo operador.",
+    "curvasDisco": [
+      {
+        "disco": "D2",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 0.5 },
+          { "psi": 30, "vazaoLMin": 0.58 },
+          { "psi": 40, "vazaoLMin": 0.658 },
+          { "psi": 50, "vazaoLMin": 0.74 },
+          { "psi": 60, "vazaoLMin": 0.813 }
+        ]
+      },
+      {
+        "disco": "D3",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 0.79 },
+          { "psi": 30, "vazaoLMin": 0.9 },
+          { "psi": 40, "vazaoLMin": 1.05 },
+          { "psi": 50, "vazaoLMin": 1.17 },
+          { "psi": 60, "vazaoLMin": 1.28 }
+        ]
+      },
+      {
+        "disco": "D4",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 1.48 },
+          { "psi": 30, "vazaoLMin": 1.75 },
+          { "psi": 40, "vazaoLMin": 2.01 },
+          { "psi": 50, "vazaoLMin": 2.25 },
+          { "psi": 60, "vazaoLMin": 2.45 }
+        ]
+      },
+      {
+        "disco": "D5",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 2.15 },
+          { "psi": 30, "vazaoLMin": 2.52 },
+          { "psi": 40, "vazaoLMin": 2.9 },
+          { "psi": 50, "vazaoLMin": 3.2 },
+          { "psi": 60, "vazaoLMin": 3.53 }
+        ]
+      },
+      {
+        "disco": "D6",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 3.03 },
+          { "psi": 30, "vazaoLMin": 3.51 },
+          { "psi": 40, "vazaoLMin": 4.08 },
+          { "psi": 50, "vazaoLMin": 4.54 },
+          { "psi": 60, "vazaoLMin": 4.95 }
+        ]
+      },
+      {
+        "disco": "D7",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 3.81 },
+          { "psi": 30, "vazaoLMin": 4.45 },
+          { "psi": 40, "vazaoLMin": 5.08 },
+          { "psi": 50, "vazaoLMin": 5.65 },
+          { "psi": 60, "vazaoLMin": 6.21 }
+        ]
+      },
+      {
+        "disco": "D8",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 4.55 },
+          { "psi": 30, "vazaoLMin": 5.32 },
+          { "psi": 40, "vazaoLMin": 6.16 },
+          { "psi": 50, "vazaoLMin": 6.85 },
+          { "psi": 60, "vazaoLMin": 7.45 }
+        ]
+      },
+      {
+        "disco": "D10",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 6.56 },
+          { "psi": 30, "vazaoLMin": 7.43 },
+          { "psi": 40, "vazaoLMin": 8.65 },
+          { "psi": 50, "vazaoLMin": 9.68 },
+          { "psi": 60, "vazaoLMin": 10.45 }
+        ]
+      },
+      {
+        "disco": "D12",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 7.65 },
+          { "psi": 30, "vazaoLMin": 8.9 },
+          { "psi": 40, "vazaoLMin": 10.35 },
+          { "psi": 50, "vazaoLMin": 11.34 },
+          { "psi": 60, "vazaoLMin": 12.34 }
+        ]
+      },
+      {
+        "disco": "D14",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 8.56 },
+          { "psi": 30, "vazaoLMin": 9.7 },
+          { "psi": 40, "vazaoLMin": 11.12 },
+          { "psi": 50, "vazaoLMin": 12.75 },
+          { "psi": 60, "vazaoLMin": 14.21 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "CORE56",
+    "nome": "CORE 56",
+    "categoria": "core",
+    "familia": "conico",
+    "tipoJato": "conico-cheio",
+    "vazaoMinLMin": 0.52,
+    "vazaoMaxLMin": 15.7,
+    "pressaoMinPsi": null,
+    "pressaoMaxPsi": null,
+    "conexao": "Montado em corpo de bico compativel",
+    "ajuste": {
+      "modo": "pressao"
+    },
+    "observacao": "Inserto com disco difusor. Requer porta-bico escolhido pelo operador.",
+    "curvasDisco": [
+      {
+        "disco": "D2",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 0.52 },
+          { "psi": 30, "vazaoLMin": 0.57 },
+          { "psi": 40, "vazaoLMin": 0.658 },
+          { "psi": 50, "vazaoLMin": 0.749 },
+          { "psi": 60, "vazaoLMin": 0.812 }
+        ]
+      },
+      {
+        "disco": "D3",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 0.815 },
+          { "psi": 30, "vazaoLMin": 0.921 },
+          { "psi": 40, "vazaoLMin": 1.02 },
+          { "psi": 50, "vazaoLMin": 1.17 },
+          { "psi": 60, "vazaoLMin": 1.28 }
+        ]
+      },
+      {
+        "disco": "D4",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 1.54 },
+          { "psi": 30, "vazaoLMin": 1.71 },
+          { "psi": 40, "vazaoLMin": 2.01 },
+          { "psi": 50, "vazaoLMin": 2.25 },
+          { "psi": 60, "vazaoLMin": 2.46 }
+        ]
+      },
+      {
+        "disco": "D5",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 2.2 },
+          { "psi": 30, "vazaoLMin": 2.53 },
+          { "psi": 40, "vazaoLMin": 2.9 },
+          { "psi": 50, "vazaoLMin": 3.27 },
+          { "psi": 60, "vazaoLMin": 3.58 }
+        ]
+      },
+      {
+        "disco": "D6",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 3.3 },
+          { "psi": 30, "vazaoLMin": 3.58 },
+          { "psi": 40, "vazaoLMin": 4.15 },
+          { "psi": 50, "vazaoLMin": 4.58 },
+          { "psi": 60, "vazaoLMin": 5.05 }
+        ]
+      },
+      {
+        "disco": "D7",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 3.98 },
+          { "psi": 30, "vazaoLMin": 4.55 },
+          { "psi": 40, "vazaoLMin": 5.43 },
+          { "psi": 50, "vazaoLMin": 5.93 },
+          { "psi": 60, "vazaoLMin": 6.43 }
+        ]
+      },
+      {
+        "disco": "D8",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 4.76 },
+          { "psi": 30, "vazaoLMin": 5.54 },
+          { "psi": 40, "vazaoLMin": 6.36 },
+          { "psi": 50, "vazaoLMin": 7.1 },
+          { "psi": 60, "vazaoLMin": 7.76 }
+        ]
+      },
+      {
+        "disco": "D10",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 7.08 },
+          { "psi": 30, "vazaoLMin": 7.98 },
+          { "psi": 40, "vazaoLMin": 9.2 },
+          { "psi": 50, "vazaoLMin": 10.34 },
+          { "psi": 60, "vazaoLMin": 11.24 }
+        ]
+      },
+      {
+        "disco": "D12",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 8.11 },
+          { "psi": 30, "vazaoLMin": 9.78 },
+          { "psi": 40, "vazaoLMin": 11.02 },
+          { "psi": 50, "vazaoLMin": 12.34 },
+          { "psi": 60, "vazaoLMin": 13.44 }
+        ]
+      },
+      {
+        "disco": "D14",
+        "pontos": [
+          { "psi": 20, "vazaoLMin": 9.2 },
+          { "psi": 30, "vazaoLMin": 10.8 },
+          { "psi": 40, "vazaoLMin": 12.6 },
+          { "psi": 50, "vazaoLMin": 14.23 },
+          { "psi": 60, "vazaoLMin": 15.7 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "AR-15",
+    "nome": "Atomizador Rotativo V.R.U Inox (niple 1/8)",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 1.18,
+    "vazaoMaxLMin": 23.4,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/8\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "No eixo, 1 valvula anti-gotejo. Curva detalhada por posicao da valvula VRU e regulagem (preto/vermelho/verde).",
+    "tabelaVru": {
+      "coresRegulagem": ["preto", "vermelho", "verde"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 0, "valores": [[2.93, 2.5, 1.18], [3.79, 3.48, 2.4], [4.61, 4.31, 3.35], [5.21, 4.92, 4.12], [5.81, 5.63, 4.81]] },
+        { "posicao": 1, "valores": [[3.88, 3.2, 1.39], [5.02, 4.48, 3], [6.07, 5.55, 4.35], [6.82, 6.45, 5.13], [7.54, 7.33, 6.2]] },
+        { "posicao": 2, "valores": [[6.05, 4.81, 1.8], [8.05, 6.92, 4.51], [9.51, 8.68, 6.5], [11.88, 10.62, 8.06], [13.37, 12.08, 9.7]] },
+        { "posicao": 3, "valores": [[7.75, 5.95, 2], [9.55, 8.55, 5.35], [13.4, 11.41, 8.12], [15.2, 13.52, 9.94], [16.87, 15.58, 13.25]] },
+        { "posicao": 4, "valores": [[8.77, 6.79, 2.12], [12.86, 9.88, 5.85], [15.5, 13.2, 9.04], [17.5, 15.96, 12.86], [19.11, 18.2, 15.14]] },
+        { "posicao": 5, "valores": [[9.12, 7.31, 2.17], [14.05, 11.18, 6.4], [16.71, 14.43, 9.6], [18.82, 17.89, 13.86], [20.72, 20.05, 16.62]] },
+        { "posicao": 6, "valores": [[9.45, 7.63, 2.2], [15.03, 12.05, 6.58], [17.44, 15.54, 9.97], [19.69, 18.86, 14.89], [21.85, 21.02, 17.43]] },
+        { "posicao": 7, "valores": [[9.67, 7.77, 2.23], [15.53, 12.46, 6.7], [17.95, 16.07, 11.6], [20.41, 19.48, 15.32], [22.42, 21.73, 17.95]] },
+        { "posicao": 8, "valores": [[9.91, 7.89, 2.26], [15.82, 12.8, 6.77], [18.58, 16.76, 12.23], [20.81, 19.85, 15.57], [22.78, 22.19, 18.33]] },
+        { "posicao": 9, "valores": [[11.92, 8, 2.31], [16, 12.91, 6.84], [18.8, 17.08, 12.36], [21.1, 20.36, 15.82], [23.15, 22.47, 18.6]] },
+        { "posicao": 10, "valores": [[12.06, 8.07, 2.32], [16.14, 13.16, 6.95], [19, 17.23, 12.52], [21.3, 20.54, 15.95], [23.37, 22.74, 18.75]] },
+        { "posicao": 11, "valores": [[12.13, 8.15, 2.33], [16.2, 13.2, 6.98], [19.04, 17.3, 12.57], [21.32, 20.61, 16], [23.45, 22.8, 18.78]] },
+        { "posicao": 12, "valores": [[12.15, 8.2, 2.33], [16.24, 13.23, 7.1], [19.05, 17.33, 12.6], [21.33, 20.63, 16.02], [23.47, 22.84, 18.81]] }
+      ]
+    }
+  },
+  {
+    "id": "AR-17",
+    "nome": "Atomizador Rotativo V.R.U Inox na barra (valvula inox no eixo, niple 1/4)",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 0.99,
+    "vazaoMaxLMin": 30.2,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/4\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "VRU na barra e valvula anti-gotejo inox no eixo.",
+    "tabelaVru": {
+      "coresRegulagem": ["preto", "vermelho", "verde"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 0, "valores": [[0.76, 0.70, 0.29], [1.09, 0.85, 0.77], [1.18, 1.34, 1.15], [1.66, 1.58, 1.40], [1.73, 1.80, 1.68]] },
+        { "posicao": 1, "valores": [[1.60, 1.67, 0.72], [2.23, 2.36, 1.68], [2.84, 2.89, 2.29], [3.23, 3.30, 2.90], [3.74, 3.76, 3.30]] },
+        { "posicao": 2, "valores": [[3.33, 3.71, 1.55], [4.96, 5.12, 3.74], [6.06, 6.36, 5.05], [6.93, 7.11, 6.39], [7.86, 8.09, 7.30]] },
+        { "posicao": 3, "valores": [[5.06, 5.81, 2.23], [7.71, 8.51, 5.55], [9.79, 10.69, 8.17], [12.18, 13.29, 10.80], [13.73, 14.28, 12.47]] },
+        { "posicao": 4, "valores": [[6.13, 7.53, 2.59], [9.95, 11.83, 7.08], [14.12, 15.75, 11.04], [17.11, 18.35, 14.65], [21.10, 21.97, 17.55]] },
+        { "posicao": 5, "valores": [[6.71, 8.39, 2.72], [13.38, 14.53, 8.04], [16.86, 19.55, 13.41], [20.67, 22.34, 17.17], [23.78, 25.05, 21.47]] },
+        { "posicao": 6, "valores": [[7.10, 9.21, 2.82], [14.66, 15.98, 8.50], [19.51, 21.07, 14.58], [23.10, 24.38, 19.12], [26.13, 27.13, 22.99]] },
+        { "posicao": 7, "valores": [[7.55, 9.81, 2.87], [16.15, 17.93, 8.79], [20.76, 22.61, 15.40], [24.94, 26.16, 21.34], [28.44, 29.41, 25.50]] },
+        { "posicao": 8, "valores": [[7.85, 11.92, 3.03], [16.64, 19.37, 9.11], [22.07, 24.38, 16.63], [26.69, 27.84, 22.59], [30.38, 30.64, 27.06]] },
+        { "posicao": 9, "valores": [[8.06, 12.25, 3.12], [17.33, 20.35, 9.28], [23.54, 25.21, 17.74], [27.99, 28.70, 23.46], [31.44, 31.64, 28.82]] },
+        { "posicao": 10, "valores": [[8.14, 12.52, 3.15], [17.72, 20.86, 9.40], [23.74, 25.63, 18.11], [28.60, 29.19, 23.97], [32.08, 32.20, 29.43]] },
+        { "posicao": 11, "valores": [[8.22, 13.04, 3.19], [17.82, 21.05, 9.50], [24.10, 25.87, 18.38], [28.84, 29.56, 24.51], [32.22, 32.63, 29.80]] },
+        { "posicao": 12, "valores": [[8.42, 13.08, 3.21], [17.90, 21.11, 9.52], [24.16, 25.90, 18.41], [28.92, 29.64, 24.55], [32.34, 32.74, 29.85]] }
+      ]
+    }
+  },
+  {
+    "id": "AR-19",
+    "nome": "Atomizador Rotativo V.R.U Inox duas alimentacoes (niple 1/4)",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 3.7,
+    "vazaoMaxLMin": 48,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/4\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "Duas alimentacoes na barra e valvula anti-gotejo inox no eixo. Faixa de alta vazao.",
+    "tabelaVru": {
+      "coresRegulagem": ["preto"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 0, "valores": [[3.7], [4.7], [5.8], [6.5], [7.2]] },
+        { "posicao": 1, "valores": [[4.7], [7.0], [8.0], [10.0], [11.0]] },
+        { "posicao": 2, "valores": [[13.6], [18.0], [20.0], [23.4], [25.6]] },
+        { "posicao": 3, "valores": [[20.0], [25.0], [29.0], [32.0], [35.5]] },
+        { "posicao": 4, "valores": [[22.0], [27.0], [32.0], [35.0], [38.0]] },
+        { "posicao": 5, "valores": [[23.7], [29.0], [34.0], [38.0], [42.0]] },
+        { "posicao": 6, "valores": [[24.6], [30.6], [35.7], [40.0], [44.0]] },
+        { "posicao": 7, "valores": [[25.5], [31.5], [36.7], [41.0], [45.0]] },
+        { "posicao": 8, "valores": [[26.0], [32.5], [37.7], [42.5], [46.0]] },
+        { "posicao": 9, "valores": [[26.0], [33.0], [38.0], [43.0], [48.0]] },
+        { "posicao": 10, "valores": [[26.0], [33.0], [38.0], [43.0], [48.0]] },
+        { "posicao": 11, "valores": [[26.0], [33.0], [38.0], [43.0], [48.0]] }
+      ]
+    }
+  },
+  {
+    "id": "AR-23",
+    "nome": "Atomizador Rotativo V.R.U Polimero no eixo (2 valvulas na barra, niple 1/8)",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 1.3,
+    "vazaoMaxLMin": 28.9,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/8\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "VRU no eixo com duas valvulas anti-gotejo polimero na barra.",
+    "tabelaVru": {
+      "coresRegulagem": ["preto", "vermelho", "verde"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 0, "valores": [[3.67, 2.99, 1.31], [4.71, 4.25, 3.11], [5.57, 5.2, 4.37], [6.31, 6.02, 5.29], [6.92, 6.75, 6.16]] },
+        { "posicao": 1, "valores": [[4.04, 3.31, 1.41], [5.13, 4.6, 3.38], [6.28, 5.93, 4.83], [7.11, 6.62, 6.16], [7.77, 7.3, 6.96]] },
+        { "posicao": 2, "valores": [[6.62, 5.08, 1.89], [8.54, 7.46, 5.27], [9.81, 9.44, 7.41], [11.58, 10.45, 9.47], [12.58, 12.4, 10.15]] },
+        { "posicao": 3, "valores": [[8.66, 6.56, 2.12], [11.91, 9.51, 6.33], [13.84, 12.53, 9.15], [15.94, 15.08, 11.84], [17.97, 16.96, 14.15]] },
+        { "posicao": 4, "valores": [[10.45, 7.27, 2.25], [13.86, 11.46, 6.94], [16.5, 14.63, 10.4], [18.83, 17.35, 14.03], [20.73, 20.12, 16.47]] },
+        { "posicao": 5, "valores": [[11.79, 7.87, 2.35], [15.6, 12.76, 7.61], [18.33, 16.64, 11.53], [20.8, 20.11, 15.4], [23.05, 22.48, 18.57]] },
+        { "posicao": 6, "valores": [[12.84, 8.25, 2.4], [16.94, 14.09, 7.93], [19.9, 18.51, 12.69], [22.59, 21.93, 16.6], [24.97, 24.34, 20.37]] },
+        { "posicao": 7, "valores": [[14.17, 8.9, 2.42], [18.36, 15.52, 8.54], [21.53, 20.03, 13.46], [24.0, 23.67, 17.85], [26.56, 26.18, 21.81]] },
+        { "posicao": 8, "valores": [[14.97, 9.13, 2.58], [19.18, 16.66, 8.72], [22.33, 21.74, 14.37], [25.12, 24.78, 19.41], [27.67, 27.43, 23.58]] },
+        { "posicao": 9, "valores": [[15.63, 9.3, 2.6], [19.86, 17.89, 8.81], [23.06, 22.44, 14.84], [26.08, 25.75, 20.23], [28.55, 28.3, 25.41]] },
+        { "posicao": 10, "valores": [[16.02, 9.44, 2.63], [20.18, 18.33, 9.05], [23.47, 22.85, 15.29], [26.44, 26.11, 20.66], [28.96, 28.73, 25.94]] },
+        { "posicao": 11, "valores": [[16.12, 9.45, 2.65], [20.31, 18.34, 9.06], [23.57, 23.02, 15.4], [26.58, 26.19, 20.9], [29.06, 28.8, 26.19]] },
+        { "posicao": 12, "valores": [[16.05, 9.43, 2.63], [20.13, 18.23, 9.05], [23.46, 22.91, 15.33], [26.43, 26.07, 20.78], [28.91, 28.7, 26.04]] }
+      ]
+    }
+  },
+  {
+    "id": "AR-27",
+    "nome": "Atomizador Rotativo Disco - V.R.U Polimero (niple 1/8)",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 2.2,
+    "vazaoMaxLMin": 20,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/8\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "Configuracao com disco. VRU na barra e valvula anti-gotejo polimero no eixo.",
+    "tabelaVru": {
+      "coresRegulagem": ["preto"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 0, "valores": [[2.2], [2.9], [3.7], [4.3], [4.9]] },
+        { "posicao": 1, "valores": [[3.0], [3.8], [4.8], [5.6], [6.3]] },
+        { "posicao": 2, "valores": [[4.8], [6.3], [8.0], [9.5], [10.6]] },
+        { "posicao": 3, "valores": [[6.0], [8.9], [12.4], [14.7], [16.4]] },
+        { "posicao": 4, "valores": [[6.4], [8.9], [13.0], [15.7], [17.5]] },
+        { "posicao": 5, "valores": [[6.8], [9.9], [14.7], [16.7], [18.4]] },
+        { "posicao": 6, "valores": [[7.0], [10.0], [15.6], [17.5], [18.9]] },
+        { "posicao": 7, "valores": [[7.3], [10.7], [16.0], [17.8], [19.5]] },
+        { "posicao": 8, "valores": [[7.5], [12.6], [16.3], [18.4], [19.8]] },
+        { "posicao": 9, "valores": [[7.6], [13.5], [16.6], [18.7], [20.0]] },
+        { "posicao": 10, "valores": [[7.6], [13.5], [16.8], [18.7], [20.0]] },
+        { "posicao": 11, "valores": [[7.6], [13.5], [16.8], [18.7], [20.0]] },
+        { "posicao": 12, "valores": [[7.6], [13.5], [16.8], [18.7], [20.0]] }
+      ]
+    }
+  },
+  {
+    "id": "AR-29",
+    "nome": "Atomizador Rotativo V.R.U Inox no eixo (2 valvulas na barra, niple 1/8)",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 1,
+    "vazaoMaxLMin": 29,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/8\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "VRU no eixo com duas valvulas anti-gotejo polimero na barra.",
+    "tabelaVru": {
+      "coresRegulagem": ["preto", "vermelho", "verde"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 0, "valores": [[2.91, 2.35, 1.05], [3.77, 3.36, 2.41], [4.59, 4.23, 3.83], [5.24, 4.95, 4.35], [5.8, 5.58, 5.11]] },
+        { "posicao": 1, "valores": [[3.91, 3.02, 1.26], [5.18, 4.45, 3.15], [6.06, 5.5, 4.43], [6.96, 6.45, 5.5], [7.74, 7.2, 6.43]] },
+        { "posicao": 2, "valores": [[6.4, 4.94, 1.67], [8.45, 7.15, 4.7], [10.73, 8.93, 6.75], [11.89, 11.48, 8.94], [13, 11.76, 10.04]] },
+        { "posicao": 3, "valores": [[8.17, 6.3, 2.05], [11.65, 9.25, 6.08], [14.67, 13.03, 8.98], [16.72, 15.59, 11.4], [18.05, 16.59, 14.02]] },
+        { "posicao": 4, "valores": [[9.59, 7.35, 2.15], [14.77, 12.13, 6.77], [17.61, 15.9, 10.88], [19.97, 19.09, 14.31], [22, 20.71, 17.45]] },
+        { "posicao": 5, "valores": [[12.2, 8.02, 2.25], [16.71, 14.26, 7.33], [19.53, 18.46, 12.08], [21.94, 21.66, 16.07], [24.13, 23.15, 19.42]] },
+        { "posicao": 6, "valores": [[13.42, 8.73, 2.31], [18.16, 15.5, 7.8], [21.13, 20.05, 12.86], [23.83, 23.11, 17.26], [25.84, 25.18, 21.15]] },
+        { "posicao": 7, "valores": [[14.5, 9.05, 2.47], [18.87, 16.44, 7.93], [22.08, 20.95, 13.51], [24.76, 24.22, 18.39], [27.08, 26.43, 22.82]] },
+        { "posicao": 8, "valores": [[15.04, 9.15, 2.52], [19.36, 16.95, 8.04], [22.53, 21.61, 14.37], [25.27, 24.85, 18.5], [27.85, 27.03, 23.69]] },
+        { "posicao": 9, "valores": [[15.56, 9.4, 2.57], [19.7, 17.9, 8.16], [22.98, 22.24, 14.77], [25.76, 25.41, 19.19], [28.25, 27.51, 24.77]] },
+        { "posicao": 10, "valores": [[15.88, 9.63, 2.58], [20.19, 18.28, 8.24], [23.28, 22.87, 15.05], [26.13, 25.93, 19.7], [28.85, 28.03, 25.45]] },
+        { "posicao": 11, "valores": [[16, 9.75, 2.59], [20.25, 18.43, 8.55], [23.42, 22.96, 15.18], [26.37, 26.13, 19.77], [29, 28.11, 25.61]] },
+        { "posicao": 12, "valores": [[16.02, 9.8, 2.61], [20.28, 18.46, 8.61], [23.47, 23.02, 15.24], [26.43, 26.17, 19.78], [29.07, 28.18, 25.62]] }
+      ]
+    }
+  },
+  {
+    "id": "AR-29-AV",
+    "nome": "Atomizador Rotativo V.R.U Inox AV no eixo (2 valvulas na barra, niple 1/8)",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 1.0,
+    "vazaoMaxLMin": 29.1,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/8\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "VRU AV no eixo com duas valvulas anti-gotejo polimero na barra.",
+    "tabelaVru": {
+      "coresRegulagem": ["preto", "vermelho", "verde"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 0, "valores": [[0.66, 0.81, 0.48], [1.11, 0.84, 0.79], [1.26, 1.22, 1.11], [1.51, 1.72, 1.48], [1.82, 1.89, 1.63]] },
+        { "posicao": 1, "valores": [[1.78, 1.54, 0.75], [2.27, 1.99, 1.50], [2.73, 2.53, 2.12], [3.49, 3.00, 2.55], [3.56, 3.37, 3.24]] },
+        { "posicao": 2, "valores": [[4.55, 3.52, 1.38], [5.61, 5.02, 3.33], [6.55, 6.43, 4.97], [7.73, 7.05, 6.10], [8.01, 8.20, 6.90]] },
+        { "posicao": 3, "valores": [[7.35, 5.61, 1.84], [9.11, 7.95, 5.44], [11.42, 10.05, 7.59], [13.42, 11.82, 9.63], [14.92, 14.20, 11.20]] },
+        { "posicao": 4, "valores": [[9.90, 7.16, 2.04], [13.17, 10.66, 6.51], [16.31, 14.55, 9.77], [18.35, 17.00, 12.97], [20.30, 19.98, 15.77]] },
+        { "posicao": 5, "valores": [[11.77, 8.00, 2.20], [15.79, 12.94, 7.50], [19.13, 17.15, 11.78], [21.45, 20.82, 15.88], [23.95, 23.63, 19.19]] },
+        { "posicao": 6, "valores": [[13.18, 8.53, 2.28], [17.49, 15.20, 7.99], [20.79, 19.45, 13.10], [23.57, 22.75, 17.39], [26.06, 25.60, 20.97]] },
+        { "posicao": 7, "valores": [[14.72, 9.50, 2.31], [19.42, 16.60, 8.40], [22.79, 21.78, 14.34], [25.51, 25.09, 18.96], [28.13, 27.96, 24.50]] },
+        { "posicao": 8, "valores": [[15.93, 10.82, 2.35], [20.23, 17.86, 8.74], [23.99, 22.97, 15.25], [26.92, 26.29, 20.78], [29.55, 29.34, 26.29]] },
+        { "posicao": 9, "valores": [[16.81, 11.31, 2.38], [21.05, 19.09, 8.91], [24.59, 24.00, 16.42], [27.67, 26.98, 21.70], [30.26, 30.06, 27.52]] },
+        { "posicao": 10, "valores": [[17.17, 11.53, 2.40], [21.35, 19.61, 8.97], [25.26, 24.33, 16.63], [28.02, 27.85, 22.08], [31.05, 30.54, 28.09]] },
+        { "posicao": 11, "valores": [[17.25, 11.65, 2.42], [21.52, 19.99, 9.01], [25.38, 24.45, 16.74], [28.36, 27.98, 23.00], [31.26, 30.70, 28.23]] },
+        { "posicao": 12, "valores": [[17.27, 11.61, 2.44], [21.60, 20.00, 9.04], [25.40, 24.53, 16.78], [28.44, 28.04, 23.08], [31.30, 30.84, 28.26]] }
+      ]
+    }
+  },
+  {
+    "id": "AR-D5D7",
+    "nome": "Atomizador Rotativo Mini - V.R.U com redutor D5/D7",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 1.89,
+    "vazaoMaxLMin": 6.8,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/8\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "Faixa estreita para ajuste fino.",
+    "tabelaVru": {
+      "coresRegulagem": ["D5", "D7"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 0, "valores": [[1.89, 3.61], [2.47, 3.42], [2.84, 4.41], [3.15, 5.15], [3.41, 6.14]] },
+        { "posicao": 1, "valores": [[2.09, 3.74], [2.51, 3.84], [2.87, 4.78], [3.17, 5.48], [3.44, 6.30]] },
+        { "posicao": 2, "valores": [[2.13, 3.99], [2.55, 4.70], [2.92, 5.41], [3.23, 5.99], [3.50, 6.57]] },
+        { "posicao": 3, "valores": [[2.14, 4.10], [2.57, 4.91], [2.93, 5.62], [3.24, 6.15], [3.52, 6.67]] },
+        { "posicao": 4, "valores": [[2.14, 4.15], [2.58, 5.00], [2.95, 5.70], [3.25, 6.23], [3.53, 6.71]] },
+        { "posicao": 5, "valores": [[2.16, 4.17], [2.58, 5.07], [2.95, 5.74], [3.26, 6.28], [3.54, 6.74]] },
+        { "posicao": 6, "valores": [[2.17, 4.18], [2.59, 5.10], [2.96, 5.75], [3.27, 6.29], [3.54, 6.79]] },
+        { "posicao": 7, "valores": [[2.17, 4.22], [2.59, 5.11], [2.95, 5.77], [3.26, 6.29], [3.53, 6.80]] },
+        { "posicao": 8, "valores": [[2.18, 4.24], [2.59, 5.11], [2.96, 5.78], [3.26, 6.30], [3.54, 6.81]] },
+        { "posicao": 9, "valores": [[2.18, 4.25], [2.60, 5.12], [2.95, 5.79], [3.27, 6.29], [3.53, 6.79]] },
+        { "posicao": 10, "valores": [[2.17, 4.26], [2.59, 5.12], [2.96, 5.78], [3.26, 6.30], [3.54, 6.81]] },
+        { "posicao": 11, "valores": [[2.18, 4.27], [2.60, 5.15], [2.96, 5.79], [3.27, 6.31], [3.54, 6.81]] },
+        { "posicao": 12, "valores": [[2.17, 4.28], [2.59, 5.16], [2.96, 5.78], [3.28, 6.30], [3.55, 6.81]] }
+      ]
+    }
+  },
+  {
+    "id": "AR-15B",
+    "nome": "Atomizador Rotativo V.R.U Inox na barra (valvula inox no eixo, niple 1/8)",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 1,
+    "vazaoMaxLMin": 27.1,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/8\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "VRU na barra e valvula anti-gotejo inox no eixo.",
+    "tabelaVru": {
+      "coresRegulagem": ["preto", "vermelho", "verde"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 0, "valores": [[2.05, 2.37, 1.0], [3.15, 3.38, 2.58], [4.02, 4.17, 3.53], [4.75, 4.94, 4.26], [5.45, 5.57, 5.01]] },
+        { "posicao": 1, "valores": [[2.57, 3.21, 1.18], [4.08, 4.5, 3.37], [5.31, 5.59, 5.02], [7.02, 7.26, 5.8], [7.24, 7.77, 6.65]] },
+        { "posicao": 2, "valores": [[4.24, 4.96, 1.61], [6.64, 7.21, 5.21], [8.53, 8.93, 7.35], [10.11, 10.78, 9.3], [12.4, 12.55, 11.21]] },
+        { "posicao": 3, "valores": [[5.1, 6.34, 1.97], [8.5, 9.38, 6.39], [12.28, 12.9, 9.22], [14.43, 15.09, 11.71], [16.54, 17.56, 14.88]] },
+        { "posicao": 4, "valores": [[6.1, 7.21, 2.07], [9.75, 12.09, 7.17], [14.47, 15.37, 10.54], [17.24, 18.05, 14.15], [19.94, 21.06, 17.54]] },
+        { "posicao": 5, "valores": [[6.56, 7.97, 2.2], [12.54, 13.42, 7.97], [16.01, 17.44, 11.55], [19.39, 20.61, 15.83], [22.03, 23.05, 19.31]] },
+        { "posicao": 6, "valores": [[6.84, 8.3, 2.45], [13.23, 14.39, 8.17], [17.07, 18.61, 12.45], [20.66, 21.88, 17.37], [23.68, 24.59, 20.97]] },
+        { "posicao": 7, "valores": [[7.02, 8.63, 2.52], [13.76, 15.3, 8.33], [17.73, 19.53, 13.01], [21.91, 22.95, 18.04], [25.27, 25.7, 21.9]] },
+        { "posicao": 8, "valores": [[7.12, 8.71, 2.66], [14.04, 15.75, 8.44], [18.46, 20.04, 13.4], [22.46, 23.52, 18.69], [25.85, 26.22, 22.46]] },
+        { "posicao": 9, "valores": [[7.19, 8.97, 2.7], [14.18, 16.15, 8.52], [18.72, 20.55, 13.6], [22.88, 23.97, 19.01], [26.45, 26.6, 23.34]] },
+        { "posicao": 10, "valores": [[7.24, 9.02, 2.72], [14.3, 16.3, 8.6], [18.93, 20.83, 13.96], [23.09, 24.24, 19.18], [26.62, 26.9, 23.5]] },
+        { "posicao": 11, "valores": [[7.27, 9.05, 2.72], [14.45, 16.55, 8.62], [19.05, 21.05, 14.07], [23.22, 24.39, 19.28], [26.76, 27.05, 23.6]] },
+        { "posicao": 12, "valores": [[7.3, 9.06, 2.7], [14.55, 16.61, 8.57], [19.07, 21.2, 14.24], [23.25, 24.44, 19.38], [26.8, 27.11, 23.65]] }
+      ]
+    }
+  },
+  {
+    "id": "AR-21",
+    "nome": "Atomizador Rotativo V.R.U Polimero no eixo (1 valvula na barra, niple 1/8)",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 1.5,
+    "vazaoMaxLMin": 23.4,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/8\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "VRU no eixo com 1 valvula anti-gotejo polimero na barra.",
+    "tabelaVru": {
+      "coresRegulagem": ["preto", "vermelho", "verde"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 0, "valores": [[3.75, 3.06, 1.58], [5.15, 4.39, 3.25], [5.98, 5.33, 4.6], [6.8, 6.27, 5.51], [7.45, 6.98, 6.37]] },
+        { "posicao": 1, "valores": [[4.16, 3.31, 1.66], [5.55, 4.77, 3.68], [6.58, 5.97, 4.92], [7.44, 6.66, 5.9], [8.23, 7.77, 6.98]] },
+        { "posicao": 2, "valores": [[6.41, 5.01, 2.12], [8.41, 7.54, 5.31], [9.98, 9.04, 7.35], [11.36, 10.48, 8.83], [11.98, 11.76, 10.22]] },
+        { "posicao": 3, "valores": [[7.75, 6.09, 2.32], [10.52, 8.84, 6.06], [12.9, 10.91, 8.71], [14.4, 13.31, 10.58], [16.24, 15.1, 12.43]] },
+        { "posicao": 4, "valores": [[8.51, 6.61, 2.43], [11.91, 9.85, 6.6], [14.36, 12.68, 9.63], [16.83, 15.02, 12.0], [18.09, 17.02, 14.33]] },
+        { "posicao": 5, "valores": [[9.15, 7.04, 2.59], [12.89, 10.5, 7.0], [15.85, 14.05, 10.25], [17.87, 16.65, 13.0], [19.72, 18.94, 15.42]] },
+        { "posicao": 6, "valores": [[9.51, 7.3, 2.66], [14.38, 11.14, 7.2], [16.74, 14.86, 10.83], [19.01, 17.73, 13.7], [20.94, 20.2, 16.8]] },
+        { "posicao": 7, "valores": [[11.12, 7.55, 2.71], [15.11, 12.3, 7.38], [17.78, 16.07, 11.26], [20.11, 18.92, 14.35], [22.04, 21.49, 17.46]] },
+        { "posicao": 8, "valores": [[11.66, 7.67, 2.75], [15.6, 13.11, 7.51], [18.34, 16.68, 11.66], [20.73, 19.52, 15.0], [22.84, 22.18, 18.11]] },
+        { "posicao": 9, "valores": [[11.89, 7.94, 2.75], [16.03, 13.35, 7.74], [18.67, 17.06, 11.86], [21.08, 20.03, 15.22], [23.16, 22.57, 18.49]] },
+        { "posicao": 10, "valores": [[12.04, 7.94, 2.76], [16.17, 13.52, 7.8], [18.89, 17.25, 12.0], [21.28, 20.26, 15.37], [23.38, 22.82, 18.65]] },
+        { "posicao": 11, "valores": [[12.26, 7.95, 2.8], [16.21, 13.58, 7.82], [18.91, 17.28, 12.11], [21.35, 20.35, 15.51], [23.45, 22.87, 18.7]] },
+        { "posicao": 12, "valores": [[12.25, 7.9, 2.96], [16.17, 13.48, 7.9], [18.85, 17.2, 12.1], [21.29, 20.24, 15.41], [23.4, 22.79, 18.67]] }
+      ]
+    }
+  },
+  {
+    "id": "AR-22",
+    "nome": "Atomizador Rotativo V.R.U Polimero na barra (valvula inox no eixo, niple 1/8)",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 1.4,
+    "vazaoMaxLMin": 27.3,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/8\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "VRU na barra e valvula anti-gotejo inox no eixo.",
+    "tabelaVru": {
+      "coresRegulagem": ["preto", "vermelho", "verde"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 0, "valores": [[2.0, 2.78, 1.44], [3.56, 3.79, 2.84], [4.49, 4.84, 3.93], [5.4, 5.59, 5.03], [6.18, 6.32, 5.8]] },
+        { "posicao": 1, "valores": [[2.35, 3.34, 1.65], [4.29, 4.69, 3.41], [5.47, 5.73, 4.75], [6.49, 6.69, 5.9], [7.28, 7.51, 6.91]] },
+        { "posicao": 2, "valores": [[3.61, 5.11, 2.24], [6.74, 7.4, 5.22], [8.39, 9.37, 7.55], [10.19, 11.69, 9.32], [12.08, 13.34, 11.51]] },
+        { "posicao": 3, "valores": [[4.31, 6.43, 2.6], [8.22, 9.35, 6.23], [11.38, 13.23, 9.14], [13.61, 15.74, 12.62], [15.89, 17.77, 15.05]] },
+        { "posicao": 4, "valores": [[4.62, 7.26, 2.83], [9.12, 12.42, 7.0], [13.32, 15.76, 11.47], [16.2, 18.35, 14.88], [19.21, 20.91, 17.45]] },
+        { "posicao": 5, "valores": [[4.72, 8.0, 2.93], [10.67, 13.75, 7.8], [14.73, 17.36, 12.96], [18.68, 20.81, 16.55], [22.09, 23.12, 19.64]] },
+        { "posicao": 6, "valores": [[4.88, 8.35, 3.01], [11.85, 14.77, 8.18], [16.1, 18.94, 13.75], [19.8, 22.04, 17.71], [23.68, 24.48, 21.26]] },
+        { "posicao": 7, "valores": [[5.1, 8.59, 3.05], [12.33, 16.01, 8.63], [16.95, 20.12, 14.4], [21.47, 23.14, 18.95], [25.31, 25.58, 22.2]] },
+        { "posicao": 8, "valores": [[6.91, 8.77, 3.8], [13.08, 16.53, 8.77], [17.94, 20.85, 14.77], [22.86, 23.8, 19.61], [26.17, 26.4, 22.91]] },
+        { "posicao": 9, "valores": [[6.98, 8.85, 3.13], [13.26, 16.89, 8.8], [18.16, 21.11, 14.93], [23.55, 24.46, 19.81], [26.61, 26.75, 23.3]] },
+        { "posicao": 10, "valores": [[7.01, 9.2, 3.2], [13.36, 17.08, 9.0], [18.46, 21.33, 15.56], [23.6, 24.58, 20.04], [26.87, 27.13, 23.46]] },
+        { "posicao": 11, "valores": [[7.03, 9.35, 3.47], [13.42, 17.14, 9.03], [18.51, 21.45, 15.62], [23.7, 24.67, 20.1], [27.0, 27.25, 23.6]] },
+        { "posicao": 12, "valores": [[7.04, 9.47, 3.48], [13.45, 17.21, 9.04], [18.6, 21.52, 15.72], [23.77, 24.74, 20.12], [27.05, 27.3, 23.68]] }
+      ]
+    }
+  },
+  {
+    "id": "AR-24",
+    "nome": "Atomizador Rotativo V.R.U Polimero na barra (valvula inox no eixo, niple 1/4)",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 1,
+    "vazaoMaxLMin": 30.1,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/4\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "VRU na barra e valvula anti-gotejo inox no eixo.",
+    "tabelaVru": {
+      "coresRegulagem": ["preto", "vermelho", "verde"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 0, "valores": [[2.8, 2.78, 1.01], [3.75, 3.9, 2.68], [4.77, 4.98, 3.99], [5.41, 5.63, 4.94], [6.21, 6.33, 5.73]] },
+        { "posicao": 1, "valores": [[3.22, 3.38, 1.31], [4.67, 4.84, 3.43], [5.77, 5.8, 4.78], [6.63, 6.75, 6.1], [7.35, 7.7, 7.11]] },
+        { "posicao": 2, "valores": [[4.92, 5.3, 1.92], [7.05, 7.7, 5.29], [9.5, 9.47, 7.53], [11.68, 12.06, 9.39], [13.29, 13.46, 12.34]] },
+        { "posicao": 3, "valores": [[5.93, 6.75, 2.28], [9.25, 9.9, 6.64], [12.63, 13.37, 9.61], [14.98, 16.5, 12.87], [17.3, 18.26, 15.6]] },
+        { "posicao": 4, "valores": [[6.78, 7.6, 2.52], [11.45, 12.61, 7.35], [14.81, 16.56, 12.45], [17.79, 19.62, 16.03], [20.76, 22.08, 18.78]] },
+        { "posicao": 5, "valores": [[7.41, 8.5, 2.62], [12.9, 14.34, 7.93], [16.87, 18.66, 13.78], [20.52, 22.37, 18.07], [23.54, 24.98, 21.49]] },
+        { "posicao": 6, "valores": [[7.75, 8.9, 2.72], [14.2, 16.15, 8.51], [18.3, 20.92, 15.12], [22.57, 23.94, 19.46], [25.83, 26.45, 23.11]] },
+        { "posicao": 7, "valores": [[7.95, 9.33, 2.85], [14.97, 17.08, 8.83], [19.6, 22.4, 16.43], [24.13, 25.53, 21.35], [27.26, 27.93, 25.25]] },
+        { "posicao": 8, "valores": [[8.06, 9.52, 2.92], [15.47, 18.22, 9.01], [20.4, 23.5, 17.03], [25.08, 26.3, 22.09], [28.72, 29.33, 26.46]] },
+        { "posicao": 9, "valores": [[8.33, 9.81, 3.0], [15.69, 18.61, 9.12], [21.12, 23.74, 17.43], [25.7, 27.06, 22.65], [29.19, 29.72, 27.03]] },
+        { "posicao": 10, "valores": [[8.36, 9.93, 3.09], [16.1, 18.94, 9.19], [21.45, 24.05, 17.68], [26.09, 27.3, 22.92], [29.6, 30.01, 27.74]] },
+        { "posicao": 11, "valores": [[8.4, 9.97, 3.12], [16.13, 19.05, 9.26], [21.51, 24.15, 18.21], [26.19, 27.5, 23.0], [29.86, 30.17, 28.08]] },
+        { "posicao": 12, "valores": [[8.45, 10.0, 3.15], [16.09, 19.12, 9.3], [21.54, 24.2, 18.25], [26.23, 27.52, 23.06], [29.87, 30.2, 28.15]] }
+      ]
+    }
+  },
+  {
+    "id": "AR-30",
+    "nome": "Atomizador Rotativo V.R.U Polimero duas alimentacoes (niple 1/4)",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 3.7,
+    "vazaoMaxLMin": 48,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/4\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "Duas alimentacoes na barra e valvula anti-gotejo inox no eixo. Faixa de alta vazao.",
+    "tabelaVru": {
+      "coresRegulagem": ["preto"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 0, "valores": [[3.7], [4.7], [5.8], [6.5], [7.2]] },
+        { "posicao": 1, "valores": [[4.7], [7.0], [8.0], [10.0], [11.0]] },
+        { "posicao": 2, "valores": [[13.6], [18.0], [20.0], [23.4], [25.6]] },
+        { "posicao": 3, "valores": [[20.0], [25.0], [29.0], [32.0], [35.5]] },
+        { "posicao": 4, "valores": [[22.0], [27.0], [32.0], [35.0], [38.0]] },
+        { "posicao": 5, "valores": [[23.7], [29.0], [34.0], [38.0], [42.0]] },
+        { "posicao": 6, "valores": [[24.6], [30.6], [35.7], [40.0], [44.0]] },
+        { "posicao": 7, "valores": [[25.5], [31.5], [36.7], [41.0], [45.0]] },
+        { "posicao": 8, "valores": [[26.0], [32.5], [37.7], [42.5], [46.0]] },
+        { "posicao": 9, "valores": [[26.0], [33.0], [38.0], [43.0], [48.0]] },
+        { "posicao": 10, "valores": [[26.0], [33.0], [38.0], [43.0], [48.0]] },
+        { "posicao": 11, "valores": [[26.0], [33.0], [38.0], [43.0], [48.0]] }
+      ]
+    }
+  },
+  {
+    "id": "AR-ESFERA-23",
+    "nome": "Atomizador Rotativo V.R.U Esfera (niple 1/8, faixa 23 L/min)",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 1.9,
+    "vazaoMaxLMin": 23,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/8\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "VRU esfera no eixo com 1 valvula anti-gotejo polimero na barra.",
+    "tabelaVru": {
+      "coresRegulagem": ["preto"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 1, "valores": [[1.9], [2.5], [3.4], [4.0], [4.7]] },
+        { "posicao": 2, "valores": [[2.0], [2.8], [3.8], [4.5], [5.2]] },
+        { "posicao": 3, "valores": [[2.15], [2.9], [3.8], [4.7], [5.5]] },
+        { "posicao": 4, "valores": [[2.8], [3.9], [5.2], [6.3], [7.2]] },
+        { "posicao": 5, "valores": [[3.6], [5.3], [6.9], [8.3], [9.6]] },
+        { "posicao": 6, "valores": [[3.9], [5.7], [7.6], [9.3], [10.9]] },
+        { "posicao": 7, "valores": [[4.6], [7.0], [9.5], [13.8], [15.9]] },
+        { "posicao": 8, "valores": [[5.1], [7.8], [10.6], [16.0], [18.0]] },
+        { "posicao": 9, "valores": [[5.6], [8.7], [15.5], [18.7], [21.2]] },
+        { "posicao": 10, "valores": [[5.7], [9.0], [16.0], [19.0], [22.0]] },
+        { "posicao": 11, "valores": [[5.8], [9.3], [17.0], [20.0], [23.0]] }
+      ]
+    }
+  },
+  {
+    "id": "AR-ESFERA-27",
+    "nome": "Atomizador Rotativo V.R.U Esfera (niple 1/8, faixa 27 L/min)",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 1.9,
+    "vazaoMaxLMin": 27,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/8\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "VRU esfera no eixo com 2 valvulas anti-gotejo polimero na barra.",
+    "tabelaVru": {
+      "coresRegulagem": ["preto"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 1, "valores": [[1.9], [2.6], [3.3], [4.0], [4.6]] },
+        { "posicao": 2, "valores": [[2.0], [3.0], [3.8], [4.7], [6.0]] },
+        { "posicao": 3, "valores": [[2.2], [3.0], [4.0], [4.7], [5.4]] },
+        { "posicao": 4, "valores": [[2.9], [4.0], [5.3], [6.4], [7.2]] },
+        { "posicao": 5, "valores": [[3.8], [5.3], [7.0], [8.5], [9.9]] },
+        { "posicao": 6, "valores": [[4.2], [5.8], [7.6], [9.4], [11.4]] },
+        { "posicao": 7, "valores": [[5.0], [7.4], [11.5], [14.4], [17.0]] },
+        { "posicao": 8, "valores": [[5.7], [8.6], [14.3], [17.8], [20.6]] },
+        { "posicao": 9, "valores": [[6.2], [12.4], [18.9], [22.6], [25.3]] },
+        { "posicao": 10, "valores": [[6.4], [13.6], [19.4], [23.4], [26.0]] },
+        { "posicao": 11, "valores": [[6.6], [14.0], [20.6], [24.5], [27.0]] }
+      ]
+    }
+  },
+  {
+    "id": "AR-MINI-BARRA",
+    "nome": "Atomizador Rotativo Mini - V.R.U Polimero na barra (niple 1/8)",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 2.6,
+    "vazaoMaxLMin": 19.7,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/8\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "Mini VRU na barra com valvula anti-gotejo inox no eixo.",
+    "tabelaVru": {
+      "coresRegulagem": ["vermelho", "verde"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 0, "valores": [[3.15, 2.64], [4.40, 3.71], [5.40, 4.69], [6.13, 5.52], [6.71, 6.38]] },
+        { "posicao": 1, "valores": [[3.96, 3.14], [5.24, 4.53], [6.22, 5.63], [7.30, 6.74], [8.00, 7.54]] },
+        { "posicao": 2, "valores": [[6.40, 4.87], [8.27, 7.28], [10.04, 9.03], [11.56, 11.71], [13.04, 13.08]] },
+        { "posicao": 3, "valores": [[8.12, 6.18], [10.41, 8.97], [12.11, 12.55], [13.91, 14.09], [15.46, 15.75]] },
+        { "posicao": 4, "valores": [[8.90, 6.88], [11.58, 10.04], [13.29, 13.65], [15.22, 15.55], [16.93, 17.09]] },
+        { "posicao": 5, "valores": [[9.35, 7.37], [12.45, 11.38], [14.21, 14.77], [16.22, 16.41], [17.89, 18.04]] },
+        { "posicao": 6, "valores": [[9.63, 7.80], [12.89, 12.47], [14.85, 15.31], [16.81, 17.04], [18.41, 18.58]] },
+        { "posicao": 7, "valores": [[9.85, 8.05], [13.21, 12.95], [15.21, 15.65], [17.13, 17.50], [18.96, 19.07]] },
+        { "posicao": 8, "valores": [[10.80, 8.19], [13.38, 13.30], [15.48, 15.88], [17.50, 17.61], [19.19, 19.41]] },
+        { "posicao": 9, "valores": [[10.83, 8.31], [13.43, 13.49], [15.58, 15.97], [17.61, 17.77], [19.40, 19.50]] },
+        { "posicao": 10, "valores": [[10.95, 8.33], [13.52, 13.59], [15.72, 16.03], [17.76, 17.87], [19.48, 19.61]] },
+        { "posicao": 11, "valores": [[10.99, 8.35], [13.53, 13.62], [15.83, 16.05], [17.80, 18.00], [19.51, 19.71]] },
+        { "posicao": 12, "valores": [[11.03, 8.36], [13.55, 13.66], [15.87, 16.08], [17.82, 18.02], [19.55, 19.75]] }
+      ]
+    }
+  },
+  {
+    "id": "AR-MINI-EIXO",
+    "nome": "Atomizador Rotativo Mini - V.R.U Polimero no eixo (niple 1/8)",
+    "categoria": "atomizador",
+    "familia": "rotativo",
+    "tipoJato": "rotativo",
+    "vazaoMinLMin": 3.9,
+    "vazaoMaxLMin": 19.6,
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 60,
+    "conexao": "Barra com rosca para niple 1/8\"",
+    "ajuste": {
+      "modo": "rotacao",
+      "passos": 3
+    },
+    "observacao": "Mini VRU no eixo com valvula anti-gotejo polimero na barra.",
+    "tabelaVru": {
+      "coresRegulagem": ["preto"],
+      "psi": [20, 30, 40, 50, 60],
+      "linhas": [
+        { "posicao": 0, "valores": [[3.93], [4.87], [5.60], [6.43], [7.00]] },
+        { "posicao": 1, "valores": [[4.73], [5.60], [6.60], [7.39], [8.14]] },
+        { "posicao": 2, "valores": [[6.92], [8.50], [9.92], [11.57], [12.92]] },
+        { "posicao": 3, "valores": [[8.05], [9.85], [12.05], [13.83], [15.05]] },
+        { "posicao": 4, "valores": [[8.85], [11.42], [13.42], [15.22], [16.68]] },
+        { "posicao": 5, "valores": [[9.35], [12.12], [14.30], [16.32], [17.92]] },
+        { "posicao": 6, "valores": [[9.81], [12.53], [14.86], [16.77], [18.50]] },
+        { "posicao": 7, "valores": [[9.92], [12.90], [15.27], [17.20], [18.97]] },
+        { "posicao": 8, "valores": [[10.77], [13.18], [15.52], [17.41], [19.22]] },
+        { "posicao": 9, "valores": [[10.84], [13.31], [15.83], [17.71], [19.37]] },
+        { "posicao": 10, "valores": [[10.90], [13.42], [15.96], [17.83], [19.52]] },
+        { "posicao": 11, "valores": [[10.91], [13.51], [16.01], [17.90], [19.57]] },
+        { "posicao": 12, "valores": [[10.93], [13.63], [16.05], [17.90], [19.60]] }
+      ]
+    }
+  }
+]

@@ -1,0 +1,979 @@
+﻿(function () {
+  const ns = window.SoftwareBicos || {};
+  const calculos = ns.calculos || {};
+
+  const form = document.getElementById("comp-form");
+  if (!form) return;
+
+  const formError = document.getElementById("comp-error");
+  const presetAeronave = document.getElementById("preset-aeronave-comp");
+  const inputEquipamento = document.getElementById("equipamento-comp");
+  const passosBody = document.querySelector("#comp-steps-table tbody");
+  const passosMeta = document.getElementById("comp-steps-meta");
+
+  const inputFaixa = document.getElementById("faixa-comp");
+  const inputTaxa = document.getElementById("taxa-comp");
+  const inputPulverizadores = document.getElementById("pulverizadores-comp");
+  const inputVelMin = document.getElementById("velocidade-min-comp");
+  const inputVelMed = document.getElementById("velocidade-med-comp");
+  const inputVelMax = document.getElementById("velocidade-max-comp");
+  const inputPasso = document.getElementById("comp-step-comp");
+  const inputPsiMin = document.getElementById("comp-psi-min-comp");
+  const inputPsiMax = document.getElementById("comp-psi-max-comp");
+  const inputPassosBaixo = document.getElementById("comp-step-down-comp");
+  const inputPassosCima = document.getElementById("comp-step-up-comp");
+  const configBox = document.getElementById("comp-config-box");
+  const configLabel = document.getElementById("comp-config-label");
+  const configOpcoes = document.getElementById("comp-config-opcoes");
+  const btnConfigTodos = document.getElementById("comp-config-todos");
+  const btnConfigLimpar = document.getElementById("comp-config-limpar");
+
+  const resumoIds = {
+    velMin: document.getElementById("comp-res-vel-min"),
+    velMed: document.getElementById("comp-res-vel-med"),
+    velMax: document.getElementById("comp-res-vel-max"),
+    areaMin: document.getElementById("comp-res-area-min"),
+    areaMed: document.getElementById("comp-res-area-med"),
+    areaMax: document.getElementById("comp-res-area-max"),
+    vtMin: document.getElementById("comp-res-vt-min"),
+    vtMed: document.getElementById("comp-res-vt-med"),
+    vtMax: document.getElementById("comp-res-vt-max"),
+    vbMin: document.getElementById("comp-res-vb-min"),
+    vbMed: document.getElementById("comp-res-vb-med"),
+    vbMax: document.getElementById("comp-res-vb-max"),
+  };
+
+  let catalogo = [];
+  let aeronaves = [];
+  let bicosConfiguracao = [];
+  const selecaoConfigPorBico = new Map();
+  const PSI_LIMITE_MIN = 15;
+  const PSI_LIMITE_MAX = 100;
+  const PSI_PADRAO_MIN = 20;
+  const PSI_PADRAO_MAX = 60;
+  const MAX_PONTEIRAS_TT11 = 3;
+  const CHAVE_DADOS_COMPARTILHADOS = "softwarebicos_shared_form_v1";
+
+  function fmt(value, decimals) {
+    if (calculos.formatNumber) return calculos.formatNumber(value, decimals);
+    return new Intl.NumberFormat("pt-BR", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }).format(value);
+  }
+
+  function lerDadosCompartilhados() {
+    try {
+      const bruto = localStorage.getItem(CHAVE_DADOS_COMPARTILHADOS);
+      if (!bruto) return null;
+      const parsed = JSON.parse(bruto);
+      if (!parsed || typeof parsed !== "object") return null;
+      return parsed;
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function salvarDadosCompartilhados() {
+    try {
+      const dados = lerDadosCompartilhados() || {};
+      const payload = {
+        ...dados,
+        presetAeronave: String((presetAeronave && presetAeronave.value) || ""),
+        faixa: String((inputFaixa && inputFaixa.value) || ""),
+        taxa: String((inputTaxa && inputTaxa.value) || ""),
+        pulverizadores: String((inputPulverizadores && inputPulverizadores.value) || ""),
+        velMin: String((inputVelMin && inputVelMin.value) || ""),
+        velMed: String((inputVelMed && inputVelMed.value) || ""),
+        velMax: String((inputVelMax && inputVelMax.value) || ""),
+        psiMinCfg: String((inputPsiMin && inputPsiMin.value) || ""),
+        psiMaxCfg: String((inputPsiMax && inputPsiMax.value) || ""),
+        passosBaixo: String((inputPassosBaixo && inputPassosBaixo.value) || ""),
+        passosCima: String((inputPassosCima && inputPassosCima.value) || ""),
+      };
+      localStorage.setItem(CHAVE_DADOS_COMPARTILHADOS, JSON.stringify(payload));
+    } catch (_error) {
+      // localStorage indisponivel: segue sem compartilhamento.
+    }
+  }
+
+  function aplicarDadosCompartilhadosNoForm() {
+    const dados = lerDadosCompartilhados();
+    if (!dados) return false;
+    let aplicou = false;
+
+    if (Object.prototype.hasOwnProperty.call(dados, "faixa")) {
+      inputFaixa.value = String(dados.faixa || "0");
+      aplicou = true;
+    }
+    if (Object.prototype.hasOwnProperty.call(dados, "taxa")) {
+      inputTaxa.value = String(dados.taxa || "0");
+      aplicou = true;
+    }
+    if (Object.prototype.hasOwnProperty.call(dados, "pulverizadores")) {
+      inputPulverizadores.value = String(dados.pulverizadores || "0");
+      aplicou = true;
+    }
+    if (Object.prototype.hasOwnProperty.call(dados, "velMin")) {
+      inputVelMin.value = String(dados.velMin || "0");
+      aplicou = true;
+    }
+    if (Object.prototype.hasOwnProperty.call(dados, "velMed")) {
+      inputVelMed.value = String(dados.velMed || "0");
+      aplicou = true;
+    }
+    if (Object.prototype.hasOwnProperty.call(dados, "velMax")) {
+      inputVelMax.value = String(dados.velMax || "0");
+      aplicou = true;
+    }
+    if (Object.prototype.hasOwnProperty.call(dados, "psiMinCfg") && inputPsiMin) {
+      const psiMinSalvo = Number(dados.psiMinCfg);
+      const psiMinSeguro =
+        Number.isFinite(psiMinSalvo) && psiMinSalvo >= PSI_LIMITE_MIN && psiMinSalvo <= PSI_LIMITE_MAX
+          ? psiMinSalvo
+          : PSI_PADRAO_MIN;
+      inputPsiMin.value = String(psiMinSeguro);
+      aplicou = true;
+    }
+    if (Object.prototype.hasOwnProperty.call(dados, "psiMaxCfg") && inputPsiMax) {
+      const psiMaxSalvo = Number(dados.psiMaxCfg);
+      const psiMaxSeguro =
+        Number.isFinite(psiMaxSalvo) && psiMaxSalvo >= PSI_LIMITE_MIN && psiMaxSalvo <= PSI_LIMITE_MAX
+          ? psiMaxSalvo
+          : PSI_PADRAO_MAX;
+      inputPsiMax.value = String(psiMaxSeguro);
+      aplicou = true;
+    }
+    if (Object.prototype.hasOwnProperty.call(dados, "passosBaixo") && inputPassosBaixo) {
+      inputPassosBaixo.value = String(dados.passosBaixo || "5");
+      aplicou = true;
+    }
+    if (Object.prototype.hasOwnProperty.call(dados, "passosCima") && inputPassosCima) {
+      inputPassosCima.value = String(dados.passosCima || "5");
+      aplicou = true;
+    }
+
+    if (presetAeronave && Object.prototype.hasOwnProperty.call(dados, "presetAeronave")) {
+      const alvo = String(dados.presetAeronave || "");
+      const existe = Array.from(presetAeronave.options || []).some((opt) => String(opt.value) === alvo);
+      if (existe) {
+        presetAeronave.value = alvo;
+        aplicou = true;
+      }
+    }
+
+    if (inputPsiMin && inputPsiMax) {
+      const psiMinAtual = Number(inputPsiMin.value);
+      const psiMaxAtual = Number(inputPsiMax.value);
+      if (!(Number.isFinite(psiMinAtual) && Number.isFinite(psiMaxAtual) && psiMinAtual < psiMaxAtual)) {
+        inputPsiMin.value = String(PSI_PADRAO_MIN);
+        inputPsiMax.value = String(PSI_PADRAO_MAX);
+      }
+    }
+
+    return aplicou;
+  }
+
+  function clearTabela() {
+    passosBody.innerHTML = "";
+    passosMeta.textContent = "";
+  }
+
+  function setError(msg) {
+    formError.textContent = msg || "";
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? "" : value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  async function fetchJsonWithFallback(paths, required) {
+    const erros = [];
+    for (let i = 0; i < paths.length; i += 1) {
+      const path = paths[i];
+      try {
+        const resp = await fetch(path, { cache: "no-store" });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        return await resp.json();
+      } catch (error) {
+        erros.push(`${path} -> ${error.message}`);
+      }
+    }
+    if (required) {
+      throw new Error(`Falha ao carregar JSON: ${erros.join(" | ")}`);
+    }
+    return null;
+  }
+
+  function preencherPresets() {
+    if (!presetAeronave) return;
+    while (presetAeronave.options.length > 1) {
+      presetAeronave.remove(1);
+    }
+    aeronaves
+      .slice()
+      .sort((a, b) => String(a.modelo || "").localeCompare(String(b.modelo || ""), "pt-BR"))
+      .forEach((item) => {
+        const opt = document.createElement("option");
+        opt.value = String(item.modelo || "");
+        opt.textContent = String(item.modelo || "");
+        presetAeronave.appendChild(opt);
+      });
+  }
+
+  function itemTemCurvaConfiguracao(item) {
+    return (
+      Array.isArray(item && item.curvasOrificio) ||
+      Array.isArray(item && item.curvasPontaColorida) ||
+      Array.isArray(item && item.curvasDisco)
+    );
+  }
+
+  function listarBicosConfiguracao() {
+    return (Array.isArray(catalogo) ? catalogo : [])
+      .filter((item) => itemTemCurvaConfiguracao(item))
+      .sort((a, b) => String(a.nome || "").localeCompare(String(b.nome || ""), "pt-BR"));
+  }
+
+  function preencherBicosConfiguracao() {
+    if (!inputEquipamento) return;
+    bicosConfiguracao = listarBicosConfiguracao();
+    inputEquipamento.innerHTML =
+      '<option value="">Selecione</option>' +
+      bicosConfiguracao
+        .map(
+          (item) =>
+            `<option value="${escapeHtml(String(item.id || ""))}">${escapeHtml(String(item.nome || item.id || ""))}</option>`
+        )
+        .join("");
+
+    const padrao = bicosConfiguracao.find((item) => String(item.id) === "TT90300") || bicosConfiguracao[0];
+    if (padrao) {
+      inputEquipamento.value = String(padrao.id);
+    }
+  }
+
+  function obterBicoSelecionado() {
+    const id = String((inputEquipamento && inputEquipamento.value) || "").trim();
+    if (!id) return null;
+    return bicosConfiguracao.find((item) => String(item.id) === id) || null;
+  }
+
+  function tipoSelecaoConfiguracao(item) {
+    if (!item) return "";
+    const id = String(item.id || "").toUpperCase();
+    const categoria = String(item.categoria || "").toLowerCase();
+
+    if (id === "TT11" && Array.isArray(item.curvasPontaColorida) && item.curvasPontaColorida.length) {
+      return "ponta";
+    }
+    if ((categoria === "core" || id.startsWith("CORE")) && Array.isArray(item.curvasDisco) && item.curvasDisco.length) {
+      return "disco";
+    }
+    return "";
+  }
+
+  function listarOpcoesConfiguracao(item) {
+    const tipo = tipoSelecaoConfiguracao(item);
+    if (!tipo || !item) return [];
+
+    if (tipo === "disco") {
+      return (item.curvasDisco || [])
+        .map((curva) => {
+          const disco = String((curva && curva.disco) || "").trim();
+          if (!disco) return null;
+          return {
+            key: `disco:${disco}`,
+            label: `Disco ${disco}`,
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.label.localeCompare(b.label, "pt-BR", { numeric: true }));
+    }
+
+    if (tipo === "ponta") {
+      return (item.curvasPontaColorida || [])
+        .map((curva) => {
+          const codigo = String((curva && curva.codigo) || "").trim();
+          const cor = String((curva && curva.cor) || "").trim();
+          if (!codigo) return null;
+          return {
+            key: `ponta:${codigo}`,
+            label: cor ? `${codigo} - ${cor}` : codigo,
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.label.localeCompare(b.label, "pt-BR", { numeric: true }));
+    }
+
+    return [];
+  }
+
+  function lerConfiguracoesMarcadasDom() {
+    if (!configOpcoes) return [];
+    return Array.from(configOpcoes.querySelectorAll("input.comp-config-check:checked"))
+      .map((node) => String(node.value || "").trim())
+      .filter(Boolean);
+  }
+
+  function salvarSelecaoConfiguracaoAtual(item) {
+    if (!item) return;
+    const tipo = tipoSelecaoConfiguracao(item);
+    if (!tipo) return;
+    const id = String(item.id || "");
+    selecaoConfigPorBico.set(id, lerConfiguracoesMarcadasDom());
+  }
+
+  function normalizarSelecaoConfiguracao(item, lista) {
+    const tipo = tipoSelecaoConfiguracao(item);
+    const opcoes = listarOpcoesConfiguracao(item);
+    const validas = new Set(opcoes.map((opcao) => String(opcao.key)));
+    const filtradas = Array.isArray(lista)
+      ? lista.map((v) => String(v || "").trim()).filter((v) => v && validas.has(v))
+      : [];
+
+    if (tipo === "disco") {
+      return filtradas.length ? [filtradas[0]] : [];
+    }
+    if (tipo === "ponta") {
+      return filtradas.slice(0, MAX_PONTEIRAS_TT11);
+    }
+    return filtradas;
+  }
+
+  function atualizarSeletorConfiguracao() {
+    if (!configBox || !configLabel || !configOpcoes) return;
+    const item = obterBicoSelecionado();
+    const tipo = tipoSelecaoConfiguracao(item);
+
+    if (!item || !tipo) {
+      configBox.hidden = true;
+      configOpcoes.innerHTML = "";
+      return;
+    }
+
+    const opcoes = listarOpcoesConfiguracao(item);
+    const id = String(item.id || "");
+    const selecaoNormalizada = normalizarSelecaoConfiguracao(item, selecaoConfigPorBico.get(id) || []);
+    selecaoConfigPorBico.set(id, selecaoNormalizada);
+    const selecionadas = new Set(selecaoNormalizada);
+
+    configBox.hidden = false;
+    configLabel.textContent =
+      tipo === "disco"
+        ? "Selecione o disco que voce ja tem (1 por CORE)"
+        : `Selecione as ponteiras do TT11 que voce ja tem (maximo ${MAX_PONTEIRAS_TT11})`;
+
+    configOpcoes.innerHTML = opcoes
+      .map(
+        (opcao) => `
+          <label class="comp-check">
+            <input type="${tipo === "disco" ? "radio" : "checkbox"}" class="comp-config-check" ${
+              tipo === "disco" ? 'name="comp-config-radio"' : ""
+            } value="${escapeHtml(opcao.key)}" ${
+              selecionadas.has(opcao.key) ? "checked" : ""
+            } />
+            <span>${escapeHtml(opcao.label)}</span>
+          </label>
+        `
+      )
+      .join("");
+  }
+
+  function aplicarPadraoInicial() {
+    inputFaixa.value = "0";
+    inputTaxa.value = "0";
+    inputPulverizadores.value = "0";
+    inputVelMin.value = "0";
+    inputVelMed.value = "0";
+    inputVelMax.value = "0";
+    if (inputPsiMin) inputPsiMin.value = String(PSI_PADRAO_MIN);
+    if (inputPsiMax) inputPsiMax.value = String(PSI_PADRAO_MAX);
+    inputPasso.value = "5";
+    if (inputPassosBaixo) inputPassosBaixo.value = "5";
+    if (inputPassosCima) inputPassosCima.value = "5";
+  }
+
+  function entradaInicialValidaParaCalculo() {
+    const faixa = Number(inputFaixa && inputFaixa.value);
+    const taxa = Number(inputTaxa && inputTaxa.value);
+    const pulverizadores = Number(inputPulverizadores && inputPulverizadores.value);
+    const velMin = Number(inputVelMin && inputVelMin.value);
+    const velMed = Number(inputVelMed && inputVelMed.value);
+    const velMax = Number(inputVelMax && inputVelMax.value);
+    const psiMinCfg = Number(inputPsiMin && inputPsiMin.value);
+    const psiMaxCfg = Number(inputPsiMax && inputPsiMax.value);
+    const passo = Number(inputPasso && inputPasso.value);
+    const passosBaixo = Number(inputPassosBaixo && inputPassosBaixo.value);
+    const passosCima = Number(inputPassosCima && inputPassosCima.value);
+
+    if (!Number.isFinite(faixa) || !Number.isFinite(taxa) || !Number.isFinite(pulverizadores)) return false;
+    if (!Number.isFinite(velMin) || !Number.isFinite(velMed) || !Number.isFinite(velMax)) return false;
+    if (!Number.isFinite(psiMinCfg) || !Number.isFinite(psiMaxCfg)) return false;
+    if (!Number.isFinite(passo) || !Number.isFinite(passosBaixo) || !Number.isFinite(passosCima)) return false;
+    if (faixa <= 0 || taxa <= 0 || pulverizadores <= 0) return false;
+    if (velMin <= 0 || velMed <= 0 || velMax <= 0) return false;
+    if (psiMinCfg < PSI_LIMITE_MIN || psiMinCfg > PSI_LIMITE_MAX) return false;
+    if (psiMaxCfg < PSI_LIMITE_MIN || psiMaxCfg > PSI_LIMITE_MAX) return false;
+    if (!(psiMinCfg < psiMaxCfg)) return false;
+    if (passo <= 0 || passosBaixo < 0 || passosCima < 0) return false;
+    if (!(velMin <= velMed && velMed <= velMax)) return false;
+    return true;
+  }
+
+  function lerNumero(el, nome) {
+    const value = Number(el && el.value);
+    if (!Number.isFinite(value) || value <= 0) {
+      throw new Error(`${nome} deve ser maior que zero.`);
+    }
+    return value;
+  }
+
+  function lerEntrada() {
+    const bicoSelecionado = obterBicoSelecionado();
+    if (!bicoSelecionado) {
+      throw new Error("Selecione o bico utilizado.");
+    }
+    const tipoConfig = tipoSelecaoConfiguracao(bicoSelecionado);
+    const configuracoesSelecionadas = lerConfiguracoesMarcadasDom();
+    if (tipoConfig && !configuracoesSelecionadas.length) {
+      if (tipoConfig === "disco") {
+        throw new Error("Selecione pelo menos um disco que voce ja possui para este CORE.");
+      }
+      throw new Error("Selecione pelo menos uma ponteira do TT11 que voce ja possui.");
+    }
+
+    const faixaM = lerNumero(inputFaixa, "Faixa");
+    const taxaAlvoLHa = lerNumero(inputTaxa, "Taxa alvo");
+    const pulverizadores = lerNumero(inputPulverizadores, "Numero de bicos");
+    const velMin = lerNumero(inputVelMin, "Velocidade minima");
+    const velMed = lerNumero(inputVelMed, "Velocidade media");
+    const velMax = lerNumero(inputVelMax, "Velocidade maxima");
+    const passoComp = Number(inputPasso && inputPasso.value);
+    if (!Number.isFinite(passoComp) || passoComp <= 0) {
+      throw new Error("Passo de ajuste (%) deve ser maior que zero.");
+    }
+    const psiMinCfg = Number(inputPsiMin && inputPsiMin.value);
+    const psiMaxCfg = Number(inputPsiMax && inputPsiMax.value);
+    if (!Number.isFinite(psiMinCfg) || psiMinCfg < PSI_LIMITE_MIN || psiMinCfg > PSI_LIMITE_MAX) {
+      throw new Error(`Pressao minima deve ficar entre ${PSI_LIMITE_MIN} e ${PSI_LIMITE_MAX} psi.`);
+    }
+    if (!Number.isFinite(psiMaxCfg) || psiMaxCfg < PSI_LIMITE_MIN || psiMaxCfg > PSI_LIMITE_MAX) {
+      throw new Error(`Pressao maxima deve ficar entre ${PSI_LIMITE_MIN} e ${PSI_LIMITE_MAX} psi.`);
+    }
+    if (!(psiMinCfg < psiMaxCfg)) {
+      throw new Error("Pressao minima deve ser menor que a pressao maxima.");
+    }
+    const passosBaixo = Number(inputPassosBaixo && inputPassosBaixo.value);
+    if (!Number.isFinite(passosBaixo) || passosBaixo < 0 || !Number.isInteger(passosBaixo)) {
+      throw new Error("Passos para baixo deve ser um inteiro maior ou igual a zero.");
+    }
+    const passosCima = Number(inputPassosCima && inputPassosCima.value);
+    if (!Number.isFinite(passosCima) || passosCima < 0 || !Number.isInteger(passosCima)) {
+      throw new Error("Passos para cima deve ser um inteiro maior ou igual a zero.");
+    }
+
+    if (!(velMin <= velMed && velMed <= velMax)) {
+      throw new Error("As velocidades devem seguir: minima <= media <= maxima.");
+    }
+
+    return {
+      bicoSelecionado,
+      configuracoesSelecionadas,
+      faixaM,
+      taxaAlvoLHa,
+      pulverizadores,
+      velocidades: { min: velMin, med: velMed, max: velMax },
+      psiFaixa: { min: psiMinCfg, max: psiMaxCfg },
+      passoComp,
+      passosBaixo,
+      passosCima,
+    };
+  }
+
+  function atualizarResumo(input) {
+    const area = {
+      min: (input.velocidades.min * input.faixaM) / 600,
+      med: (input.velocidades.med * input.faixaM) / 600,
+      max: (input.velocidades.max * input.faixaM) / 600,
+    };
+    const vt = {
+      min: area.min * input.taxaAlvoLHa,
+      med: area.med * input.taxaAlvoLHa,
+      max: area.max * input.taxaAlvoLHa,
+    };
+    const vb = {
+      min: vt.min / input.pulverizadores,
+      med: vt.med / input.pulverizadores,
+      max: vt.max / input.pulverizadores,
+    };
+
+    resumoIds.velMin.textContent = fmt(input.velocidades.min, 0);
+    resumoIds.velMed.textContent = fmt(input.velocidades.med, 0);
+    resumoIds.velMax.textContent = fmt(input.velocidades.max, 0);
+
+    resumoIds.areaMin.textContent = fmt(area.min, 2);
+    resumoIds.areaMed.textContent = fmt(area.med, 2);
+    resumoIds.areaMax.textContent = fmt(area.max, 2);
+
+    resumoIds.vtMin.textContent = fmt(vt.min, 2);
+    resumoIds.vtMed.textContent = fmt(vt.med, 2);
+    resumoIds.vtMax.textContent = fmt(vt.max, 2);
+
+    resumoIds.vbMin.textContent = fmt(vb.min, 2);
+    resumoIds.vbMed.textContent = fmt(vb.med, 2);
+    resumoIds.vbMax.textContent = fmt(vb.max, 2);
+  }
+
+  function calcularTaxa(vazaoTotalLMin, velocidadeKmh, faixaM) {
+    return (600 * vazaoTotalLMin) / (velocidadeKmh * faixaM);
+  }
+
+  function normalizarPontos(curva) {
+    return (curva && Array.isArray(curva.pontos) ? curva.pontos : [])
+      .map((ponto) => ({
+        psi: Number(ponto && ponto.psi),
+        vazao: Number(ponto && ponto.vazaoLMin),
+      }))
+      .filter((ponto) => Number.isFinite(ponto.psi) && Number.isFinite(ponto.vazao))
+      .sort((a, b) => a.psi - b.psi);
+  }
+
+  function interpolarVazaoPorPsi(pontos, psi) {
+    if (!Array.isArray(pontos) || pontos.length < 2) return null;
+    if (psi < pontos[0].psi) {
+      // Extrapolacao para baixo usando modelo de bico: Q ~ sqrt(P)
+      if (psi < PSI_LIMITE_MIN) return null;
+      if (pontos[0].psi <= 0) return null;
+      return pontos[0].vazao * Math.sqrt(psi / pontos[0].psi);
+    }
+    if (psi > pontos[pontos.length - 1].psi) return null;
+    for (let i = 0; i < pontos.length - 1; i += 1) {
+      const p1 = pontos[i];
+      const p2 = pontos[i + 1];
+      if (psi === p1.psi) return p1.vazao;
+      if (psi === p2.psi) return p2.vazao;
+      if (psi > p1.psi && psi < p2.psi) {
+        const t = (psi - p1.psi) / (p2.psi - p1.psi);
+        return p1.vazao + t * (p2.vazao - p1.vazao);
+      }
+    }
+    return null;
+  }
+
+  function interpolarPsiPorVazao(pontos, vazaoAlvo, psiMinAceitavel) {
+    if (!Array.isArray(pontos) || pontos.length < 2) return null;
+    const psiMin = Number.isFinite(Number(psiMinAceitavel)) ? Number(psiMinAceitavel) : PSI_PADRAO_MIN;
+    const pontosPorVazao = pontos
+      .map((p) => ({ psi: p.psi, vazao: p.vazao }))
+      .sort((a, b) => a.vazao - b.vazao);
+    if (vazaoAlvo < pontosPorVazao[0].vazao) {
+      // Extrapolacao para baixo invertendo Q ~ sqrt(P)
+      const pontoMin = pontosPorVazao[0];
+      if (pontoMin.vazao <= 0) return null;
+      const psiEstimada = Math.pow(vazaoAlvo / pontoMin.vazao, 2) * pontoMin.psi;
+      if (!Number.isFinite(psiEstimada)) return null;
+      if (psiEstimada < psiMin || psiEstimada > pontoMin.psi) return null;
+      return psiEstimada;
+    }
+    if (vazaoAlvo > pontosPorVazao[pontosPorVazao.length - 1].vazao) {
+      return null;
+    }
+    for (let i = 0; i < pontosPorVazao.length - 1; i += 1) {
+      const p1 = pontosPorVazao[i];
+      const p2 = pontosPorVazao[i + 1];
+      if (vazaoAlvo === p1.vazao) return p1.psi;
+      if (vazaoAlvo === p2.vazao) return p2.psi;
+      if (vazaoAlvo > p1.vazao && vazaoAlvo < p2.vazao) {
+        const t = (vazaoAlvo - p1.vazao) / (p2.vazao - p1.vazao);
+        return p1.psi + t * (p2.psi - p1.psi);
+      }
+    }
+    return null;
+  }
+
+  function calcularVazaoPorBico(taxaLHa, velocidadeKmh, faixaM, pulverizadores) {
+    const vazaoTotal = (taxaLHa * velocidadeKmh * faixaM) / 600;
+    return vazaoTotal / pulverizadores;
+  }
+
+  function curvasDoBico(item, configuracoesSelecionadas) {
+    if (!item) return [];
+    const curvas = [];
+    const filtro = Array.isArray(configuracoesSelecionadas) && configuracoesSelecionadas.length
+      ? new Set(configuracoesSelecionadas)
+      : null;
+    const permitido = (chave) => !filtro || filtro.has(chave);
+
+    if (Array.isArray(item.curvasOrificio)) {
+      item.curvasOrificio.forEach((curva) => {
+        const valor = Number(curva && curva.orificioMm);
+        const pontos = normalizarPontos(curva);
+        const chave = `orificio:${valor}`;
+        if (!Number.isFinite(valor) || pontos.length < 2) return;
+        if (!permitido(chave)) return;
+        curvas.push({
+          chave,
+          label: `Orificio ${fmt(valor, 2)} mm`,
+          pontos,
+        });
+      });
+    }
+
+    if (Array.isArray(item.curvasPontaColorida)) {
+      item.curvasPontaColorida.forEach((curva) => {
+        const codigo = String((curva && curva.codigo) || "").trim();
+        const cor = String((curva && curva.cor) || "").trim();
+        const pontos = normalizarPontos(curva);
+        const chave = `ponta:${codigo}`;
+        if (!codigo || pontos.length < 2) return;
+        if (!permitido(chave)) return;
+        curvas.push({
+          chave,
+          label: `Ponta ${codigo}${cor ? ` (${cor})` : ""}`,
+          pontos,
+        });
+      });
+    }
+
+    if (Array.isArray(item.curvasDisco)) {
+      item.curvasDisco.forEach((curva) => {
+        const disco = String((curva && curva.disco) || "").trim();
+        const pontos = normalizarPontos(curva);
+        const chave = `disco:${disco}`;
+        if (!disco || pontos.length < 2) return;
+        if (!permitido(chave)) return;
+        curvas.push({
+          chave,
+          label: `Disco ${disco}`,
+          pontos,
+        });
+      });
+    }
+
+    return curvas;
+  }
+
+  function calcularPassos(input) {
+    const passo = Number(input && input.passoComp) || 5;
+    const psiMinAceitavel =
+      Number.isFinite(Number(input && input.psiFaixa && input.psiFaixa.min))
+        ? Number(input.psiFaixa.min)
+        : PSI_PADRAO_MIN;
+    const psiMaxAceitavel =
+      Number.isFinite(Number(input && input.psiFaixa && input.psiFaixa.max))
+        ? Number(input.psiFaixa.max)
+        : PSI_PADRAO_MAX;
+    const passosBaixo = Number.isFinite(Number(input && input.passosBaixo))
+      ? Math.max(0, Math.trunc(Number(input.passosBaixo)))
+      : 5;
+    const passosCima = Number.isFinite(Number(input && input.passosCima))
+      ? Math.max(0, Math.trunc(Number(input.passosCima)))
+      : 5;
+    const curvasSelecionadas = curvasDoBico(input.bicoSelecionado, input.configuracoesSelecionadas);
+    if (!curvasSelecionadas.length) return [];
+
+    const totalFaixas = passosBaixo + passosCima + 1;
+    const alvos = [];
+    const inicio = 100 - passosBaixo * passo;
+    const fim = 100 + passosCima * passo;
+    for (let p = inicio; p <= fim; p += passo) {
+      alvos.push(p);
+    }
+
+    const resultados = [];
+    alvos.forEach((passoAlvo) => {
+      const taxaCompAlvo = input.taxaAlvoLHa * (passoAlvo / 100);
+      const candidatos = [];
+
+      curvasSelecionadas.forEach((curva) => {
+        const q = {
+          min: calcularVazaoPorBico(
+            taxaCompAlvo,
+            input.velocidades.min,
+            input.faixaM,
+            input.pulverizadores
+          ),
+          med: calcularVazaoPorBico(
+            taxaCompAlvo,
+            input.velocidades.med,
+            input.faixaM,
+            input.pulverizadores
+          ),
+          max: calcularVazaoPorBico(
+            taxaCompAlvo,
+            input.velocidades.max,
+            input.faixaM,
+            input.pulverizadores
+          ),
+        };
+        const psi = {
+          min: interpolarPsiPorVazao(curva.pontos, q.min, psiMinAceitavel),
+          med: interpolarPsiPorVazao(curva.pontos, q.med, psiMinAceitavel),
+          max: interpolarPsiPorVazao(curva.pontos, q.max, psiMinAceitavel),
+        };
+        if (!Number.isFinite(psi.min) || !Number.isFinite(psi.med) || !Number.isFinite(psi.max)) return;
+        if (psi.min < psiMinAceitavel || psi.med < psiMinAceitavel || psi.max < psiMinAceitavel) return;
+        if (psi.min > psiMaxAceitavel || psi.med > psiMaxAceitavel || psi.max > psiMaxAceitavel) return;
+
+        const score = Math.abs(psi.med - 35) + Math.abs(psi.max - psi.min) * 0.05;
+        candidatos.push({
+          configLabel: curva.label,
+          configKey: curva.chave,
+          vazaoBico: q,
+          psi,
+          score,
+        });
+      });
+
+      if (!candidatos.length) {
+        const ehReferencialZero = Math.abs(passoAlvo - 100) < 0.001;
+        if (ehReferencialZero) {
+          resultados.push({
+            passoComp: passo,
+            totalFaixas,
+            passoAlvo,
+            taxaCompAlvo,
+            candidato: null,
+            referencialIndisponivel: true,
+          });
+        }
+        return;
+      }
+      candidatos.sort((a, b) => a.score - b.score);
+      resultados.push({
+        passoComp: passo,
+        totalFaixas,
+        passoAlvo,
+        taxaCompAlvo,
+        candidato: candidatos[0],
+        referencialIndisponivel: false,
+      });
+    });
+
+    return resultados;
+  }
+
+  function renderPassos(passos) {
+    const psiMinAceitavel = Number(inputPsiMin && inputPsiMin.value);
+    const psiMaxAceitavel = Number(inputPsiMax && inputPsiMax.value);
+    const psiMin = Number.isFinite(psiMinAceitavel) ? psiMinAceitavel : PSI_PADRAO_MIN;
+    const psiMax = Number.isFinite(psiMaxAceitavel) ? psiMaxAceitavel : PSI_PADRAO_MAX;
+    if (!passos.length) {
+      passosBody.innerHTML = `
+        <tr>
+          <td colspan="5">
+            Sem configuracoes disponiveis no intervalo de pressao ${psiMin}-${psiMax} psi.
+          </td>
+        </tr>
+      `;
+      passosMeta.textContent = "0 configuracoes mapeadas";
+      return;
+    }
+
+    function textoDeltaComp(passoAlvo) {
+      const delta = passoAlvo - 100;
+      if (delta === 0) return "+/-0%";
+      return `${delta > 0 ? "+" : ""}${fmt(delta, 0)}%`;
+    }
+
+    function celulaVel(vazao, psi) {
+      const psiClass =
+        psi < psiMin
+          ? "pressao-faixa-baixa"
+          : psi > psiMax
+          ? "pressao-faixa-alta"
+          : "";
+      return `
+        <div class="demanda-vazao">${fmt(vazao, 2)} L/min</div>
+        <small class="demanda-psi ${psiClass}">${fmt(psi, 1)} psi</small>
+      `;
+    }
+
+    passosBody.innerHTML = passos
+      .map((item) => {
+        const cand = item.candidato;
+        const ehCentro = Math.abs(item.passoAlvo - 100) < 0.001;
+        const semReferencia = !cand && Boolean(item.referencialIndisponivel);
+        const rowClass = ehCentro
+          ? semReferencia
+            ? "comp-med comp-centro-100"
+            : "comp-ok comp-centro-100"
+          : "comp-ok";
+        return `
+          <tr class="${rowClass}">
+            <td>
+              <div class="comp-taxa-evidencia">${fmt(item.taxaCompAlvo, 2)} L/ha</div>
+              <small>${textoDeltaComp(item.passoAlvo)}</small>
+            </td>
+            <td>
+              ${
+                cand
+                  ? escapeHtml(String(cand.configLabel || "-"))
+                  : "Indisponivel nesta configuração"
+              }
+            </td>
+            <td>
+              ${cand ? celulaVel(cand.vazaoBico.min, cand.psi.min) : '<small class="demanda-psi">n/d</small>'}
+            </td>
+            <td>
+              ${cand ? celulaVel(cand.vazaoBico.med, cand.psi.med) : '<small class="demanda-psi">n/d</small>'}
+            </td>
+            <td>
+              ${cand ? celulaVel(cand.vazaoBico.max, cand.psi.max) : '<small class="demanda-psi">n/d</small>'}
+            </td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    const passoAtual = Number(passos[0] && passos[0].passoComp) || Number(inputPasso && inputPasso.value) || 5;
+    const totalFaixas =
+      Number(passos[0] && passos[0].totalFaixas) ||
+      (Number(inputPassosBaixo && inputPassosBaixo.value) || 0) +
+        (Number(inputPassosCima && inputPassosCima.value) || 0) +
+        1;
+    passosMeta.textContent = `${passos.length} de ${fmt(totalFaixas, 0)} faixas exibidas (passo ${fmt(
+      passoAtual,
+      0
+    )}%, PSI ${fmt(psiMin, 0)}-${fmt(psiMax, 0)})`;
+  }
+
+  function recalc() {
+    try {
+      setError("");
+      const input = lerEntrada();
+      atualizarResumo(input);
+      const passos = calcularPassos(input);
+      renderPassos(passos);
+    } catch (error) {
+      setError(error.message);
+      clearTabela();
+    }
+  }
+
+  function aplicarPresetSelecionado() {
+    const nome = String(presetAeronave.value || "").trim();
+    if (!nome) return;
+    const item = aeronaves.find((a) => String(a.modelo || "").trim() === nome);
+    if (!item) return;
+
+    if (Number.isFinite(Number(item.vminKmh))) inputVelMin.value = String(Number(item.vminKmh));
+    if (Number.isFinite(Number(item.vmedKmh))) inputVelMed.value = String(Number(item.vmedKmh));
+    if (Number.isFinite(Number(item.vmaxKmh))) inputVelMax.value = String(Number(item.vmaxKmh));
+    salvarDadosCompartilhados();
+    recalc();
+  }
+
+  function bindEvents() {
+    form.addEventListener("input", function (event) {
+      const alvo = event && event.target;
+      if (alvo && alvo.classList && alvo.classList.contains("comp-config-check")) {
+        // Seletores de configuracao sao tratados no evento "change".
+        return;
+      }
+      salvarDadosCompartilhados();
+      recalc();
+    });
+
+    form.addEventListener("change", function (event) {
+      const alvo = event && event.target;
+      if (alvo && alvo.id === "equipamento-comp") {
+        atualizarSeletorConfiguracao();
+      }
+      if (alvo && alvo.classList && alvo.classList.contains("comp-config-check")) {
+        const item = obterBicoSelecionado();
+        const tipo = tipoSelecaoConfiguracao(item);
+        if (tipo === "ponta" && alvo.checked && configOpcoes) {
+          const marcados = configOpcoes.querySelectorAll("input.comp-config-check:checked");
+          if (marcados.length > MAX_PONTEIRAS_TT11) {
+            alvo.checked = false;
+            salvarSelecaoConfiguracaoAtual(item);
+            salvarDadosCompartilhados();
+            setError(`TT11 permite no maximo ${MAX_PONTEIRAS_TT11} ponteiras selecionadas.`);
+            return;
+          }
+        }
+        salvarSelecaoConfiguracaoAtual(item);
+      }
+      salvarDadosCompartilhados();
+      recalc();
+    });
+
+    if (presetAeronave) presetAeronave.addEventListener("change", aplicarPresetSelecionado);
+    if (btnConfigTodos) {
+      btnConfigTodos.addEventListener("click", function () {
+        if (!configOpcoes) return;
+        const item = obterBicoSelecionado();
+        const tipo = tipoSelecaoConfiguracao(item);
+        const checks = Array.from(configOpcoes.querySelectorAll("input.comp-config-check"));
+        checks.forEach((node, idx) => {
+          if (tipo === "disco") {
+            node.checked = idx === 0;
+          } else if (tipo === "ponta") {
+            node.checked = idx < MAX_PONTEIRAS_TT11;
+          } else {
+            node.checked = true;
+          }
+        });
+        salvarSelecaoConfiguracaoAtual(item);
+        salvarDadosCompartilhados();
+        recalc();
+      });
+    }
+    if (btnConfigLimpar) {
+      btnConfigLimpar.addEventListener("click", function () {
+        if (!configOpcoes) return;
+        configOpcoes.querySelectorAll("input.comp-config-check").forEach((node) => {
+          node.checked = false;
+        });
+        salvarSelecaoConfiguracaoAtual(obterBicoSelecionado());
+        recalc();
+      });
+    }
+  }
+
+  async function init() {
+    try {
+      setError("");
+
+      catalogo = await fetchJsonWithFallback(
+        ["js/data/catalogo.json", "./js/data/catalogo.json", "/js/data/catalogo.json"],
+        true
+      );
+      const aeronavesData = await fetchJsonWithFallback(
+        ["js/data/aeronaves_fluxometro.json", "./js/data/aeronaves_fluxometro.json", "/js/data/aeronaves_fluxometro.json"],
+        false
+      );
+
+      aeronaves = Array.isArray(aeronavesData && aeronavesData.aeronaves) ? aeronavesData.aeronaves : [];
+      bicosConfiguracao = listarBicosConfiguracao();
+      if (!bicosConfiguracao.length) {
+        throw new Error("Nenhum bico com curva de configuracao foi encontrado no catalogo.");
+      }
+
+      preencherPresets();
+      preencherBicosConfiguracao();
+      atualizarSeletorConfiguracao();
+      const aplicouCompartilhado = aplicarDadosCompartilhadosNoForm();
+      if (!aplicouCompartilhado) {
+        aplicarPadraoInicial();
+      }
+      bindEvents();
+      salvarDadosCompartilhados();
+      if (entradaInicialValidaParaCalculo()) {
+        recalc();
+      }
+    } catch (error) {
+      setError(error.message || "Falha ao inicializar a pagina de configuracoes.");
+      clearTabela();
+    }
+  }
+
+  init();
+})();

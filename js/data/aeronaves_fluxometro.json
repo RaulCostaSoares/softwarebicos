@@ -1,0 +1,79 @@
+{
+  "fonteArquivo": "CALIBRAÇÃO AERONAVE E FLUXOMETRO.xlsx",
+  "geradoEmUtc": "2026-03-09T18:33:35.501024+00:00",
+  "aeronaves": [
+    {
+      "modelo": "AIR TRACTOR 402",
+      "vmaxKmh": 260.0,
+      "vmedKmh": 230.0,
+      "vminKmh": 210.0
+    },
+    {
+      "modelo": "AIR TRACTOR 502",
+      "vmaxKmh": 260.0,
+      "vmedKmh": 230.0,
+      "vminKmh": 210.0
+    },
+    {
+      "modelo": "AIR TRACTOR 502XP",
+      "vmaxKmh": 285.0,
+      "vmedKmh": 255.0,
+      "vminKmh": 220.0
+    },
+    {
+      "modelo": "AIR TRACTOR 602",
+      "vmaxKmh": 300.0,
+      "vmedKmh": 265.0,
+      "vminKmh": 220.0
+    },
+    {
+      "modelo": "AIR TRACTOR 802",
+      "vmaxKmh": 320.0,
+      "vmedKmh": 280.0,
+      "vminKmh": 220.0
+    },
+    {
+      "modelo": "CESSNA",
+      "vmaxKmh": 215.0,
+      "vmedKmh": 185.0,
+      "vminKmh": 160.0
+    },
+    {
+      "modelo": "IPANEMA 201",
+      "vmaxKmh": 215.0,
+      "vmedKmh": 185.0,
+      "vminKmh": 160.0
+    },
+    {
+      "modelo": "IPANEMA 202",
+      "vmaxKmh": 215.0,
+      "vmedKmh": 185.0,
+      "vminKmh": 160.0
+    },
+    {
+      "modelo": "IPANEMA 203",
+      "vmaxKmh": 215.0,
+      "vmedKmh": 190.0,
+      "vminKmh": 160.0
+    },
+    {
+      "modelo": "PAWNEE",
+      "vmaxKmh": 215.0,
+      "vmedKmh": 180.0,
+      "vminKmh": 160.0
+    },
+    {
+      "modelo": "THRUSH 510",
+      "vmaxKmh": 260.0,
+      "vmedKmh": 230.0,
+      "vminKmh": 210.0
+    }
+  ],
+  "fluxometroReferencia": {
+    "faixaMinM": 20.0,
+    "taxaMinLHa": 15.0,
+    "faixaMaxM": 20.0,
+    "taxaMaxLHa": 30.0,
+    "formula": "vazao_total_l_min = (velocidade_kmh * faixa_m * taxa_l_ha) / 600"
+  }
+}

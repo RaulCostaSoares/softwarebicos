@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Calibracao geral de bicos hidraulicos Travicar." />
+  <title data-i18n="title_bicos">Calibracao - Bicos Hidraulicos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles_colunas.css" />
+  <style>
+    :root {
+      --brand: #FF7B00;
+      --brand-100: #fff2e5;
+      --brand-50: #fff7ef;
+    }
+    body {
+      font-family: "Inter", sans-serif;
+      background-color: #fafafa;
+      color: #1e293b;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    h1, h2, h3, .font-heading {
+      font-family: "Outfit", sans-serif;
+    }
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .hero-gradient {
+      background: radial-gradient(circle at top right, #fff4e8 0%, #ffffff 50%, #fff8f1 100%);
+    }
+    .lang-select,
+    .design-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
+      background-size: 1rem;
+    }
+    .content-wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .hero-wrap {
+      margin-top: 80px;
+      padding: 36px 0 24px;
+    }
+    .hero-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--brand-100);
+      color: #c2410c;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .hero-title {
+      margin: 12px 0 10px;
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      line-height: 1.15;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .hero-sub {
+      margin: 0;
+      color: #475569;
+      font-size: 1rem;
+      max-width: 900px;
+    }
+    .main-sections {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .panel {
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(2, 6, 23, 0.04);
+    }
+    .panel h2 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .field,
+    .chip span {
+      border-radius: 14px;
+      border-color: #dbe2ea;
+    }
+    .field {
+      background: #f8fafc;
+    }
+    .btn {
+      border-radius: 999px;
+    }
+    .table-wrap {
+      border-radius: 16px;
+      border-color: #e2e8f0;
+    }
+    .text-emerald-600 { color: var(--brand) !important; }
+    .border-emerald-600 { border-color: var(--brand) !important; }
+    .bg-emerald-600 { background-color: var(--brand) !important; }
+    .bg-emerald-100 { background-color: var(--brand-100) !important; }
+    .bg-emerald-50 { background-color: var(--brand-50) !important; }
+    .shadow-emerald-200 { --tw-shadow-color: rgba(255, 123, 0, 0.28) !important; }
+    .hover\:text-emerald-600:hover { color: var(--brand) !important; }
+    .hover\:bg-emerald-600:hover { background-color: var(--brand) !important; }
+    .focus\:ring-emerald-500:focus { --tw-ring-color: var(--brand) !important; }
+    @media (max-width: 1024px) {
+      .content-wrap {
+        padding: 0 12px;
+      }
+      .hero-wrap {
+        margin-top: 90px;
+      }
+    }
+  </style>
+</head>
+<body class="antialiased" data-pagina="geral" data-design="modern">
+  <nav class="fixed top-0 w-full z-50 glass-nav">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-200">
+          <i data-lucide="droplets" class="w-6 h-6"></i>
+        </div>
+        <span class="text-2xl font-bold tracking-tight text-slate-900 font-heading">TRAVICAR</span>
+      </div>
+
+      <div class="hidden md:flex items-center gap-8">
+        <a href="home.html" class="text-sm font-medium text-slate-500 hover:text-emerald-600 transition-colors" data-i18n="nav_home">HOME</a>
+        <a href="bicos_hidraulicos.html" class="text-sm font-semibold text-emerald-600 border-b-2 border-emerald-600 pb-1" aria-current="page" data-i18n="nav_bicos">BICOS</a>
+        <a href="atomizadores.html" class="text-sm font-medium text-slate-500 hover:text-emerald-600 transition-colors" data-i18n="nav_atomizadores">ATOMIZADORES</a>
+        <a href="configuracoes.html" class="text-sm font-medium text-slate-500 hover:text-emerald-600 transition-colors" data-i18n="nav_configuracoes">CONFIGURACOES</a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="relative">
+          <select class="design-switch design-select pl-3 pr-8 py-1.5 bg-slate-100 border-none rounded-full text-xs font-bold text-slate-600 cursor-pointer focus:ring-2 focus:ring-emerald-500 transition-all" aria-label="Design">
+            <option value="modern">Moderno</option>
+            <option value="compact">Compacto</option>
+          </select>
+        </div>
+        <div class="relative">
+          <select class="lang-switch lang-select pl-3 pr-8 py-1.5 bg-slate-100 border-none rounded-full text-xs font-bold text-slate-600 cursor-pointer focus:ring-2 focus:ring-emerald-500 transition-all uppercase" aria-label="Idioma">
+            <option value="pt">PT</option>
+            <option value="en">EN</option>
+            <option value="es">ES</option>
+          </select>
+        </div>
+        <a href="https://travicar.com.br/" class="hidden sm:block text-xs font-bold px-5 py-2.5 bg-slate-900 text-white rounded-full hover:bg-slate-800 transition-all shadow-md">
+          VISITAR SITE
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero-gradient hero-wrap">
+    <div class="content-wrap">
+      <span class="hero-badge">Tecnologia Agricola 4.0</span>
+      <h1 class="hero-title font-heading" data-i18n="header_bicos">CALIBRACAO DE BICOS HIDRAULICOS</h1>
+      <p class="hero-sub">
+        Informe os parametros da aplicacao para calcular vazao, pressao e recomendacoes de configuracao por faixa de velocidade.
+      </p>
+    </div>
+  </section>
+
+  <main class="content-wrap main-sections">
+    <section class="panel">
+      <form id="calibration-form" novalidate data-default-modo-exibicao="medio">
+        <div class="form-grid">
+          <div class="field field-wide">
+            <label for="preset-aeronave" data-i18n="label_select_aircraft">Selecione sua aeronave</label>
+            <select id="preset-aeronave" name="preset-aeronave">
+              <option value="" data-i18n="option_manual">Manual</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="faixa" data-i18n="label_faixa">Faixa (m)</label>
+            <input id="faixa" name="faixa" type="number" step="1" min="0" required />
+          </div>
+          <div class="field">
+            <label for="vazao" data-i18n="label_taxa">Taxa (L/ha)</label>
+            <input id="vazao" name="vazao" type="number" step="1" min="0" required />
+          </div>
+          <div class="field">
+            <label for="pulverizadores" data-i18n="label_n_bicos">N de bicos</label>
+            <input id="pulverizadores" name="pulverizadores" type="number" step="1" min="1" required />
+          </div>
+          <div class="field">
+            <label for="max-rec-modelo" data-i18n="label_max_rec_modelo">Recomendacoes por bico</label>
+            <input id="max-rec-modelo" name="max-rec-modelo" type="number" step="1" min="1" max="10" value="5" required />
+          </div>
+
+          <div class="field is-disabled" aria-disabled="true">
+            <label for="modo-exibicao" data-i18n="label_display">Exibicao</label>
+            <select id="modo-exibicao" name="modo-exibicao" disabled title="Indisponivel no momento">
+              <option value="faixa" data-i18n="option_min_med_max">Min/med/max</option>
+              <option value="medio" selected>Somente medio</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="velocidades-wrap">
+          <div class="velocidades-line">
+            <div class="field">
+              <label for="velocidade-min" data-i18n="label_vel_min">Velocidade minima (km/h)</label>
+              <input id="velocidade-min" name="velocidade-min" type="number" step="1" min="0" required />
+            </div>
+            <div class="field">
+              <label for="velocidade-med" data-i18n="label_vel_med">Velocidade media (km/h)</label>
+              <input id="velocidade-med" name="velocidade-med" type="number" step="1" min="0" required />
+            </div>
+            <div class="field">
+              <label for="velocidade-max" data-i18n="label_vel_max">Velocidade maxima (km/h)</label>
+              <input id="velocidade-max" name="velocidade-max" type="number" step="1" min="0" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="filtros">
+          <label class="chip" for="filtro-conico-core">
+            <input id="filtro-conico-core" name="filtro-conico-core" type="checkbox" checked />
+            <span data-i18n="filter_conico_core">Jato Conico: Core/Disco</span>
+          </label>
+          <label class="chip" for="filtro-conico-eletro">
+            <input id="filtro-conico-eletro" name="filtro-conico-eletro" type="checkbox" checked />
+            <span data-i18n="filter_conico_eletro">Jato Conico: Eletrostatico</span>
+          </label>
+          <label class="chip" for="filtro-leque">
+            <input id="filtro-leque" name="filtro-leque" type="checkbox" checked />
+            <span data-i18n="filter_plano">Jato Plano</span>
+          </label>
+          <label class="chip" for="filtro-solido">
+            <input id="filtro-solido" name="filtro-solido" type="checkbox" checked />
+            <span data-i18n="filter_solido">Jato Solido</span>
+          </label>
+          <input id="filtro-atomizador" name="filtro-atomizador" type="checkbox" hidden />
+        </div>
+      </form>
+      <div id="form-error" class="error" role="alert"></div>
+    </section>
+
+    <section class="panel">
+      <h2 data-i18n="summary_range_title">Resumo da calibracao para o range da velocidade</h2>
+      <table class="resumo-colunas">
+        <thead>
+          <tr>
+            <th></th>
+            <th data-i18n="th_vel_min">Velocidade Minima</th>
+            <th data-i18n="th_vel_med">Velocidade Media</th>
+            <th data-i18n="th_vel_max">Velocidade Maxima</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-i18n="row_velocidade">Velocidade (km/h)</td>
+            <td id="res-vel-min">-</td>
+            <td id="res-vel-med">-</td>
+            <td id="res-vel-max">-</td>
+          </tr>
+          <tr>
+            <td data-i18n="row_area">Area Coberta (ha/min)</td>
+            <td id="res-area-min">-</td>
+            <td id="res-area-med">-</td>
+            <td id="res-area-max">-</td>
+          </tr>
+          <tr>
+            <td data-i18n="row_vazao_total">Vazao Total (L/min)</td>
+            <td id="res-vt-min">-</td>
+            <td id="res-vt-med">-</td>
+            <td id="res-vt-max">-</td>
+          </tr>
+          <tr>
+            <td data-i18n="row_vazao_por_bico">Vazao por Pulverizador (L/min)</td>
+            <td id="res-vb-min">-</td>
+            <td id="res-vb-med">-</td>
+            <td id="res-vb-max">-</td>
+          </tr>
+          <tr>
+            <td data-i18n="row_pressao">Pressao (psi)</td>
+            <td id="res-psi-min">-</td>
+            <td id="res-psi-med">-</td>
+            <td id="res-psi-max">-</td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="summary-cards" class="summary-cards ghost"></div>
+      <div id="warnings" class="warnings"></div>
+    </section>
+
+    <section class="panel">
+      <div class="results-head">
+        <h2 data-i18n="h2_recommendations">Recomendacoes</h2>
+        <div class="results-head-meta">
+          <p id="results-meta"></p>
+          <button id="export-pdf-btn" class="btn no-print" type="button" data-i18n="btn_export_pdf">
+            Exportar PDF
+          </button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="results-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th data-i18n="th_modelo">Modelo</th>
+              <th data-i18n="th_familia">Familia</th>
+              <th data-i18n="th_faixa_vazao">Faixa de vazao (L/min)</th>
+              <th data-i18n="th_cor">Cor</th>
+              <th id="th-demanda-min" data-i18n="th_vel_min_lower">Velocidade minima</th>
+              <th id="th-demanda-med" data-i18n="th_vel_med_lower">Velocidade media</th>
+              <th id="th-demanda-max" data-i18n="th_vel_max_lower">Velocidade maxima</th>
+              <th data-i18n="th_config_sugerida">Configuracao sugerida</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script defer src="js/engine/calculos.js"></script>
+  <script defer src="js/engine/recomendador.js"></script>
+  <script defer src="js/i18n.js"></script>
+  <script defer src="js/home_design.js"></script>
+  <script defer src="js/app.js"></script>
+  <script>
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      window.lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

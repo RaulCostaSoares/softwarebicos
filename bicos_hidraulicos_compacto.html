@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n="title_bicos">Calibracao - Bicos Hidraulicos</title>
+  <link rel="stylesheet" href="styles_colunas.css" />
+</head>
+<body data-pagina="geral" data-design="compact">
+  <main class="layout">
+    <header class="topo">
+      <div class="topo-nav topo-nav-config">
+        <a class="topo-link topo-link-site" href="https://travicar.com.br/">TRAVICAR</a>
+        <h1 class="topo-title-center" data-i18n="header_bicos">CALIBRACAO DE BICOS HIDRAULICOS</h1>
+        <div class="topo-links">
+          <select class="design-switch" aria-label="Design">
+            <option value="modern">Design moderno</option>
+            <option value="compact">Design compacto</option>
+          </select>
+          <a class="topo-link" href="home.html" data-i18n="nav_home">HOME</a>
+          <a class="topo-link is-active" href="bicos_hidraulicos_compacto.html" aria-current="page" data-i18n="nav_bicos">BICOS</a>
+          <a class="topo-link" href="atomizadores.html" data-i18n="nav_atomizadores">ATOMIZADORES</a>
+          <a class="topo-link" href="configuracoes.html" data-i18n="nav_configuracoes">CONFIGURACOES</a>
+          <select class="lang-switch" aria-label="Idioma">
+            <option value="pt">PT</option>
+            <option value="en">EN</option>
+            <option value="es">ES</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <section class="panel">
+      <form id="calibration-form" novalidate data-default-modo-exibicao="medio">
+        <div class="form-grid">
+          <div class="field field-wide">
+            <label for="preset-aeronave" data-i18n="label_select_aircraft">Selecione sua aeronave</label>
+            <select id="preset-aeronave" name="preset-aeronave">
+              <option value="" data-i18n="option_manual">Manual</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="faixa" data-i18n="label_faixa">Faixa (m)</label>
+            <input id="faixa" name="faixa" type="number" step="1" min="0" required />
+          </div>
+          <div class="field">
+            <label for="vazao" data-i18n="label_taxa">Taxa (L/ha)</label>
+            <input id="vazao" name="vazao" type="number" step="1" min="0" required />
+          </div>
+          <div class="field">
+            <label for="pulverizadores" data-i18n="label_n_bicos">N de bicos</label>
+            <input id="pulverizadores" name="pulverizadores" type="number" step="1" min="1" required />
+          </div>
+          <div class="field">
+            <label for="max-rec-modelo" data-i18n="label_max_rec_modelo">Recomendacoes por bico</label>
+            <input id="max-rec-modelo" name="max-rec-modelo" type="number" step="1" min="1" max="10" value="5" required />
+          </div>
+
+          <div class="field is-disabled" aria-disabled="true">
+            <label for="modo-exibicao" data-i18n="label_display">Exibicao</label>
+            <select id="modo-exibicao" name="modo-exibicao" disabled title="Indisponivel no momento">
+              <option value="faixa" data-i18n="option_min_med_max">Min/med/max</option>
+              <option value="medio" selected></option>
+            </select>
+          </div>
+        </div>
+
+        <div class="velocidades-wrap">
+          <div class="velocidades-line">
+            <div class="field">
+              <label for="velocidade-min" data-i18n="label_vel_min">Velocidade minima (km/h)</label>
+              <input id="velocidade-min" name="velocidade-min" type="number" step="1" min="0" required />
+            </div>
+            <div class="field">
+              <label for="velocidade-med" data-i18n="label_vel_med">Velocidade media (km/h)</label>
+              <input id="velocidade-med" name="velocidade-med" type="number" step="1" min="0" required />
+            </div>
+            <div class="field">
+              <label for="velocidade-max" data-i18n="label_vel_max">Velocidade maxima (km/h)</label>
+              <input id="velocidade-max" name="velocidade-max" type="number" step="1" min="0" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="filtros">
+          <label class="chip" for="filtro-conico-core">
+            <input id="filtro-conico-core" name="filtro-conico-core" type="checkbox" checked />
+            <span data-i18n="filter_conico_core">Jato Conico: Core/Disco</span>
+          </label>
+          <label class="chip" for="filtro-conico-eletro">
+            <input id="filtro-conico-eletro" name="filtro-conico-eletro" type="checkbox" checked />
+            <span data-i18n="filter_conico_eletro">Jato Conico: Eletrostatico</span>
+          </label>
+          <label class="chip" for="filtro-leque">
+            <input id="filtro-leque" name="filtro-leque" type="checkbox" checked />
+            <span data-i18n="filter_plano">Jato Plano</span>
+          </label>
+          <label class="chip" for="filtro-solido">
+            <input id="filtro-solido" name="filtro-solido" type="checkbox" checked />
+            <span data-i18n="filter_solido">Jato Solido</span>
+          </label>
+          <input id="filtro-atomizador" name="filtro-atomizador" type="checkbox" hidden />
+        </div>
+      </form>
+      <div id="form-error" class="error" role="alert"></div>
+    </section>
+
+    <section class="panel">
+      <h2 data-i18n="summary_range_title">Resumo da calibracao para o range da velocidade</h2>
+      <table class="resumo-colunas">
+        <thead>
+          <tr>
+            <th></th>
+            <th data-i18n="th_vel_min">Velocidade Minima</th>
+            <th data-i18n="th_vel_med">Velocidade Media</th>
+            <th data-i18n="th_vel_max">Velocidade Maxima</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-i18n="row_velocidade">Velocidade (km/h)</td>
+            <td id="res-vel-min">-</td>
+            <td id="res-vel-med">-</td>
+            <td id="res-vel-max">-</td>
+          </tr>
+          <tr>
+            <td data-i18n="row_area">Area Coberta (ha/min)</td>
+            <td id="res-area-min">-</td>
+            <td id="res-area-med">-</td>
+            <td id="res-area-max">-</td>
+          </tr>
+          <tr>
+            <td data-i18n="row_vazao_total">Vazao Total (L/min)</td>
+            <td id="res-vt-min">-</td>
+            <td id="res-vt-med">-</td>
+            <td id="res-vt-max">-</td>
+          </tr>
+          <tr>
+            <td data-i18n="row_vazao_por_bico">Vazao por Pulverizador (L/min)</td>
+            <td id="res-vb-min">-</td>
+            <td id="res-vb-med">-</td>
+            <td id="res-vb-max">-</td>
+          </tr>
+          <tr>
+            <td data-i18n="row_pressao">Pressao (psi)</td>
+            <td id="res-psi-min">-</td>
+            <td id="res-psi-med">-</td>
+            <td id="res-psi-max">-</td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="summary-cards" class="summary-cards ghost"></div>
+      <div id="warnings" class="warnings"></div>
+    </section>
+
+    <section class="panel">
+      <div class="results-head">
+        <h2 data-i18n="h2_recommendations">Recomendacoes</h2>
+        <div class="results-head-meta">
+          <p id="results-meta"></p>
+          <button id="export-pdf-btn" class="btn no-print" type="button" data-i18n="btn_export_pdf">
+            Exportar PDF
+          </button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="results-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th data-i18n="th_modelo">Modelo</th>
+              <th data-i18n="th_familia">Familia</th>
+              <th data-i18n="th_faixa_vazao">Faixa de vazao (L/min)</th>
+              <th data-i18n="th_cor">Cor</th>
+              <th id="th-demanda-min" data-i18n="th_vel_min_lower">Velocidade minima</th>
+              <th id="th-demanda-med" data-i18n="th_vel_med_lower">Velocidade media</th>
+              <th id="th-demanda-max" data-i18n="th_vel_max_lower">Velocidade maxima</th>
+              <th data-i18n="th_config_sugerida">Configuracao sugerida</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script defer src="js/engine/calculos.js"></script>
+  <script defer src="js/engine/recomendador.js"></script>
+  <script defer src="js/i18n.js"></script>
+  <script defer src="js/home_design.js"></script>
+  <script defer src="js/app.js"></script>
+</body>
+</html>

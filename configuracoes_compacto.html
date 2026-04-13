@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n="title_configuracoes">Configuracoes - Bicos</title>
+  <link rel="stylesheet" href="styles_colunas.css" />
+</head>
+<body data-pagina="configuracoes" data-design="compact">
+  <main class="layout">
+    <header class="topo">
+      <div class="topo-nav topo-nav-config">
+        <a class="topo-link topo-link-site" href="https://travicar.com.br/">TRAVICAR</a>
+        <h1 class="topo-title-center" data-i18n="header_configuracoes">LIMITE DE ATUACAO DOS BICOS</h1>
+        <div class="topo-links">
+          <select class="design-switch" aria-label="Design">
+            <option value="modern">Design moderno</option>
+            <option value="compact">Design compacto</option>
+          </select>
+          <a class="topo-link" href="home.html" data-i18n="nav_home">HOME</a>
+          <a class="topo-link" href="bicos_hidraulicos.html" data-i18n="nav_bicos">BICOS</a>
+          <a class="topo-link" href="atomizadores.html" data-i18n="nav_atomizadores">ATOMIZADORES</a>
+          <a class="topo-link is-active" href="configuracoes_compacto.html" aria-current="page" data-i18n="nav_configuracoes">CONFIGURACOES</a>
+          <select class="lang-switch" aria-label="Idioma">
+            <option value="pt">PT</option>
+            <option value="en">EN</option>
+            <option value="es">ES</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <section class="panel">
+      <form id="comp-form" novalidate>
+        <div class="form-grid">
+          <div class="field field-wide">
+            <label for="equipamento-comp" data-i18n="label_bico_utilizado">Bico utilizado</label>
+            <select id="equipamento-comp" name="equipamento-comp">
+              <option value="" data-i18n="option_selecione">Selecione</option>
+            </select>
+          </div>
+
+          <div class="field field-wide">
+            <label for="preset-aeronave-comp" data-i18n="label_select_aircraft">Selecione sua aeronave</label>
+            <select id="preset-aeronave-comp" name="preset-aeronave-comp">
+              <option value="" data-i18n="option_manual">Manual</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="faixa-comp" data-i18n="label_faixa">Faixa (m)</label>
+            <input id="faixa-comp" name="faixa-comp" type="number" step="1" min="0" required />
+          </div>
+          <div class="field">
+            <label for="taxa-comp" data-i18n="label_taxa_alvo">Taxa alvo (L/ha)</label>
+            <input id="taxa-comp" name="taxa-comp" type="number" step="0.1" min="0" required />
+          </div>
+          <div class="field">
+            <label for="pulverizadores-comp" data-i18n="label_n_bicos">N de bicos</label>
+            <input id="pulverizadores-comp" name="pulverizadores-comp" type="number" step="1" min="1" required />
+          </div>
+          <div class="field">
+            <label for="comp-step-comp" data-i18n="label_passo_ajuste">Passo de ajuste (%)</label>
+            <input id="comp-step-comp" name="comp-step-comp" type="number" step="1" min="1" value="5" required />
+          </div>
+          <div class="field">
+            <label for="comp-psi-min-comp" data-i18n="label_pressao_min_cfg">Pressao minima (psi)</label>
+            <input id="comp-psi-min-comp" name="comp-psi-min-comp" type="number" step="1" min="15" max="100" value="20" required />
+          </div>
+          <div class="field">
+            <label for="comp-psi-max-comp" data-i18n="label_pressao_max_cfg">Pressao maxima (psi)</label>
+            <input id="comp-psi-max-comp" name="comp-psi-max-comp" type="number" step="1" min="15" max="100" value="60" required />
+          </div>
+          <div class="field">
+            <label for="comp-step-down-comp" data-i18n="label_passos_baixo">Passos para baixo</label>
+            <input id="comp-step-down-comp" name="comp-step-down-comp" type="number" step="1" min="0" value="5" required />
+          </div>
+          <div class="field">
+            <label for="comp-step-up-comp" data-i18n="label_passos_cima">Passos para cima</label>
+            <input id="comp-step-up-comp" name="comp-step-up-comp" type="number" step="1" min="0" value="5" required />
+          </div>
+        </div>
+
+        <div class="velocidades-wrap">
+          <div class="velocidades-line">
+            <div class="field">
+              <label for="velocidade-min-comp" data-i18n="label_vel_min">Velocidade minima (km/h)</label>
+              <input id="velocidade-min-comp" name="velocidade-min-comp" type="number" step="1" min="0" required />
+            </div>
+            <div class="field">
+              <label for="velocidade-med-comp" data-i18n="label_vel_med">Velocidade media (km/h)</label>
+              <input id="velocidade-med-comp" name="velocidade-med-comp" type="number" step="1" min="0" required />
+            </div>
+            <div class="field">
+              <label for="velocidade-max-comp" data-i18n="label_vel_max">Velocidade maxima (km/h)</label>
+              <input id="velocidade-max-comp" name="velocidade-max-comp" type="number" step="1" min="0" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="comp-seletores">
+          <div class="field field-wide" id="comp-config-box" hidden>
+            <label id="comp-config-label" data-i18n="label_cfg_disponiveis">Selecione as configuracoes disponiveis</label>
+            <div class="comp-mini-actions">
+              <button type="button" id="comp-config-todos" class="btn" data-i18n="btn_marcar_todos">Marcar todos</button>
+              <button type="button" id="comp-config-limpar" class="btn" data-i18n="btn_limpar">Limpar</button>
+            </div>
+            <div id="comp-config-opcoes" class="comp-opcoes"></div>
+          </div>
+        </div>
+      </form>
+      <div id="comp-error" class="error" role="alert"></div>
+    </section>
+
+    <section class="panel">
+      <h2 data-i18n="h2_summary">Resumo da calibracao</h2>
+      <table class="resumo-colunas">
+        <thead>
+          <tr>
+            <th></th>
+            <th data-i18n="th_vel_min">Velocidade Minima</th>
+            <th data-i18n="th_vel_med">Velocidade Media</th>
+            <th data-i18n="th_vel_max">Velocidade Maxima</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-i18n="row_velocidade">Velocidade (km/h)</td>
+            <td id="comp-res-vel-min">-</td>
+            <td id="comp-res-vel-med">-</td>
+            <td id="comp-res-vel-max">-</td>
+          </tr>
+          <tr>
+            <td data-i18n="row_area">Area Coberta (ha/min)</td>
+            <td id="comp-res-area-min">-</td>
+            <td id="comp-res-area-med">-</td>
+            <td id="comp-res-area-max">-</td>
+          </tr>
+          <tr>
+            <td data-i18n="row_vazao_total_alvo">Vazao Total Alvo (L/min)</td>
+            <td id="comp-res-vt-min">-</td>
+            <td id="comp-res-vt-med">-</td>
+            <td id="comp-res-vt-max">-</td>
+          </tr>
+          <tr>
+            <td data-i18n="row_vazao_bico_alvo">Vazao por Bico Alvo (L/min)</td>
+            <td id="comp-res-vb-min">-</td>
+            <td id="comp-res-vb-med">-</td>
+            <td id="comp-res-vb-max">-</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <div class="results-head">
+        <h2 data-i18n="h2_cfg_disponiveis">Configuracoes disponiveis (passo ajustavel)</h2>
+        <p id="comp-steps-meta"></p>
+      </div>
+      <div class="table-wrap">
+        <table id="comp-steps-table">
+          <thead>
+            <tr>
+              <th data-i18n="th_cfg_disp">Configuracao disponivel</th>
+              <th data-i18n="th_cfg">Configuracao</th>
+              <th data-i18n="th_vel_min_lower">Velocidade minima</th>
+              <th data-i18n="th_vel_med_lower">Velocidade media</th>
+              <th data-i18n="th_vel_max_lower">Velocidade maxima</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script defer src="js/engine/calculos.js"></script>
+  <script defer src="js/i18n.js"></script>
+  <script defer src="js/home_design.js"></script>
+  <script defer src="js/configuracoes.js"></script>
+</body>
+</html>

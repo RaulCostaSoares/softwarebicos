@@ -1,0 +1,770 @@
+[
+  {
+    "id": "TT11",
+    "pressaoMinPsi": 20,
+    "pressaoMaxPsi": 70,
+    "curvasPontaColorida": [
+      {
+        "codigo": "4004",
+        "cor": "vermelho",
+        "pontos": [
+          {
+            "psi": 20.0,
+            "vazaoLMin": 1.05
+          },
+          {
+            "psi": 30.0,
+            "vazaoLMin": 1.34
+          },
+          {
+            "psi": 40.0,
+            "vazaoLMin": 1.55
+          },
+          {
+            "psi": 50.0,
+            "vazaoLMin": 1.7
+          },
+          {
+            "psi": 60.0,
+            "vazaoLMin": 1.84
+          },
+          {
+            "psi": 70.0,
+            "vazaoLMin": 1.98
+          }
+        ]
+      },
+      {
+        "codigo": "4006",
+        "cor": "cinza-claro",
+        "pontos": [
+          {
+            "psi": 20.0,
+            "vazaoLMin": 1.63
+          },
+          {
+            "psi": 30.0,
+            "vazaoLMin": 1.94
+          },
+          {
+            "psi": 40.0,
+            "vazaoLMin": 2.22
+          },
+          {
+            "psi": 50.0,
+            "vazaoLMin": 2.51
+          },
+          {
+            "psi": 60.0,
+            "vazaoLMin": 2.77
+          },
+          {
+            "psi": 70.0,
+            "vazaoLMin": 2.98
+          }
+        ]
+      },
+      {
+        "codigo": "4008",
+        "cor": "branco",
+        "pontos": [
+          {
+            "psi": 20.0,
+            "vazaoLMin": 2.23
+          },
+          {
+            "psi": 30.0,
+            "vazaoLMin": 2.66
+          },
+          {
+            "psi": 40.0,
+            "vazaoLMin": 3.0
+          },
+          {
+            "psi": 50.0,
+            "vazaoLMin": 3.36
+          },
+          {
+            "psi": 60.0,
+            "vazaoLMin": 3.71
+          },
+          {
+            "psi": 70.0,
+            "vazaoLMin": 3.98
+          }
+        ]
+      },
+      {
+        "codigo": "4010",
+        "cor": "cinza-escuro",
+        "pontos": [
+          {
+            "psi": 20.0,
+            "vazaoLMin": 2.71
+          },
+          {
+            "psi": 30.0,
+            "vazaoLMin": 3.29
+          },
+          {
+            "psi": 40.0,
+            "vazaoLMin": 3.78
+          },
+          {
+            "psi": 50.0,
+            "vazaoLMin": 4.22
+          },
+          {
+            "psi": 60.0,
+            "vazaoLMin": 4.62
+          },
+          {
+            "psi": 70.0,
+            "vazaoLMin": 4.97
+          }
+        ]
+      },
+      {
+        "codigo": "4012",
+        "cor": "laranja",
+        "pontos": [
+          {
+            "psi": 20.0,
+            "vazaoLMin": 3.2
+          },
+          {
+            "psi": 30.0,
+            "vazaoLMin": 3.95
+          },
+          {
+            "psi": 40.0,
+            "vazaoLMin": 4.6
+          },
+          {
+            "psi": 50.0,
+            "vazaoLMin": 5.16
+          },
+          {
+            "psi": 60.0,
+            "vazaoLMin": 5.68
+          },
+          {
+            "psi": 70.0,
+            "vazaoLMin": 6.15
+          }
+        ]
+      },
+      {
+        "codigo": "4015",
+        "cor": "verde",
+        "pontos": [
+          {
+            "psi": 20.0,
+            "vazaoLMin": 4.02
+          },
+          {
+            "psi": 30.0,
+            "vazaoLMin": 4.95
+          },
+          {
+            "psi": 40.0,
+            "vazaoLMin": 5.74
+          },
+          {
+            "psi": 50.0,
+            "vazaoLMin": 6.42
+          },
+          {
+            "psi": 60.0,
+            "vazaoLMin": 7.04
+          },
+          {
+            "psi": 70.0,
+            "vazaoLMin": 7.62
+          }
+        ]
+      },
+      {
+        "codigo": "4020",
+        "cor": "bege",
+        "pontos": [
+          {
+            "psi": 20.0,
+            "vazaoLMin": 5.35
+          },
+          {
+            "psi": 30.0,
+            "vazaoLMin": 6.55
+          },
+          {
+            "psi": 40.0,
+            "vazaoLMin": 7.56
+          },
+          {
+            "psi": 50.0,
+            "vazaoLMin": 8.45
+          },
+          {
+            "psi": 60.0,
+            "vazaoLMin": 9.25
+          },
+          {
+            "psi": 70.0,
+            "vazaoLMin": 10.0
+          }
+        ]
+      },
+      {
+        "codigo": "4025",
+        "cor": "azul",
+        "pontos": [
+          {
+            "psi": 20.0,
+            "vazaoLMin": 6.69
+          },
+          {
+            "psi": 30.0,
+            "vazaoLMin": 8.25
+          },
+          {
+            "psi": 40.0,
+            "vazaoLMin": 9.57
+          },
+          {
+            "psi": 50.0,
+            "vazaoLMin": 10.74
+          },
+          {
+            "psi": 60.0,
+            "vazaoLMin": 11.8
+          },
+          {
+            "psi": 70.0,
+            "vazaoLMin": 12.78
+          }
+        ]
+      },
+      {
+        "codigo": "4030",
+        "cor": "marrom",
+        "pontos": [
+          {
+            "psi": 20.0,
+            "vazaoLMin": 8.05
+          },
+          {
+            "psi": 30.0,
+            "vazaoLMin": 9.84
+          },
+          {
+            "psi": 40.0,
+            "vazaoLMin": 11.35
+          },
+          {
+            "psi": 50.0,
+            "vazaoLMin": 12.68
+          },
+          {
+            "psi": 60.0,
+            "vazaoLMin": 13.88
+          },
+          {
+            "psi": 70.0,
+            "vazaoLMin": 14.98
+          }
+        ]
+      }
+    ],
+    "fonteComplemento": {
+      "arquivo": "CALIBRACAO PULVERIZADORES TRAVICAR.xls",
+      "aba": "TRAVICAR TT11",
+      "geradoEmUtc": "2026-03-09T18:15:39.452921+00:00"
+    }
+  },
+  {
+    "id": "90500",
+    "calibracaoPlanilha": {
+      "origem": "xls",
+      "parametrosPadrao": {
+        "velocidade": 180.0,
+        "faixa": 22.0,
+        "areaCoberta": 6.6,
+        "vazaoRequerida": 5.0,
+        "vazaoTotal": 33.0,
+        "numeroPulverizadores": 34.0,
+        "vazaoPorPulverizador": 0.9705882352941176
+      },
+      "snapshot": {
+        "tipo": "spe-snapshot",
+        "linhas": [
+          {
+            "codigo": "SPE-0",
+            "psiEstimadoPadrao": null,
+            "barEstimadoPadrao": null,
+            "statusPorPsi": {
+              "20": "F",
+              "30": "F",
+              "40": "VF",
+              "50": "VF",
+              "60": "VF",
+              "70": "VF",
+              "80": "VF",
+              "90": "VF",
+              "100": "VF"
+            }
+          },
+          {
+            "codigo": "SPE-1",
+            "psiEstimadoPadrao": null,
+            "barEstimadoPadrao": null,
+            "statusPorPsi": {
+              "20": "F",
+              "30": "F",
+              "40": "VF",
+              "50": "VF",
+              "60": "VF",
+              "70": "VF",
+              "80": "VF",
+              "90": "VF",
+              "100": "VF"
+            }
+          },
+          {
+            "codigo": "SPE-2",
+            "psiEstimadoPadrao": null,
+            "barEstimadoPadrao": null,
+            "statusPorPsi": {
+              "20": "F",
+              "30": "F",
+              "40": "F",
+              "50": "F",
+              "60": "VF",
+              "70": "VF",
+              "80": "VF",
+              "90": "VF",
+              "100": "VF"
+            }
+          },
+          {
+            "codigo": "SPE-3",
+            "psiEstimadoPadrao": null,
+            "barEstimadoPadrao": null,
+            "statusPorPsi": {
+              "20": "F",
+              "30": "F",
+              "40": "F",
+              "50": "F",
+              "60": "VF",
+              "70": "VF",
+              "80": "VF",
+              "90": "VF",
+              "100": "VF"
+            }
+          },
+          {
+            "codigo": "SPE-4",
+            "psiEstimadoPadrao": 97.93250305241054,
+            "barEstimadoPadrao": 6.753965727752451,
+            "statusPorPsi": {
+              "20": "F",
+              "30": "F",
+              "40": "F",
+              "50": "F",
+              "60": "F",
+              "70": "VF",
+              "80": "VF",
+              "90": "VF",
+              "100": "VF"
+            }
+          },
+          {
+            "codigo": "SPE-5",
+            "psiEstimadoPadrao": 66.92063665655269,
+            "barEstimadoPadrao": 4.615216321141565,
+            "statusPorPsi": {
+              "20": "F",
+              "30": "F",
+              "40": "F",
+              "50": "F",
+              "60": "F",
+              "70": "VF",
+              "80": "VF",
+              "90": "VF",
+              "100": "VF"
+            }
+          },
+          {
+            "codigo": "SPE-6",
+            "psiEstimadoPadrao": 29.214992475104054,
+            "barEstimadoPadrao": 2.0148270672485555,
+            "statusPorPsi": {
+              "20": "F",
+              "30": "F",
+              "40": "F",
+              "50": "F",
+              "60": "F",
+              "70": "F",
+              "80": "F",
+              "90": "F",
+              "100": "VF"
+            }
+          },
+          {
+            "codigo": "SPE-7",
+            "psiEstimadoPadrao": null,
+            "barEstimadoPadrao": null,
+            "statusPorPsi": {
+              "20": "F",
+              "30": "F",
+              "40": "F",
+              "50": "F",
+              "60": "F",
+              "70": "F",
+              "80": "F",
+              "90": "F",
+              "100": "F"
+            }
+          },
+          {
+            "codigo": "SPE-8",
+            "psiEstimadoPadrao": null,
+            "barEstimadoPadrao": null,
+            "statusPorPsi": {
+              "20": "F",
+              "30": "F",
+              "40": "F",
+              "50": "F",
+              "60": "F",
+              "70": "F",
+              "80": "F",
+              "90": "F",
+              "100": "F"
+            }
+          }
+        ]
+      }
+    },
+    "fonteComplemento": {
+      "arquivo": "CALIBRACAO PULVERIZADORES TRAVICAR.xls",
+      "aba": "SPE ELETROSTÁTICO",
+      "geradoEmUtc": "2026-03-09T18:15:39.452921+00:00"
+    }
+  },
+  {
+    "id": "TT90300",
+    "calibracaoPlanilha": {
+      "origem": "xls",
+      "parametrosPadrao": {
+        "velocidade": 110.0,
+        "faixa": 18.0,
+        "areaCoberta": 5.3083109919571045,
+        "vazaoRequerida": 40.0,
+        "vazaoTotal": 212.33243967828417,
+        "numeroPulverizadores": 34.0,
+        "vazaoPorPulverizador": 6.245071755243652
+      },
+      "snapshot": {
+        "tipo": "orificio-snapshot",
+        "linhas": [
+          {
+            "orificio": "O-1",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "orificio": "O-2",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "orificio": "O-3",
+            "psiEstimadoPadrao": 19.954178275420976
+          },
+          {
+            "orificio": "O-4",
+            "psiEstimadoPadrao": null
+          }
+        ]
+      }
+    },
+    "fonteComplemento": {
+      "arquivo": "CALIBRACAO PULVERIZADORES TRAVICAR.xls",
+      "aba": "TRAVICAR 03",
+      "geradoEmUtc": "2026-03-09T18:15:39.452921+00:00"
+    }
+  },
+  {
+    "id": "90088",
+    "calibracaoPlanilha": {
+      "origem": "xls",
+      "parametrosPadrao": {
+        "velocidade": 62.0,
+        "faixa": 15.0,
+        "areaCoberta": 2.493297587131367,
+        "vazaoRequerida": 10.0,
+        "vazaoTotal": 24.932975871313673,
+        "numeroPulverizadores": 30.0,
+        "vazaoPorPulverizador": 0.8310991957104558
+      },
+      "snapshot": {
+        "tipo": "orificio-snapshot",
+        "linhas": [
+          {
+            "orificio": "O-1",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "orificio": "O-2",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "orificio": "O-3",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "orificio": "O-4",
+            "psiEstimadoPadrao": null
+          }
+        ]
+      }
+    },
+    "fonteComplemento": {
+      "arquivo": "CALIBRACAO PULVERIZADORES TRAVICAR.xls",
+      "aba": "TRAVICAR PLANO ",
+      "geradoEmUtc": "2026-03-09T18:15:39.452921+00:00"
+    }
+  },
+  {
+    "id": "AR-ESFERA-23",
+    "calibracaoPlanilha": {
+      "origem": "xls",
+      "parametrosPadrao": {
+        "velocidade": 120.0,
+        "faixa": 20.0,
+        "areaCoberta": 6.434316353887399,
+        "vazaoRequerida": 15.0,
+        "vazaoTotal": 96.51474530831099,
+        "numeroAtomizadores": 10.0,
+        "vazaoPorAtomizador": 9.651474530831099
+      },
+      "snapshot": {
+        "tipo": "rotativo-snapshot",
+        "linhas": [
+          {
+            "opcao": "VRU 1",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "VRU 2",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "VRU 3",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "VRU 4",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "VRU 5",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "VRU 6",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "VRU 7",
+            "psiEstimadoPadrao": 29.549922820700296
+          },
+          {
+            "opcao": "VRU 8",
+            "psiEstimadoPadrao": 25.445513325973817
+          },
+          {
+            "opcao": "VRU 9",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "VRU 10",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "VRU 11",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 5",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 6",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 7",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 8",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 10",
+            "psiEstimadoPadrao": 36.81913125711557
+          },
+          {
+            "opcao": "D - 12",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 14",
+            "psiEstimadoPadrao": null
+          }
+        ]
+      }
+    },
+    "fonteComplemento": {
+      "arquivo": "CALIBRACAO PULVERIZADORES TRAVICAR.xls",
+      "aba": "ROTATIVO TELA VRU ESFERA",
+      "geradoEmUtc": "2026-03-09T18:15:39.452921+00:00"
+    }
+  },
+  {
+    "id": "AR-15",
+    "calibracaoPlanilha": {
+      "origem": "xls",
+      "parametrosPadrao": {
+        "velocidade": 120.0,
+        "faixa": 20.0,
+        "areaCoberta": 6.434316353887399,
+        "vazaoRequerida": 20.0,
+        "vazaoTotal": 128.686327077748,
+        "numeroAtomizadores": 8.0,
+        "vazaoPorAtomizador": 16.0857908847185
+      },
+      "snapshot": {
+        "tipo": "rotativo-snapshot",
+        "linhas": [
+          {
+            "opcao": "O - 1",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "O - 2",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "O - 3",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "O - 4",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 5",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 6",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 7",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 8",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 10",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 12",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 14",
+            "psiEstimadoPadrao": null
+          }
+        ]
+      }
+    },
+    "fonteComplemento": {
+      "arquivo": "CALIBRACAO PULVERIZADORES TRAVICAR.xls",
+      "aba": "ROTATIVO TELA",
+      "geradoEmUtc": "2026-03-09T18:15:39.452921+00:00"
+    }
+  },
+  {
+    "id": "AR-27",
+    "calibracaoPlanilha": {
+      "origem": "xls",
+      "parametrosPadrao": {
+        "velocidade": 120.0,
+        "faixa": 20.0,
+        "areaCoberta": 6.434316353887399,
+        "vazaoRequerida": 10.0,
+        "vazaoTotal": 64.343163538874,
+        "numeroAtomizadores": 10.0,
+        "vazaoPorAtomizador": 6.434316353887399
+      },
+      "snapshot": {
+        "tipo": "rotativo-snapshot",
+        "linhas": [
+          {
+            "opcao": "O - 1",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "O - 2",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "O - 3",
+            "psiEstimadoPadrao": 21.20579599131878
+          },
+          {
+            "opcao": "O - 4",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 5",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 6",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 7",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 8",
+            "psiEstimadoPadrao": 35.09325058319696
+          },
+          {
+            "opcao": "D - 10",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 12",
+            "psiEstimadoPadrao": null
+          },
+          {
+            "opcao": "D - 14",
+            "psiEstimadoPadrao": null
+          }
+        ]
+      }
+    },
+    "fonteComplemento": {
+      "arquivo": "CALIBRACAO PULVERIZADORES TRAVICAR.xls",
+      "aba": "ROTATIVO DISCO",
+      "geradoEmUtc": "2026-03-09T18:15:39.452921+00:00"
+    }
+  }
+]
