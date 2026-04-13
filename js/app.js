@@ -2149,9 +2149,25 @@
         const response = await fetch(caminho, { cache: "no-store" });
         if (!response.ok) continue;
         const data = await response.json();
-        if (data && Array.isArray(data.aeronaves)) return data;
+        const normalizado = normalizarDadosAeronaves(data);
+        if (normalizado) return normalizado;
       } catch (error) {
         // Presets de aeronave sao opcionais.
+      }
+    }
+    return null;
+  }
+
+  function normalizarDadosAeronaves(data) {
+    if (!data) return null;
+    if (Array.isArray(data.aeronaves)) return data;
+    if (Array.isArray(data)) return { aeronaves: data };
+
+    const chavesAlternativas = ["Aeronaves", "aircraft", "avioes", "planes"];
+    for (let i = 0; i < chavesAlternativas.length; i += 1) {
+      const chave = chavesAlternativas[i];
+      if (Array.isArray(data[chave])) {
+        return { ...data, aeronaves: data[chave] };
       }
     }
     return null;
@@ -2163,6 +2179,7 @@
     }
 
     const aeronaves = dadosAeronaveFluxometro.aeronaves;
+    if (!Array.isArray(aeronaves) || !aeronaves.length) return;
     const fragment = document.createDocumentFragment();
     aeronaves.forEach((item) => {
       const opt = document.createElement("option");
@@ -2243,6 +2260,9 @@
       const catalogo = mesclarCatalogo(catalogoBase, complementoXls);
       catalogoAtivo = catalogo;
       popularPresetAeronave(catalogo);
+      if (presetAeronaveSelect && presetAeronaveSelect.options.length <= 1) {
+        console.warn("[softwarebicos] Presets de aeronave nao carregados ou vazios.");
+      }
       inicializarSeletorPulverizador(catalogo, function () {
         executarCalculo(catalogo);
       });
