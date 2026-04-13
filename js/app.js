@@ -2180,6 +2180,10 @@
 
     const aeronaves = dadosAeronaveFluxometro.aeronaves;
     if (!Array.isArray(aeronaves) || !aeronaves.length) return;
+    // Mantem apenas a opcao manual na primeira posicao antes de popular.
+    while (presetAeronaveSelect.options.length > 1) {
+      presetAeronaveSelect.remove(1);
+    }
     const fragment = document.createDocumentFragment();
     aeronaves.forEach((item) => {
       const opt = document.createElement("option");
@@ -2260,6 +2264,14 @@
       const catalogo = mesclarCatalogo(catalogoBase, complementoXls);
       catalogoAtivo = catalogo;
       popularPresetAeronave(catalogo);
+      // Fallback: em alguns ambientes o preset pode nao montar na primeira tentativa.
+      if (presetAeronaveSelect && presetAeronaveSelect.options.length <= 1) {
+        const fallbackAeronaves = await carregarAeronavesFluxometroJson();
+        if (fallbackAeronaves && Array.isArray(fallbackAeronaves.aeronaves) && fallbackAeronaves.aeronaves.length) {
+          dadosAeronaveFluxometro = fallbackAeronaves;
+          popularPresetAeronave(catalogo);
+        }
+      }
       if (presetAeronaveSelect && presetAeronaveSelect.options.length <= 1) {
         console.warn("[softwarebicos] Presets de aeronave nao carregados ou vazios.");
       }
