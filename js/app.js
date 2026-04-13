@@ -38,7 +38,18 @@
   const LIMITE_MAX_PSI_BICOS_HIDRAULICOS = 100;
   const CHAVE_DADOS_COMPARTILHADOS = "softwarebicos_shared_form_v1";
 
-  if (!form || !calculos.calcularDemandaFaixa || !recomendador.recomendar) {
+  if (!form) {
+    console.error("[softwarebicos] Formulario #calibration-form nao encontrado nesta pagina.");
+    return;
+  }
+  if (!calculos.calcularDemandaFaixa || !recomendador.recomendar) {
+    const msg =
+      "Falha ao inicializar calculadora: scripts base nao carregaram (calculos/recomendador).";
+    if (formError) formError.textContent = msg;
+    console.error("[softwarebicos]", msg, {
+      temCalculos: Boolean(calculos.calcularDemandaFaixa),
+      temRecomendador: Boolean(recomendador.recomendar),
+    });
     return;
   }
 
