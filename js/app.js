@@ -2224,9 +2224,19 @@
   async function preencherPresetAeronaveDireto() {
     if (!presetAeronaveSelect || presetAeronaveSelect.options.length > 1) return;
     try {
-      const resp = await fetch("/js/data/aeronaves_fluxometro.json", { cache: "no-store" });
-      if (!resp.ok) return;
-      const data = await resp.json();
+      const caminhos = [
+        "/js/data/aeronaves_fluxometro.json",
+        "js/data/aeronaves_fluxometro.json",
+        "./js/data/aeronaves_fluxometro.json",
+      ];
+      let data = null;
+      for (let i = 0; i < caminhos.length; i += 1) {
+        const resp = await fetch(caminhos[i], { cache: "no-store" });
+        if (!resp.ok) continue;
+        data = await resp.json();
+        break;
+      }
+      if (!data) return;
       const normalizado = normalizarDadosAeronaves(data);
       const lista = normalizado && Array.isArray(normalizado.aeronaves) ? normalizado.aeronaves : [];
       if (!lista.length) return;
@@ -2241,13 +2251,41 @@
         const vmin = Number.isFinite(Number(item.vminKmh)) ? Number(item.vminKmh) : 0;
         const vmed = Number.isFinite(Number(item.vmedKmh)) ? Number(item.vmedKmh) : 0;
         const vmax = Number.isFinite(Number(item.vmaxKmh)) ? Number(item.vmaxKmh) : 0;
-        opt.textContent = `${item.modelo} (${n(vmin, 0)}/${n(vmed, 0)}/${n(vmax, 0)} km/h)`;
+        opt.textContent = `${item.modelo} (${Math.round(vmin)}/${Math.round(vmed)}/${Math.round(vmax)} km/h)`;
         frag.appendChild(opt);
       });
       presetAeronaveSelect.appendChild(frag);
       window.__softwarebicosPresetCount = presetAeronaveSelect.options.length;
     } catch (_error) {
       // fallback silencioso
+    }
+  }
+
+  function iniciarFallbackPresetAeronave() {
+    if (!presetAeronaveSelect) return;
+    let tentativas = 0;
+    const maxTentativas = 6;
+
+    const tentar = async () => {
+      tentativas += 1;
+      await preencherPresetAeronaveDireto();
+      window.__softwarebicosPresetFallbackTentativas = tentativas;
+      window.__softwarebicosPresetCount = presetAeronaveSelect.options.length;
+      if (presetAeronaveSelect.options.length > 1) return;
+      if (tentativas >= maxTentativas) return;
+      window.setTimeout(tentar, 450);
+    };
+
+    if (document.readyState === "complete") {
+      tentar();
+    } else {
+      window.addEventListener(
+        "load",
+        () => {
+          tentar();
+        },
+        { once: true }
+      );
     }
   }
 
@@ -2377,4 +2415,6 @@
       formError.textContent = error.message || "Erro ao inicializar aplicacao.";
     }
   })();
+
+  iniciarFallbackPresetAeronave();
 })();
