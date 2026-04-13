@@ -2193,16 +2193,31 @@
     });
     presetAeronaveSelect.appendChild(fragment);
 
-    presetAeronaveSelect.addEventListener("change", function () {
-      const model = presetAeronaveSelect.value;
-      const preset = aeronaves.find((a) => a.modelo === model);
-      if (!preset) return;
-      form["velocidade-min"].value = String(preset.vminKmh);
-      form["velocidade-med"].value = String(preset.vmedKmh);
-      form["velocidade-max"].value = String(preset.vmaxKmh);
-      salvarDadosCompartilhados();
-      executarCalculo(catalogo);
-    });
+    if (!presetAeronaveSelect.dataset.boundChange) {
+      presetAeronaveSelect.addEventListener("change", function () {
+        const model = presetAeronaveSelect.value;
+        const base = dadosAeronaveFluxometro && Array.isArray(dadosAeronaveFluxometro.aeronaves)
+          ? dadosAeronaveFluxometro.aeronaves
+          : [];
+        const preset = base.find((a) => a.modelo === model);
+        if (!preset) return;
+        form["velocidade-min"].value = String(preset.vminKmh);
+        form["velocidade-med"].value = String(preset.vmedKmh);
+        form["velocidade-max"].value = String(preset.vmaxKmh);
+        salvarDadosCompartilhados();
+        executarCalculo(catalogo);
+      });
+      presetAeronaveSelect.dataset.boundChange = "1";
+    }
+  }
+
+  async function garantirPresetAeronaveCarregado(catalogo) {
+    if (!presetAeronaveSelect) return;
+    if (presetAeronaveSelect.options.length > 1) return;
+    const dados = await carregarAeronavesFluxometroJson();
+    if (!dados || !Array.isArray(dados.aeronaves) || !dados.aeronaves.length) return;
+    dadosAeronaveFluxometro = dados;
+    popularPresetAeronave(catalogo);
   }
 
   function mesclarCurvasPonta(base, extra) {
@@ -2264,14 +2279,10 @@
       const catalogo = mesclarCatalogo(catalogoBase, complementoXls);
       catalogoAtivo = catalogo;
       popularPresetAeronave(catalogo);
-      // Fallback: em alguns ambientes o preset pode nao montar na primeira tentativa.
-      if (presetAeronaveSelect && presetAeronaveSelect.options.length <= 1) {
-        const fallbackAeronaves = await carregarAeronavesFluxometroJson();
-        if (fallbackAeronaves && Array.isArray(fallbackAeronaves.aeronaves) && fallbackAeronaves.aeronaves.length) {
-          dadosAeronaveFluxometro = fallbackAeronaves;
-          popularPresetAeronave(catalogo);
-        }
-      }
+      await garantirPresetAeronaveCarregado(catalogo);
+      window.setTimeout(() => {
+        garantirPresetAeronaveCarregado(catalogo);
+      }, 350);
       if (presetAeronaveSelect && presetAeronaveSelect.options.length <= 1) {
         console.warn("[softwarebicos] Presets de aeronave nao carregados ou vazios.");
       }
