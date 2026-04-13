@@ -190,5 +190,72 @@
   <script defer src="js/i18n.js"></script>
   <script defer src="js/home_design.js"></script>
   <script defer src="js/app.js"></script>
+  <script>
+    (function () {
+      async function preencherPresetFallback() {
+        const sel = document.getElementById("preset-aeronave");
+        if (!sel || sel.options.length > 1) return;
+
+        const caminhos = [
+          "/js/data/aeronaves_fluxometro.json",
+          "js/data/aeronaves_fluxometro.json",
+          "./js/data/aeronaves_fluxometro.json",
+        ];
+
+        let dados = null;
+        for (let i = 0; i < caminhos.length; i += 1) {
+          try {
+            const resp = await fetch(caminhos[i], { cache: "no-store" });
+            if (!resp.ok) continue;
+            dados = await resp.json();
+            break;
+          } catch (_error) {
+            // tenta proximo caminho
+          }
+        }
+
+        const lista = Array.isArray(dados && dados.aeronaves) ? dados.aeronaves : Array.isArray(dados) ? dados : [];
+        if (!lista.length) return;
+
+        while (sel.options.length > 1) sel.remove(1);
+        const frag = document.createDocumentFragment();
+        lista.forEach((item) => {
+          const opt = document.createElement("option");
+          const vmin = Number(item && item.vminKmh);
+          const vmed = Number(item && item.vmedKmh);
+          const vmax = Number(item && item.vmaxKmh);
+          opt.value = String(item && item.modelo ? item.modelo : "");
+          opt.textContent = `${opt.value} (${Math.round(Number.isFinite(vmin) ? vmin : 0)}/${Math.round(
+            Number.isFinite(vmed) ? vmed : 0
+          )}/${Math.round(Number.isFinite(vmax) ? vmax : 0)} km/h)`;
+          frag.appendChild(opt);
+        });
+        sel.appendChild(frag);
+
+        if (!sel.dataset.fallbackBound) {
+          sel.addEventListener("change", function () {
+            const escolhido = lista.find((x) => String(x && x.modelo) === String(sel.value));
+            if (!escolhido) return;
+            const iMin = document.getElementById("velocidade-min");
+            const iMed = document.getElementById("velocidade-med");
+            const iMax = document.getElementById("velocidade-max");
+            if (iMin) iMin.value = String(escolhido.vminKmh);
+            if (iMed) iMed.value = String(escolhido.vmedKmh);
+            if (iMax) iMax.value = String(escolhido.vmaxKmh);
+            const form = document.getElementById("calibration-form");
+            if (form) form.dispatchEvent(new Event("change", { bubbles: true }));
+          });
+          sel.dataset.fallbackBound = "1";
+        }
+
+        window.__presetSelectStandaloneCount = sel.options.length;
+      }
+
+      window.addEventListener("load", function () {
+        preencherPresetFallback();
+        setTimeout(preencherPresetFallback, 400);
+      });
+    })();
+  </script>
 </body>
 </html>
