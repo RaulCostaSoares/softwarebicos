@@ -238,6 +238,14 @@
     if (!Number.isFinite(valor)) return;
     if (paginaAtomizadores && valor > LIMITE_ATOMIZADORES_MAX) {
       campo.value = String(LIMITE_ATOMIZADORES_MAX);
+      return;
+    }
+    if (paginaAtomizadores && valor < 1) {
+      campo.value = "1";
+      return;
+    }
+    if (!paginaAtomizadores && valor < LIMITE_BICOS_MIN) {
+      campo.value = String(LIMITE_BICOS_MIN);
     }
   }
 

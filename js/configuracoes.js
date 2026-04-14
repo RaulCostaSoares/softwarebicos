@@ -8,6 +8,7 @@
   const formError = document.getElementById("comp-error");
   const presetAeronave = document.getElementById("preset-aeronave-comp");
   const inputEquipamento = document.getElementById("equipamento-comp");
+  const inputAtomizador = document.getElementById("atomizador-comp");
   const passosBody = document.querySelector("#comp-steps-table tbody");
   const passosMeta = document.getElementById("comp-steps-meta");
 
@@ -46,6 +47,7 @@
   let catalogo = [];
   let aeronaves = [];
   let bicosConfiguracao = [];
+  let atomizadoresConfiguracao = [];
   const selecaoConfigPorBico = new Map();
   const PSI_LIMITE_MIN = 15;
   const PSI_LIMITE_MAX = 100;
@@ -80,6 +82,8 @@
       const payload = {
         ...dados,
         presetAeronave: String((presetAeronave && presetAeronave.value) || ""),
+        equipamentoBicoComp: String((inputEquipamento && inputEquipamento.value) || ""),
+        equipamentoAtomizadorComp: String((inputAtomizador && inputAtomizador.value) || ""),
         faixa: String((inputFaixa && inputFaixa.value) || ""),
         taxa: String((inputTaxa && inputTaxa.value) || ""),
         pulverizadores: String((inputPulverizadores && inputPulverizadores.value) || ""),
@@ -161,6 +165,30 @@
         aplicou = true;
       }
     }
+    if (inputEquipamento) {
+      const alvoBico = String(dados.equipamentoBicoComp || dados.equipamentoComp || "");
+      if (alvoBico) {
+        const existeBico = Array.from(inputEquipamento.options || []).some(
+          (opt) => String(opt.value) === alvoBico
+        );
+        if (existeBico) {
+          inputEquipamento.value = alvoBico;
+          aplicou = true;
+        }
+      }
+    }
+    if (inputAtomizador) {
+      const alvoAtom = String(dados.equipamentoAtomizadorComp || "");
+      if (alvoAtom) {
+        const existeAtom = Array.from(inputAtomizador.options || []).some(
+          (opt) => String(opt.value) === alvoAtom
+        );
+        if (existeAtom) {
+          inputAtomizador.value = alvoAtom;
+          aplicou = true;
+        }
+      }
+    }
 
     if (inputPsiMin && inputPsiMax) {
       const psiMinAtual = Number(inputPsiMin.value);
@@ -234,9 +262,34 @@
     );
   }
 
+  function itemTemTabelaVru(item) {
+    return Boolean(
+      item &&
+        item.tabelaVru &&
+        Array.isArray(item.tabelaVru.psi) &&
+        Array.isArray(item.tabelaVru.linhas) &&
+        item.tabelaVru.psi.length >= 2 &&
+        item.tabelaVru.linhas.length
+    );
+  }
+
   function listarBicosConfiguracao() {
     return (Array.isArray(catalogo) ? catalogo : [])
-      .filter((item) => itemTemCurvaConfiguracao(item))
+      .filter(
+        (item) =>
+          String((item && item.categoria) || "").toLowerCase() !== "atomizador" &&
+          itemTemCurvaConfiguracao(item)
+      )
+      .sort((a, b) => String(a.nome || "").localeCompare(String(b.nome || ""), "pt-BR"));
+  }
+
+  function listarAtomizadoresConfiguracao() {
+    return (Array.isArray(catalogo) ? catalogo : [])
+      .filter(
+        (item) =>
+          String((item && item.categoria) || "").toLowerCase() === "atomizador" &&
+          itemTemTabelaVru(item)
+      )
       .sort((a, b) => String(a.nome || "").localeCompare(String(b.nome || ""), "pt-BR"));
   }
 
@@ -258,10 +311,35 @@
     }
   }
 
+  function preencherAtomizadoresConfiguracao() {
+    if (!inputAtomizador) return;
+    atomizadoresConfiguracao = listarAtomizadoresConfiguracao();
+    inputAtomizador.innerHTML =
+      '<option value="">Selecione</option>' +
+      atomizadoresConfiguracao
+        .map(
+          (item) =>
+            `<option value="${escapeHtml(String(item.id || ""))}">${escapeHtml(String(item.nome || item.id || ""))}</option>`
+        )
+        .join("");
+  }
+
   function obterBicoSelecionado() {
     const id = String((inputEquipamento && inputEquipamento.value) || "").trim();
     if (!id) return null;
     return bicosConfiguracao.find((item) => String(item.id) === id) || null;
+  }
+
+  function obterAtomizadorSelecionado() {
+    const id = String((inputAtomizador && inputAtomizador.value) || "").trim();
+    if (!id) return null;
+    return atomizadoresConfiguracao.find((item) => String(item.id) === id) || null;
+  }
+
+  function obterEquipamentoSelecionado() {
+    const atomizador = obterAtomizadorSelecionado();
+    if (atomizador) return atomizador;
+    return obterBicoSelecionado();
   }
 
   function tipoSelecaoConfiguracao(item) {
@@ -269,6 +347,9 @@
     const id = String(item.id || "").toUpperCase();
     const categoria = String(item.categoria || "").toLowerCase();
 
+    if (categoria === "atomizador" && itemTemTabelaVru(item)) {
+      return "vru-cor";
+    }
     if (id === "TT11" && Array.isArray(item.curvasPontaColorida) && item.curvasPontaColorida.length) {
       return "ponta";
     }
@@ -311,6 +392,36 @@
         .sort((a, b) => a.label.localeCompare(b.label, "pt-BR", { numeric: true }));
     }
 
+    if (tipo === "vru-cor") {
+      const tabela = item && item.tabelaVru ? item.tabelaVru : null;
+      const cores = Array.isArray(tabela && tabela.coresRegulagem) ? tabela.coresRegulagem : [];
+      const ordemCores = {
+        preto: 0,
+        vermelho: 1,
+        verde: 2,
+        d5: 3,
+        d7: 4,
+      };
+      return cores
+        .map((corRaw) => {
+          const cor = String(corRaw || "").trim().toLowerCase();
+          if (!cor) return null;
+          return {
+            key: `vru-cor:${cor}`,
+            label: `Cor ${cor}`,
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => {
+          const corA = String(a.key || "").replace(/^vru-cor:/, "");
+          const corB = String(b.key || "").replace(/^vru-cor:/, "");
+          const ordA = Object.prototype.hasOwnProperty.call(ordemCores, corA) ? ordemCores[corA] : 99;
+          const ordB = Object.prototype.hasOwnProperty.call(ordemCores, corB) ? ordemCores[corB] : 99;
+          if (ordA !== ordB) return ordA - ordB;
+          return a.label.localeCompare(b.label, "pt-BR", { numeric: true });
+        });
+    }
+
     return [];
   }
 
@@ -343,12 +454,15 @@
     if (tipo === "ponta") {
       return filtradas.slice(0, MAX_PONTEIRAS_TT11);
     }
+    if (tipo === "vru-cor") {
+      return filtradas;
+    }
     return filtradas;
   }
 
   function atualizarSeletorConfiguracao() {
     if (!configBox || !configLabel || !configOpcoes) return;
-    const item = obterBicoSelecionado();
+    const item = obterEquipamentoSelecionado();
     const tipo = tipoSelecaoConfiguracao(item);
 
     if (!item || !tipo) {
@@ -359,15 +473,23 @@
 
     const opcoes = listarOpcoesConfiguracao(item);
     const id = String(item.id || "");
-    const selecaoNormalizada = normalizarSelecaoConfiguracao(item, selecaoConfigPorBico.get(id) || []);
+    let selecaoNormalizada = normalizarSelecaoConfiguracao(item, selecaoConfigPorBico.get(id) || []);
+    if (tipo === "vru-cor" && !selecaoNormalizada.length && opcoes.length) {
+      selecaoNormalizada = opcoes.map((opcao) => opcao.key);
+    }
     selecaoConfigPorBico.set(id, selecaoNormalizada);
     const selecionadas = new Set(selecaoNormalizada);
 
     configBox.hidden = false;
-    configLabel.textContent =
-      tipo === "disco"
-        ? "Selecione o disco que voce ja tem (1 por CORE)"
-        : `Selecione as ponteiras do TT11 que voce ja tem (maximo ${MAX_PONTEIRAS_TT11})`;
+    if (tipo === "disco") {
+      configLabel.textContent = "Selecione o disco que voce ja tem (1 por CORE)";
+    } else if (tipo === "ponta") {
+      configLabel.textContent = `Selecione as ponteiras do TT11 que voce ja tem (maximo ${MAX_PONTEIRAS_TT11})`;
+    } else if (tipo === "vru-cor") {
+      configLabel.textContent = "Selecione as cores de regulagem disponiveis neste atomizador";
+    } else {
+      configLabel.textContent = "Selecione as configuracoes disponiveis";
+    }
 
     configOpcoes.innerHTML = opcoes
       .map(
@@ -397,6 +519,14 @@
     inputPasso.value = "5";
     if (inputPassosBaixo) inputPassosBaixo.value = "5";
     if (inputPassosCima) inputPassosCima.value = "5";
+  }
+
+  function harmonizarSelecaoEquipamento() {
+    const temAtomizador = Boolean(String((inputAtomizador && inputAtomizador.value) || "").trim());
+    const temBico = Boolean(String((inputEquipamento && inputEquipamento.value) || "").trim());
+    if (temAtomizador && temBico && inputEquipamento) {
+      inputEquipamento.value = "";
+    }
   }
 
   function entradaInicialValidaParaCalculo() {
@@ -435,15 +565,18 @@
   }
 
   function lerEntrada() {
-    const bicoSelecionado = obterBicoSelecionado();
+    const bicoSelecionado = obterEquipamentoSelecionado();
     if (!bicoSelecionado) {
-      throw new Error("Selecione o bico utilizado.");
+      throw new Error("Selecione um bico ou atomizador utilizado.");
     }
     const tipoConfig = tipoSelecaoConfiguracao(bicoSelecionado);
     const configuracoesSelecionadas = lerConfiguracoesMarcadasDom();
     if (tipoConfig && !configuracoesSelecionadas.length) {
       if (tipoConfig === "disco") {
         throw new Error("Selecione pelo menos um disco que voce ja possui para este CORE.");
+      }
+      if (tipoConfig === "vru-cor") {
+        throw new Error("Selecione pelo menos uma cor de regulagem do atomizador.");
       }
       throw new Error("Selecione pelo menos uma ponteira do TT11 que voce ja possui.");
     }
@@ -652,6 +785,57 @@
           chave,
           label: `Disco ${disco}`,
           pontos,
+        });
+      });
+    }
+
+    if (itemTemTabelaVru(item)) {
+      const tabela = item.tabelaVru || {};
+      const psiLista = Array.isArray(tabela.psi)
+        ? tabela.psi.map((v) => Number(v)).filter((v) => Number.isFinite(v))
+        : [];
+      const linhas = Array.isArray(tabela.linhas) ? tabela.linhas : [];
+      const cores = Array.isArray(tabela.coresRegulagem) && tabela.coresRegulagem.length
+        ? tabela.coresRegulagem.map((cor) => String(cor || "").trim().toLowerCase())
+        : ["canal-1"];
+      const filtroCores = filtro
+        ? new Set(
+            Array.from(filtro)
+              .map((k) => String(k || "").trim().toLowerCase())
+              .filter((k) => k.startsWith("vru-cor:"))
+          )
+        : null;
+
+      linhas.forEach((linha, idxLinha) => {
+        const posicaoRaw = Number(linha && linha.posicao);
+        const posicao = Number.isFinite(posicaoRaw) ? posicaoRaw : idxLinha;
+        const valores = Array.isArray(linha && linha.valores) ? linha.valores : [];
+
+        cores.forEach((corNome, idxCor) => {
+          const chaveCor = `vru-cor:${corNome}`;
+          if (filtroCores && !filtroCores.has(chaveCor)) return;
+
+          const pontos = [];
+          for (let i = 0; i < psiLista.length; i += 1) {
+            const psi = Number(psiLista[i]);
+            const valLinha = valores[i];
+            let vazaoRaw = NaN;
+            if (Array.isArray(valLinha)) {
+              vazaoRaw = Number(valLinha[idxCor]);
+            } else if (idxCor === 0) {
+              vazaoRaw = Number(valLinha);
+            }
+            if (Number.isFinite(psi) && Number.isFinite(vazaoRaw)) {
+              pontos.push({ psi, vazao: vazaoRaw });
+            }
+          }
+
+          if (pontos.length < 2) return;
+          curvas.push({
+            chave: `vru:${corNome}:pos:${posicao}`,
+            label: `VRU posicao ${posicao} (${corNome})`,
+            pontos: pontos.sort((a, b) => a.psi - b.psi),
+          });
         });
       });
     }
@@ -884,10 +1068,21 @@
     form.addEventListener("change", function (event) {
       const alvo = event && event.target;
       if (alvo && alvo.id === "equipamento-comp") {
+        if (inputAtomizador && String(inputEquipamento && inputEquipamento.value || "").trim()) {
+          inputAtomizador.value = "";
+        }
+        harmonizarSelecaoEquipamento();
+        atualizarSeletorConfiguracao();
+      }
+      if (alvo && alvo.id === "atomizador-comp") {
+        if (inputEquipamento && String(inputAtomizador && inputAtomizador.value || "").trim()) {
+          inputEquipamento.value = "";
+        }
+        harmonizarSelecaoEquipamento();
         atualizarSeletorConfiguracao();
       }
       if (alvo && alvo.classList && alvo.classList.contains("comp-config-check")) {
-        const item = obterBicoSelecionado();
+        const item = obterEquipamentoSelecionado();
         const tipo = tipoSelecaoConfiguracao(item);
         if (tipo === "ponta" && alvo.checked && configOpcoes) {
           const marcados = configOpcoes.querySelectorAll("input.comp-config-check:checked");
@@ -909,7 +1104,7 @@
     if (btnConfigTodos) {
       btnConfigTodos.addEventListener("click", function () {
         if (!configOpcoes) return;
-        const item = obterBicoSelecionado();
+        const item = obterEquipamentoSelecionado();
         const tipo = tipoSelecaoConfiguracao(item);
         const checks = Array.from(configOpcoes.querySelectorAll("input.comp-config-check"));
         checks.forEach((node, idx) => {
@@ -932,7 +1127,7 @@
         configOpcoes.querySelectorAll("input.comp-config-check").forEach((node) => {
           node.checked = false;
         });
-        salvarSelecaoConfiguracaoAtual(obterBicoSelecionado());
+        salvarSelecaoConfiguracaoAtual(obterEquipamentoSelecionado());
         recalc();
       });
     }
@@ -956,14 +1151,18 @@
       if (!bicosConfiguracao.length) {
         throw new Error("Nenhum bico com curva de configuracao foi encontrado no catalogo.");
       }
+      atomizadoresConfiguracao = listarAtomizadoresConfiguracao();
 
       preencherPresets();
       preencherBicosConfiguracao();
+      preencherAtomizadoresConfiguracao();
       atualizarSeletorConfiguracao();
       const aplicouCompartilhado = aplicarDadosCompartilhadosNoForm();
       if (!aplicouCompartilhado) {
         aplicarPadraoInicial();
       }
+      harmonizarSelecaoEquipamento();
+      atualizarSeletorConfiguracao();
       bindEvents();
       salvarDadosCompartilhados();
       if (entradaInicialValidaParaCalculo()) {
