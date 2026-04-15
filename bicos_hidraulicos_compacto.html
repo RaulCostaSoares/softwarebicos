@@ -229,6 +229,15 @@
         if (!lista.length) return;
 
         while (sel.options.length > 1) sel.remove(1);
+        let sistema = "metrico";
+        try {
+          const dados = JSON.parse(localStorage.getItem("softwarebicos_shared_form_v1") || "{}");
+          sistema = String(dados.sistemaUnidades || "metrico").toLowerCase() === "imperial" ? "imperial" : "metrico";
+        } catch (_error) {
+          sistema = "metrico";
+        }
+        const conv = sistema === "imperial" ? 0.6213711922 : 1;
+        const und = sistema === "imperial" ? "mph" : "km/h";
         const frag = document.createDocumentFragment();
         lista.forEach((item) => {
           const opt = document.createElement("option");
@@ -236,9 +245,9 @@
           const vmed = Number(item && item.vmedKmh);
           const vmax = Number(item && item.vmaxKmh);
           opt.value = String(item && item.modelo ? item.modelo : "");
-          opt.textContent = `${opt.value} (${Math.round(Number.isFinite(vmin) ? vmin : 0)}/${Math.round(
-            Number.isFinite(vmed) ? vmed : 0
-          )}/${Math.round(Number.isFinite(vmax) ? vmax : 0)} km/h)`;
+          opt.textContent = `${opt.value} (${Math.round(Number.isFinite(vmin) ? vmin * conv : 0)}/${Math.round(
+            Number.isFinite(vmed) ? vmed * conv : 0
+          )}/${Math.round(Number.isFinite(vmax) ? vmax * conv : 0)} ${und})`;
           frag.appendChild(opt);
         });
         sel.appendChild(frag);
@@ -250,9 +259,18 @@
             const iMin = document.getElementById("velocidade-min");
             const iMed = document.getElementById("velocidade-med");
             const iMax = document.getElementById("velocidade-max");
-            if (iMin) iMin.value = String(escolhido.vminKmh);
-            if (iMed) iMed.value = String(escolhido.vmedKmh);
-            if (iMax) iMax.value = String(escolhido.vmaxKmh);
+            let sistemaForm = "metrico";
+            try {
+              const dados = JSON.parse(localStorage.getItem("softwarebicos_shared_form_v1") || "{}");
+              sistemaForm = String(dados.sistemaUnidades || "metrico").toLowerCase() === "imperial" ? "imperial" : "metrico";
+            } catch (_error) {
+              sistemaForm = "metrico";
+            }
+            const conv = sistemaForm === "imperial" ? 0.6213711922 : 1;
+            const toInput = (v) => String((Number(v) * conv).toFixed(2)).replace(/\.?0+$/, "");
+            if (iMin) iMin.value = toInput(escolhido.vminKmh);
+            if (iMed) iMed.value = toInput(escolhido.vmedKmh);
+            if (iMax) iMax.value = toInput(escolhido.vmaxKmh);
             const form = document.getElementById("calibration-form");
             if (form) form.dispatchEvent(new Event("change", { bubbles: true }));
           });
@@ -270,3 +288,4 @@
   </script>
 </body>
 </html>
+

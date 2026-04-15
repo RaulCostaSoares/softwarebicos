@@ -17,6 +17,10 @@
       modern: "configuracoes.html",
       compact: "configuracoes_compacto.html",
     },
+    ajustes: {
+      modern: "ajustes.html",
+      compact: "ajustes_compacto.html",
+    },
   };
 
   function safeGet(key) {

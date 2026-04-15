@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   const ns = window.SoftwareBicos || {};
   const calculos = ns.calculos || {};
 
@@ -14,6 +14,7 @@
 
   const inputFaixa = document.getElementById("faixa-comp");
   const inputTaxa = document.getElementById("taxa-comp");
+  const inputSistemaUnidades = document.getElementById("sistema-unidades-comp");
   const inputPulverizadores = document.getElementById("pulverizadores-comp");
   const inputVelMin = document.getElementById("velocidade-min-comp");
   const inputVelMed = document.getElementById("velocidade-med-comp");
@@ -55,6 +56,14 @@
   const PSI_PADRAO_MAX = 60;
   const MAX_PONTEIRAS_TT11 = 3;
   const CHAVE_DADOS_COMPARTILHADOS = "softwarebicos_shared_form_v1";
+  const SISTEMA_UNIDADES_METRICO = "metrico";
+  const SISTEMA_UNIDADES_IMPERIAL = "imperial";
+
+  function normalizarSistemaUnidades(value) {
+    return String(value || "").toLowerCase().trim() === SISTEMA_UNIDADES_IMPERIAL
+      ? SISTEMA_UNIDADES_IMPERIAL
+      : SISTEMA_UNIDADES_METRICO;
+  }
 
   function fmt(value, decimals) {
     if (calculos.formatNumber) return calculos.formatNumber(value, decimals);
@@ -86,6 +95,7 @@
         equipamentoAtomizadorComp: String((inputAtomizador && inputAtomizador.value) || ""),
         faixa: String((inputFaixa && inputFaixa.value) || ""),
         taxa: String((inputTaxa && inputTaxa.value) || ""),
+        sistemaUnidades: normalizarSistemaUnidades(inputSistemaUnidades && inputSistemaUnidades.value),
         pulverizadores: String((inputPulverizadores && inputPulverizadores.value) || ""),
         velMin: String((inputVelMin && inputVelMin.value) || ""),
         velMed: String((inputVelMed && inputVelMed.value) || ""),
@@ -112,6 +122,10 @@
     }
     if (Object.prototype.hasOwnProperty.call(dados, "taxa")) {
       inputTaxa.value = String(dados.taxa || "0");
+      aplicou = true;
+    }
+    if (inputSistemaUnidades && Object.prototype.hasOwnProperty.call(dados, "sistemaUnidades")) {
+      inputSistemaUnidades.value = normalizarSistemaUnidades(dados.sistemaUnidades);
       aplicou = true;
     }
     if (Object.prototype.hasOwnProperty.call(dados, "pulverizadores")) {
@@ -510,6 +524,7 @@
   function aplicarPadraoInicial() {
     inputFaixa.value = "0";
     inputTaxa.value = "0";
+    if (inputSistemaUnidades) inputSistemaUnidades.value = SISTEMA_UNIDADES_METRICO;
     inputPulverizadores.value = "0";
     inputVelMin.value = "0";
     inputVelMed.value = "0";
@@ -1055,6 +1070,13 @@
   }
 
   function bindEvents() {
+    if (inputSistemaUnidades) {
+      inputSistemaUnidades.addEventListener("change", function () {
+        inputSistemaUnidades.value = normalizarSistemaUnidades(inputSistemaUnidades.value);
+        salvarDadosCompartilhados();
+      });
+    }
+
     form.addEventListener("input", function (event) {
       const alvo = event && event.target;
       if (alvo && alvo.classList && alvo.classList.contains("comp-config-check")) {

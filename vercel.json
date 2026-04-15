@@ -7,6 +7,14 @@
     {
       "src": "^/$",
       "dest": "/home.html"
+    },
+    {
+      "src": "^/ajustes/?$",
+      "dest": "/ajustes.html"
+    },
+    {
+      "src": "^/ajustes_compacto/?$",
+      "dest": "/ajustes_compacto.html"
     }
   ]
 }

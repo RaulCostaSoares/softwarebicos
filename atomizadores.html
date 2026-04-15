@@ -28,10 +28,38 @@
     h1, h2, h3, .font-heading {
       font-family: "Outfit", sans-serif;
     }
-    .glass-nav {
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    .trav-header {
+      background: #171717;
+      border-bottom: 1px solid #2a2a2a;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+    .trav-logo-img {
+      height: 44px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+    .trav-site-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+    .trav-site-link {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #f8fafc;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.2s ease;
+    }
+    .trav-site-link:hover {
+      color: var(--brand);
+      opacity: 1;
+    }
+    .trav-site-link.is-active {
+      font-weight: 700;
+      border-bottom: 2px solid #f8fafc;
+      padding-bottom: 2px;
     }
     .hero-gradient {
       background: radial-gradient(circle at top right, #fff4e8 0%, #ffffff 50%, #fff8f1 100%);
@@ -130,40 +158,43 @@
   </style>
 </head>
 <body class="antialiased" data-pagina="atomizadores" data-design="modern">
-  <nav class="fixed top-0 w-full z-50 glass-nav">
-    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <div class="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-200">
-          <i data-lucide="droplets" class="w-6 h-6"></i>
-        </div>
-        <span class="text-2xl font-bold tracking-tight text-slate-900 font-heading">TRAVICAR</span>
-      </div>
-
-      <div class="hidden md:flex items-center gap-8">
-        <a href="home.html" class="text-sm font-medium text-slate-500 hover:text-emerald-600 transition-colors" data-i18n="nav_home">HOME</a>
-        <a href="bicos_hidraulicos.html" class="text-sm font-medium text-slate-500 hover:text-emerald-600 transition-colors" data-i18n="nav_bicos">BICOS</a>
-        <a href="atomizadores.html" class="text-sm font-semibold text-emerald-600 border-b-2 border-emerald-600 pb-1" aria-current="page" data-i18n="nav_atomizadores">ATOMIZADORES</a>
-        <a href="configuracoes.html" class="text-sm font-medium text-slate-500 hover:text-emerald-600 transition-colors" data-i18n="nav_configuracoes">CONFIGURACOES</a>
-      </div>
-
-      <div class="flex items-center gap-3">
-        <div class="relative">
-          <select class="design-switch design-select pl-3 pr-8 py-1.5 bg-slate-100 border-none rounded-full text-xs font-bold text-slate-600 cursor-pointer focus:ring-2 focus:ring-emerald-500 transition-all" aria-label="Design">
-            <option value="modern">Moderno</option>
-            <option value="compact">Compacto</option>
-          </select>
-        </div>
-        <div class="relative">
-          <select class="lang-switch lang-select pl-3 pr-8 py-1.5 bg-slate-100 border-none rounded-full text-xs font-bold text-slate-600 cursor-pointer focus:ring-2 focus:ring-emerald-500 transition-all uppercase" aria-label="Idioma">
-            <option value="pt">PT</option>
-            <option value="en">EN</option>
-            <option value="es">ES</option>
-          </select>
-        </div>
-        <a href="https://travicar.com.br/" class="hidden sm:block text-xs font-bold px-5 py-2.5 bg-slate-900 text-white rounded-full hover:bg-slate-800 transition-all shadow-md">
-          VISITAR SITE
+  <nav class="fixed top-0 w-full z-50 trav-header">
+    <div class="max-w-7xl mx-auto px-6 py-2">
+      <div class="flex items-center justify-between gap-4">
+        <a href="https://travicar.com.br/" aria-label="Travicar" class="shrink-0">
+          <img
+            class="trav-logo-img"
+            src="https://travicar.com.br/wp-content/uploads/2025/12/logo_travicar_e1730211143455_1-scaled.webp"
+            alt="Travicar"
+            loading="lazy"
+          />
         </a>
+
+        <div class="hidden xl:flex trav-site-links">
+          <a class="trav-site-link" href="home.html" data-i18n="nav_home">HOME</a>
+          <a class="trav-site-link" href="bicos_hidraulicos.html" data-i18n="nav_bicos">BICOS</a>
+          <a class="trav-site-link is-active" href="atomizadores.html" data-i18n="nav_atomizadores">ATOMIZADORES</a>
+          <a class="trav-site-link" href="configuracoes.html" data-i18n="nav_configuracoes">CONFIGURACOES</a>
+          <a class="trav-site-link" href="ajustes.html">AJUSTES</a>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="relative">
+            <select class="design-switch design-select pl-3 pr-8 py-1.5 bg-slate-100 border-none rounded-full text-xs font-bold text-slate-600 cursor-pointer focus:ring-2 focus:ring-emerald-500 transition-all" aria-label="Design">
+              <option value="modern">Moderno</option>
+              <option value="compact">Compacto</option>
+            </select>
+          </div>
+          <div class="relative">
+            <select class="lang-switch lang-select pl-3 pr-8 py-1.5 bg-slate-100 border-none rounded-full text-xs font-bold text-slate-600 cursor-pointer focus:ring-2 focus:ring-emerald-500 transition-all uppercase" aria-label="Idioma">
+              <option value="pt">PT</option>
+              <option value="en">EN</option>
+              <option value="es">ES</option>
+            </select>
+          </div>
+        </div>
       </div>
+
     </div>
   </nav>
 
@@ -340,3 +371,4 @@
   </script>
 </body>
 </html>
+

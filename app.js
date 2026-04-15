@@ -12,6 +12,14 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "bicos_hidraulicos.html"));
 });
 
+app.get("/ajustes", (req, res) => {
+  res.sendFile(path.join(__dirname, "ajustes.html"));
+});
+
+app.get("/ajustes_compacto", (req, res) => {
+  res.sendFile(path.join(__dirname, "ajustes_compacto.html"));
+});
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Servidor rodando em http://0.0.0.0:${PORT}`);
 });

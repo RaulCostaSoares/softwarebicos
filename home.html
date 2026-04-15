@@ -25,10 +25,38 @@
     h1, h2, h3, .font-heading {
       font-family: "Outfit", sans-serif;
     }
-    .glass-nav {
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    .trav-header {
+      background: #171717;
+      border-bottom: 1px solid #2a2a2a;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+    .trav-logo-img {
+      height: 44px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+    .trav-site-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+    .trav-site-link {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #f8fafc;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.2s ease;
+    }
+    .trav-site-link:hover {
+      color: var(--brand);
+      opacity: 1;
+    }
+    .trav-site-link.is-active {
+      font-weight: 700;
+      border-bottom: 2px solid #f8fafc;
+      padding-bottom: 2px;
     }
     .hero-gradient {
       background: radial-gradient(circle at top right, #fff4e8 0%, #ffffff 50%, #fff8f1 100%);
@@ -65,6 +93,7 @@
     .bg-emerald-50 { background-color: var(--brand-50) !important; }
     .shadow-emerald-200 { --tw-shadow-color: rgba(255, 123, 0, 0.28) !important; }
     .hover\:text-emerald-600:hover { color: var(--brand) !important; }
+    .group:hover .group-hover\:text-emerald-600 { color: var(--brand) !important; }
     .hover\:bg-emerald-600:hover { background-color: var(--brand) !important; }
     .focus\:ring-emerald-500:focus { --tw-ring-color: var(--brand) !important; }
     .tool-thumb {
@@ -80,40 +109,43 @@
   </style>
 </head>
 <body class="antialiased" data-design="modern" data-pagina="home">
-  <nav class="fixed top-0 w-full z-50 glass-nav">
-    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <div class="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-200">
-          <i data-lucide="droplets" class="w-6 h-6"></i>
-        </div>
-        <span class="text-2xl font-bold tracking-tight text-slate-900 font-heading">TRAVICAR</span>
-      </div>
-
-      <div class="hidden md:flex items-center gap-8">
-        <a href="home.html" class="text-sm font-semibold text-emerald-600 border-b-2 border-emerald-600 pb-1" data-i18n="nav_home">HOME</a>
-        <a href="bicos_hidraulicos.html" class="text-sm font-medium text-slate-500 hover:text-emerald-600 transition-colors" data-i18n="nav_bicos">BICOS</a>
-        <a href="atomizadores.html" class="text-sm font-medium text-slate-500 hover:text-emerald-600 transition-colors" data-i18n="nav_atomizadores">ATOMIZADORES</a>
-        <a href="configuracoes.html" class="text-sm font-medium text-slate-500 hover:text-emerald-600 transition-colors" data-i18n="nav_configuracoes">CONFIGURACOES</a>
-      </div>
-
-      <div class="flex items-center gap-3">
-        <div class="relative">
-          <select class="design-switch design-select pl-3 pr-8 py-1.5 bg-slate-100 border-none rounded-full text-xs font-bold text-slate-600 cursor-pointer focus:ring-2 focus:ring-emerald-500 transition-all">
-            <option value="modern">Moderno</option>
-            <option value="compact">Compacto</option>
-          </select>
-        </div>
-        <div class="relative">
-          <select class="lang-switch lang-select pl-3 pr-8 py-1.5 bg-slate-100 border-none rounded-full text-xs font-bold text-slate-600 cursor-pointer focus:ring-2 focus:ring-emerald-500 transition-all uppercase">
-            <option value="pt">PT</option>
-            <option value="en">EN</option>
-            <option value="es">ES</option>
-          </select>
-        </div>
-        <a href="https://travicar.com.br/" class="hidden sm:block text-xs font-bold px-5 py-2.5 bg-slate-900 text-white rounded-full hover:bg-slate-800 transition-all shadow-md">
-          VISITAR SITE
+  <nav class="fixed top-0 w-full z-50 trav-header">
+    <div class="max-w-7xl mx-auto px-6 py-2">
+      <div class="flex items-center justify-between gap-4">
+        <a href="https://travicar.com.br/" aria-label="Travicar" class="shrink-0">
+          <img
+            class="trav-logo-img"
+            src="https://travicar.com.br/wp-content/uploads/2025/12/logo_travicar_e1730211143455_1-scaled.webp"
+            alt="Travicar"
+            loading="lazy"
+          />
         </a>
+
+        <div class="hidden xl:flex trav-site-links">
+          <a class="trav-site-link is-active" href="home.html" data-i18n="nav_home">HOME</a>
+          <a class="trav-site-link" href="bicos_hidraulicos.html" data-i18n="nav_bicos">BICOS</a>
+          <a class="trav-site-link" href="atomizadores.html" data-i18n="nav_atomizadores">ATOMIZADORES</a>
+          <a class="trav-site-link" href="configuracoes.html" data-i18n="nav_configuracoes">CONFIGURACOES</a>
+          <a class="trav-site-link" href="ajustes.html">AJUSTES</a>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="relative">
+            <select class="design-switch design-select pl-3 pr-8 py-1.5 bg-slate-100 border-none rounded-full text-xs font-bold text-slate-600 cursor-pointer focus:ring-2 focus:ring-emerald-500 transition-all">
+              <option value="modern">Moderno</option>
+              <option value="compact">Compacto</option>
+            </select>
+          </div>
+          <div class="relative">
+            <select class="lang-switch lang-select pl-3 pr-8 py-1.5 bg-slate-100 border-none rounded-full text-xs font-bold text-slate-600 cursor-pointer focus:ring-2 focus:ring-emerald-500 transition-all uppercase">
+              <option value="pt">PT</option>
+              <option value="en">EN</option>
+              <option value="es">ES</option>
+            </select>
+          </div>
+        </div>
       </div>
+
     </div>
   </nav>
 
@@ -124,7 +156,7 @@
           Tecnologia Agricola 4.0
         </span>
         <h1 class="text-5xl md:text-7xl font-bold text-slate-900 leading-[1.1] mb-6">
-          <span class="text-emerald-600 italic">Calibração</span> da Aeronave 
+          <span class="text-emerald-600 italic">Calibração</span> da Aeronave
         </h1>
         <p class="text-xl text-slate-600 leading-relaxed mb-10 max-w-2xl">
           Use as calculadoras da Travicar para obter valores mais exatos e melhorar a eficiência da aplicação
@@ -138,11 +170,8 @@
   <main class="max-w-7xl mx-auto px-6 -mt-12 mb-24 relative z-20">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <a href="bicos_hidraulicos.html" class="group block p-8 bg-white border border-slate-100 rounded-[32px] card-hover fade-in" style="animation-delay: 0.2s;">
-        <div class="w-16 h-16 mb-8 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-500">
-          <i data-lucide="settings-2" class="w-8 h-8"></i>
-        </div>
         <h3 class="text-2xl font-bold text-slate-900 mb-4 group-hover:text-emerald-600 transition-colors" data-i18n="home_card_bicos_title">
-          Calibracao geral - bicos
+          Calibração bicos hidráulicos
         </h3>
         <img class="tool-thumb" src="js/data/images/TT11.png" alt="Bico TT11" loading="lazy">
         <p class="text-slate-500 leading-relaxed mb-8" data-i18n="home_card_bicos_desc">
@@ -155,9 +184,6 @@
       </a>
 
       <a href="atomizadores.html" class="group block p-8 bg-white border border-slate-100 rounded-[32px] card-hover fade-in" style="animation-delay: 0.3s;">
-        <div class="w-16 h-16 mb-8 bg-sky-50 text-sky-600 rounded-2xl flex items-center justify-center group-hover:bg-sky-600 group-hover:text-white transition-colors duration-500">
-          <i data-lucide="wind" class="w-8 h-8"></i>
-        </div>
         <h3 class="text-2xl font-bold text-slate-900 mb-4 group-hover:text-sky-600 transition-colors" data-i18n="home_card_atomizadores_title">
           Calibracao geral - atomizadores
         </h3>
@@ -172,9 +198,6 @@
       </a>
 
       <a href="configuracoes.html" class="group block p-8 bg-white border border-slate-100 rounded-[32px] card-hover fade-in" style="animation-delay: 0.4s;">
-        <div class="w-16 h-16 mb-8 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition-colors duration-500">
-          <i data-lucide="sliders" class="w-8 h-8"></i>
-        </div>
         <h3 class="text-2xl font-bold text-slate-900 mb-4 group-hover:text-amber-600 transition-colors" data-i18n="home_card_configuracoes_title">
           O que o seu bico pode fazer
         </h3>
@@ -204,3 +227,4 @@
   </script>
 </body>
 </html>
+

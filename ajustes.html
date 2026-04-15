@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Ajustes globais da calculadora Travicar." />
+  <title>Ajustes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles_colunas.css" />
+  <style>
+    :root {
+      --brand: #FF7B00;
+      --brand-100: #fff2e5;
+      --brand-50: #fff7ef;
+    }
+    body {
+      font-family: "Inter", sans-serif;
+      background-color: #fafafa;
+      color: #1e293b;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    h1, h2, h3, .font-heading {
+      font-family: "Outfit", sans-serif;
+    }
+    .trav-header {
+      background: #171717;
+      border-bottom: 1px solid #2a2a2a;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+    .trav-logo-img {
+      height: 44px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+    .trav-site-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+    .trav-site-link {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #f8fafc;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.2s ease;
+    }
+    .trav-site-link:hover {
+      color: var(--brand);
+      opacity: 1;
+    }
+    .trav-site-link.is-active {
+      font-weight: 700;
+      border-bottom: 2px solid #f8fafc;
+      padding-bottom: 2px;
+    }
+    .hero-gradient {
+      background: radial-gradient(circle at top right, #fff4e8 0%, #ffffff 50%, #fff8f1 100%);
+    }
+    .lang-select,
+    .design-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
+      background-size: 1rem;
+    }
+    .content-wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .hero-wrap {
+      margin-top: 80px;
+      padding: 36px 0 24px;
+    }
+    .hero-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--brand-100);
+      color: #c2410c;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .hero-title {
+      margin: 12px 0 10px;
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      line-height: 1.15;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .hero-sub {
+      margin: 0;
+      color: #475569;
+      font-size: 1rem;
+      max-width: 900px;
+    }
+    .panel {
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(2, 6, 23, 0.04);
+      margin-bottom: 20px;
+    }
+    .field {
+      border-radius: 14px;
+      border: 1px solid #dbe2ea;
+      background: #f8fafc;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+    .field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .field select {
+      width: 100%;
+      border: 1px solid #dbe2ea;
+      border-radius: 10px;
+      padding: 8px;
+      background: #fff;
+    }
+    .ajustes-status {
+      font-size: 0.85rem;
+      color: #475569;
+      min-height: 1.2rem;
+    }
+    .text-emerald-600 { color: var(--brand) !important; }
+    .border-emerald-600 { border-color: var(--brand) !important; }
+    .bg-emerald-600 { background-color: var(--brand) !important; }
+    .bg-emerald-100 { background-color: var(--brand-100) !important; }
+    .bg-emerald-50 { background-color: var(--brand-50) !important; }
+    .shadow-emerald-200 { --tw-shadow-color: rgba(255, 123, 0, 0.28) !important; }
+    .hover\:text-emerald-600:hover { color: var(--brand) !important; }
+    .hover\:bg-emerald-600:hover { background-color: var(--brand) !important; }
+    .focus\:ring-emerald-500:focus { --tw-ring-color: var(--brand) !important; }
+  </style>
+</head>
+<body class="antialiased" data-pagina="ajustes" data-design="modern">
+  <nav class="fixed top-0 w-full z-50 trav-header">
+    <div class="max-w-7xl mx-auto px-6 py-2">
+      <div class="flex items-center justify-between gap-4">
+        <a href="https://travicar.com.br/" aria-label="Travicar" class="shrink-0">
+          <img
+            class="trav-logo-img"
+            src="https://travicar.com.br/wp-content/uploads/2025/12/logo_travicar_e1730211143455_1-scaled.webp"
+            alt="Travicar"
+            loading="lazy"
+          />
+        </a>
+
+        <div class="hidden xl:flex trav-site-links">
+          <a class="trav-site-link" href="home.html" data-i18n="nav_home">HOME</a>
+          <a class="trav-site-link" href="bicos_hidraulicos.html" data-i18n="nav_bicos">BICOS</a>
+          <a class="trav-site-link" href="atomizadores.html" data-i18n="nav_atomizadores">ATOMIZADORES</a>
+          <a class="trav-site-link" href="configuracoes.html" data-i18n="nav_configuracoes">CONFIGURACOES</a>
+          <a class="trav-site-link is-active" href="ajustes.html">AJUSTES</a>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="relative">
+            <select class="design-switch design-select pl-3 pr-8 py-1.5 bg-slate-100 border-none rounded-full text-xs font-bold text-slate-600 cursor-pointer focus:ring-2 focus:ring-emerald-500 transition-all" aria-label="Design">
+              <option value="modern">Moderno</option>
+              <option value="compact">Compacto</option>
+            </select>
+          </div>
+          <div class="relative">
+            <select class="lang-switch lang-select pl-3 pr-8 py-1.5 bg-slate-100 border-none rounded-full text-xs font-bold text-slate-600 cursor-pointer focus:ring-2 focus:ring-emerald-500 transition-all uppercase" aria-label="Idioma">
+              <option value="pt">PT</option>
+              <option value="en">EN</option>
+              <option value="es">ES</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <section class="hero-gradient hero-wrap">
+    <div class="content-wrap">
+      <span class="hero-badge">Preferencias globais</span>
+      <h1 class="hero-title font-heading">AJUSTES</h1>
+      <p class="hero-sub">Defina configuracoes gerais que serao usadas nas calculadoras.</p>
+    </div>
+  </section>
+
+  <main class="content-wrap">
+    <section class="panel">
+      <h2>Unidades de medida</h2>
+      <div class="field">
+        <label for="ajustes-sistema-unidades">Sistema de unidades</label>
+        <select id="ajustes-sistema-unidades" name="ajustes-sistema-unidades">
+          <option value="metrico" data-i18n="option_unidades_metrico">Metrico</option>
+          <option value="imperial" data-i18n="option_unidades_imperial">Imperial</option>
+        </select>
+      </div>
+      <div id="ajustes-status" class="ajustes-status"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Presets (em breve)</h2>
+      <p class="hero-sub">Na proxima etapa, aqui vamos salvar presets de aeronaves e configuracoes de bicos/atomizadores.</p>
+    </section>
+  </main>
+
+  <script defer src="js/i18n.js"></script>
+  <script defer src="js/home_design.js"></script>
+  <script defer src="js/ajustes.js"></script>
+  <script>
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      window.lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

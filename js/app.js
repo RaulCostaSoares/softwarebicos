@@ -21,6 +21,7 @@
   const coreDiscoSelect = document.getElementById("core-disco");
   const maxRecPorModeloInput = document.getElementById("max-rec-modelo");
   const modoExibicaoSelect = document.getElementById("modo-exibicao");
+  const sistemaUnidadesSelect = document.getElementById("sistema-unidades");
   const pressaoBaseInfo = document.getElementById("pressao-base-info");
   const configValidacaoInfo = document.getElementById("config-validacao-info");
 
@@ -38,6 +39,13 @@
   const LIMITE_MIN_PSI_EXIBICAO = 15;
   const LIMITE_MAX_PSI_BICOS_HIDRAULICOS = 100;
   const CHAVE_DADOS_COMPARTILHADOS = "softwarebicos_shared_form_v1";
+  const SISTEMA_UNIDADES_METRICO = "metrico";
+  const SISTEMA_UNIDADES_IMPERIAL = "imperial";
+  const CONV_KMH_TO_MPH = 0.6213711922;
+  const CONV_M_TO_FT = 3.280839895;
+  const CONV_L_TO_GAL = 0.2641720524;
+  const CONV_HA_TO_ACRE = 2.4710538147;
+  let sistemaUnidadesAtual = SISTEMA_UNIDADES_METRICO;
 
   if (!form) {
     console.error("[softwarebicos] Formulario #calibration-form nao encontrado nesta pagina.");
@@ -65,6 +73,253 @@
 
   function n(value, dec) {
     return calculos.formatNumber ? calculos.formatNumber(value, dec) : value.toFixed(dec);
+  }
+
+  function normalizarSistemaUnidades(value) {
+    return String(value || "").toLowerCase().trim() === SISTEMA_UNIDADES_IMPERIAL
+      ? SISTEMA_UNIDADES_IMPERIAL
+      : SISTEMA_UNIDADES_METRICO;
+  }
+
+  function idiomaAtual() {
+    const lang = String(document.documentElement.lang || "pt-BR").toLowerCase();
+    if (lang.startsWith("en")) return "en";
+    if (lang.startsWith("es")) return "es";
+    return "pt";
+  }
+
+  function unidadesEmUso() {
+    return sistemaUnidadesAtual === SISTEMA_UNIDADES_IMPERIAL
+      ? {
+          velocidade: "mph",
+          faixa: "ft",
+          taxa: "gal/ha",
+          area: "acre/min",
+          vazao: "gal/min",
+          pressao: "libras/psi",
+        }
+      : {
+          velocidade: "km/h",
+          faixa: "m",
+          taxa: "L/ha",
+          area: "ha/min",
+          vazao: "L/min",
+          pressao: "psi",
+        };
+  }
+
+  function textoUnidadesPorIdioma(lang) {
+    const unidades = unidadesEmUso();
+    if (lang === "en") {
+      return {
+        labelFaixa: `Swath (${unidades.faixa})`,
+        labelTaxa: `Rate (${unidades.taxa})`,
+        labelVelMin: `Minimum speed (${unidades.velocidade})`,
+        labelVelMed: `Average speed (${unidades.velocidade})`,
+        labelVelMax: `Maximum speed (${unidades.velocidade})`,
+        rowVel: `Speed (${unidades.velocidade})`,
+        rowArea: `Covered Area (${unidades.area})`,
+        rowVt: `Total Flow (${unidades.vazao})`,
+        rowVbBico: `Flow per Nozzle (${unidades.vazao})`,
+        rowVbAtom: `Flow per Atomizer (${unidades.vazao})`,
+        rowPressao: `Pressure (${unidades.pressao})`,
+        thFaixaVazao: `Flow range (${unidades.vazao})`,
+      };
+    }
+    if (lang === "es") {
+      return {
+        labelFaixa: `Faja (${unidades.faixa})`,
+        labelTaxa: `Tasa (${unidades.taxa})`,
+        labelVelMin: `Velocidad minima (${unidades.velocidade})`,
+        labelVelMed: `Velocidad media (${unidades.velocidade})`,
+        labelVelMax: `Velocidad maxima (${unidades.velocidade})`,
+        rowVel: `Velocidad (${unidades.velocidade})`,
+        rowArea: `Area Cubierta (${unidades.area})`,
+        rowVt: `Caudal Total (${unidades.vazao})`,
+        rowVbBico: `Caudal por Boquilla (${unidades.vazao})`,
+        rowVbAtom: `Caudal por Atomizador (${unidades.vazao})`,
+        rowPressao: `Presion (${unidades.pressao})`,
+        thFaixaVazao: `Rango de caudal (${unidades.vazao})`,
+      };
+    }
+    return {
+      labelFaixa: `Faixa (${unidades.faixa})`,
+      labelTaxa: `Taxa (${unidades.taxa})`,
+      labelVelMin: `Velocidade minima (${unidades.velocidade})`,
+      labelVelMed: `Velocidade media (${unidades.velocidade})`,
+      labelVelMax: `Velocidade maxima (${unidades.velocidade})`,
+      rowVel: `Velocidade (${unidades.velocidade})`,
+      rowArea: `Area Coberta (${unidades.area})`,
+      rowVt: `Vazao Total (${unidades.vazao})`,
+      rowVbBico: `Vazao por Pulverizador (${unidades.vazao})`,
+      rowVbAtom: `Vazao por Atomizador (${unidades.vazao})`,
+      rowPressao: `Pressao (${unidades.pressao})`,
+      thFaixaVazao: `Faixa de vazao (${unidades.vazao})`,
+    };
+  }
+
+  function setTextoNoPrimeiroSeletor(seletor, texto) {
+    const node = document.querySelector(seletor);
+    if (node) node.textContent = texto;
+  }
+
+  function atualizarRotulosUnidadesUI() {
+    const lang = idiomaAtual();
+    const txt = textoUnidadesPorIdioma(lang);
+
+    setTextoNoPrimeiroSeletor('[data-i18n="label_faixa"]', txt.labelFaixa);
+    setTextoNoPrimeiroSeletor('[data-i18n="label_taxa"]', txt.labelTaxa);
+    setTextoNoPrimeiroSeletor('[data-i18n="label_vel_min"]', txt.labelVelMin);
+    setTextoNoPrimeiroSeletor('[data-i18n="label_vel_med"]', txt.labelVelMed);
+    setTextoNoPrimeiroSeletor('[data-i18n="label_vel_max"]', txt.labelVelMax);
+    setTextoNoPrimeiroSeletor('[data-i18n="row_velocidade"]', txt.rowVel);
+    setTextoNoPrimeiroSeletor('[data-i18n="row_area"]', txt.rowArea);
+    setTextoNoPrimeiroSeletor('[data-i18n="row_vazao_total"]', txt.rowVt);
+    if (paginaAtomizadores) {
+      setTextoNoPrimeiroSeletor('[data-i18n="row_vazao_por_atomizador"]', txt.rowVbAtom);
+    } else {
+      setTextoNoPrimeiroSeletor('[data-i18n="row_vazao_por_bico"]', txt.rowVbBico);
+    }
+    setTextoNoPrimeiroSeletor('[data-i18n="row_pressao"]', txt.rowPressao);
+    setTextoNoPrimeiroSeletor('[data-i18n="th_faixa_vazao"]', txt.thFaixaVazao);
+  }
+
+  function formatInputNumber(value, decimals) {
+    if (!Number.isFinite(value)) return "";
+    const casas = Number.isFinite(Number(decimals)) ? Number(decimals) : 4;
+    return value
+      .toFixed(casas)
+      .replace(/\.?0+$/, "")
+      .replace(",", ".");
+  }
+
+  function velocidadeParaExibicao(velocidadeKmh) {
+    return sistemaUnidadesAtual === SISTEMA_UNIDADES_IMPERIAL ? velocidadeKmh * CONV_KMH_TO_MPH : velocidadeKmh;
+  }
+
+  function velocidadeParaCalculo(velocidadeDisplay) {
+    return sistemaUnidadesAtual === SISTEMA_UNIDADES_IMPERIAL ? velocidadeDisplay / CONV_KMH_TO_MPH : velocidadeDisplay;
+  }
+
+  function faixaParaExibicao(faixaM) {
+    return sistemaUnidadesAtual === SISTEMA_UNIDADES_IMPERIAL ? faixaM * CONV_M_TO_FT : faixaM;
+  }
+
+  function faixaParaCalculo(faixaDisplay) {
+    return sistemaUnidadesAtual === SISTEMA_UNIDADES_IMPERIAL ? faixaDisplay / CONV_M_TO_FT : faixaDisplay;
+  }
+
+  function taxaParaExibicao(taxaLHa) {
+    return sistemaUnidadesAtual === SISTEMA_UNIDADES_IMPERIAL ? taxaLHa * CONV_L_TO_GAL : taxaLHa;
+  }
+
+  function taxaParaCalculo(taxaDisplay) {
+    return sistemaUnidadesAtual === SISTEMA_UNIDADES_IMPERIAL ? taxaDisplay / CONV_L_TO_GAL : taxaDisplay;
+  }
+
+  function areaParaExibicao(areaHaMin) {
+    return sistemaUnidadesAtual === SISTEMA_UNIDADES_IMPERIAL ? areaHaMin * CONV_HA_TO_ACRE : areaHaMin;
+  }
+
+  function vazaoParaExibicao(vazaoLMin) {
+    return sistemaUnidadesAtual === SISTEMA_UNIDADES_IMPERIAL ? vazaoLMin * CONV_L_TO_GAL : vazaoLMin;
+  }
+
+  function unidadeVelocidade() {
+    return unidadesEmUso().velocidade;
+  }
+
+  function unidadeVazao() {
+    return unidadesEmUso().vazao;
+  }
+
+  function converterCampoEntreSistemas(campo, tipo, sistemaOrigem, sistemaDestino) {
+    if (!campo) return;
+    const valorAtual = Number(String(campo.value || "").replace(",", "."));
+    if (!Number.isFinite(valorAtual)) return;
+    if (sistemaOrigem === sistemaDestino) return;
+    let valorConvertido = valorAtual;
+    if (tipo === "velocidade") {
+      valorConvertido =
+        sistemaOrigem === SISTEMA_UNIDADES_METRICO && sistemaDestino === SISTEMA_UNIDADES_IMPERIAL
+          ? valorAtual * CONV_KMH_TO_MPH
+          : valorAtual / CONV_KMH_TO_MPH;
+      campo.value = formatInputNumber(valorConvertido, 2);
+      return;
+    }
+    if (tipo === "faixa") {
+      valorConvertido =
+        sistemaOrigem === SISTEMA_UNIDADES_METRICO && sistemaDestino === SISTEMA_UNIDADES_IMPERIAL
+          ? valorAtual * CONV_M_TO_FT
+          : valorAtual / CONV_M_TO_FT;
+      campo.value = formatInputNumber(valorConvertido, 2);
+      return;
+    }
+    if (tipo === "taxa") {
+      valorConvertido =
+        sistemaOrigem === SISTEMA_UNIDADES_METRICO && sistemaDestino === SISTEMA_UNIDADES_IMPERIAL
+          ? valorAtual * CONV_L_TO_GAL
+          : valorAtual / CONV_L_TO_GAL;
+      campo.value = formatInputNumber(valorConvertido, 2);
+    }
+  }
+
+  function atualizarTextoOpcaoAeronave(opt, itemAeronave) {
+    if (!opt || !itemAeronave) return;
+    const vMin = velocidadeParaExibicao(Number(itemAeronave.vminKmh));
+    const vMed = velocidadeParaExibicao(Number(itemAeronave.vmedKmh));
+    const vMax = velocidadeParaExibicao(Number(itemAeronave.vmaxKmh));
+    const und = unidadeVelocidade();
+    opt.textContent = `${itemAeronave.modelo} (${n(vMin, 0)}/${n(vMed, 0)}/${n(vMax, 0)} ${und})`;
+  }
+
+  function atualizarOpcoesPresetAeronave() {
+    if (!presetAeronaveSelect || !dadosAeronaveFluxometro || !Array.isArray(dadosAeronaveFluxometro.aeronaves)) return;
+    const byModelo = new Map();
+    dadosAeronaveFluxometro.aeronaves.forEach((item) => {
+      if (item && item.modelo) byModelo.set(String(item.modelo), item);
+    });
+    Array.from(presetAeronaveSelect.options || []).forEach((opt) => {
+      const item = byModelo.get(String(opt.value || ""));
+      if (item) atualizarTextoOpcaoAeronave(opt, item);
+    });
+  }
+
+  function aplicarSistemaUnidades(novoSistema, converterCampos) {
+    const normalizado = normalizarSistemaUnidades(novoSistema);
+    if (normalizado === sistemaUnidadesAtual) {
+      atualizarRotulosUnidadesUI();
+      atualizarOpcoesPresetAeronave();
+      if (sistemaUnidadesSelect) sistemaUnidadesSelect.value = normalizado;
+      return false;
+    }
+    if (converterCampos) {
+      converterCampoEntreSistemas(
+        form && form["velocidade-min"],
+        "velocidade",
+        sistemaUnidadesAtual,
+        normalizado
+      );
+      converterCampoEntreSistemas(
+        form && form["velocidade-med"],
+        "velocidade",
+        sistemaUnidadesAtual,
+        normalizado
+      );
+      converterCampoEntreSistemas(
+        form && form["velocidade-max"],
+        "velocidade",
+        sistemaUnidadesAtual,
+        normalizado
+      );
+      converterCampoEntreSistemas(form && form.faixa, "faixa", sistemaUnidadesAtual, normalizado);
+      converterCampoEntreSistemas(form && form.vazao, "taxa", sistemaUnidadesAtual, normalizado);
+    }
+    sistemaUnidadesAtual = normalizado;
+    if (sistemaUnidadesSelect) sistemaUnidadesSelect.value = normalizado;
+    atualizarRotulosUnidadesUI();
+    atualizarOpcoesPresetAeronave();
+    return true;
   }
 
   function itemRespeitaLimitePsiMaxBicos(item) {
@@ -121,6 +376,7 @@
         velMin: String((form && form["velocidade-min"] && form["velocidade-min"].value) || ""),
         velMed: String((form && form["velocidade-med"] && form["velocidade-med"].value) || ""),
         velMax: String((form && form["velocidade-max"] && form["velocidade-max"].value) || ""),
+        sistemaUnidades: String(sistemaUnidadesAtual || SISTEMA_UNIDADES_METRICO),
       };
       localStorage.setItem(CHAVE_DADOS_COMPARTILHADOS, JSON.stringify(payload));
     } catch (_error) {
@@ -132,6 +388,11 @@
     const dados = lerDadosCompartilhados();
     if (!dados) return false;
     let aplicou = false;
+
+    if (Object.prototype.hasOwnProperty.call(dados, "sistemaUnidades")) {
+      aplicarSistemaUnidades(String(dados.sistemaUnidades || SISTEMA_UNIDADES_METRICO), false);
+      aplicou = true;
+    }
 
     if (Object.prototype.hasOwnProperty.call(dados, "faixa") && form && form.faixa) {
       form.faixa.value = String(dados.faixa || "0");
@@ -182,6 +443,7 @@
   }
 
   function aplicarCamposIniciaisZero() {
+    aplicarSistemaUnidades(SISTEMA_UNIDADES_METRICO, false);
     if (form && form["velocidade-min"]) form["velocidade-min"].value = "0";
     if (form && form["velocidade-med"]) form["velocidade-med"].value = "0";
     if (form && form["velocidade-max"]) form["velocidade-max"].value = "0";
@@ -310,7 +572,7 @@
           const cols = psiCols
             .map((psi) => {
               const v = linha.valores.get(psi);
-              return `<td>${Number.isFinite(v) ? n(v, 2) : "-"}</td>`;
+              return `<td>${Number.isFinite(v) ? n(vazaoParaExibicao(v), 2) : "-"}</td>`;
             })
             .join("");
           return `<tr${cls}><th scope="row">${linha.label}</th>${cols}</tr>`;
@@ -1439,18 +1701,38 @@
       med: (demandaFaixa.velocidadesKmh.med * demandaFaixa.faixaM) / 600,
       max: (demandaFaixa.velocidadesKmh.max * demandaFaixa.faixaM) / 600,
     };
+    const velocidadeExibicao = {
+      min: velocidadeParaExibicao(demandaFaixa.velocidadesKmh.min),
+      med: velocidadeParaExibicao(demandaFaixa.velocidadesKmh.med),
+      max: velocidadeParaExibicao(demandaFaixa.velocidadesKmh.max),
+    };
+    const areaExibicao = {
+      min: areaParaExibicao(areaCobertaHaMin.min),
+      med: areaParaExibicao(areaCobertaHaMin.med),
+      max: areaParaExibicao(areaCobertaHaMin.max),
+    };
+    const vazaoTotalExibicao = {
+      min: vazaoParaExibicao(demandaFaixa.vazaoTotalLMin.min),
+      med: vazaoParaExibicao(demandaFaixa.vazaoTotalLMin.med),
+      max: vazaoParaExibicao(demandaFaixa.vazaoTotalLMin.max),
+    };
+    const vazaoPorPulverizadorExibicao = {
+      min: vazaoParaExibicao(demandaFaixa.vazaoPorPulverizadorLMin.min),
+      med: vazaoParaExibicao(demandaFaixa.vazaoPorPulverizadorLMin.med),
+      max: vazaoParaExibicao(demandaFaixa.vazaoPorPulverizadorLMin.max),
+    };
 
     const cards = [
       {
         label: modoExibicao === "medio" ? "Velocidade media" : "Velocidade (min/med/max)",
         value:
           modoExibicao === "medio"
-            ? `${n(demandaFaixa.velocidadesKmh.med, 2)} km/h`
+            ? `${n(velocidadeExibicao.med, 2)} ${unidadeVelocidade()}`
             : faixa3(
-                demandaFaixa.velocidadesKmh.min,
-                demandaFaixa.velocidadesKmh.med,
-                demandaFaixa.velocidadesKmh.max,
-                "km/h",
+                velocidadeExibicao.min,
+                velocidadeExibicao.med,
+                velocidadeExibicao.max,
+                unidadeVelocidade(),
                 2
               ),
       },
@@ -1458,12 +1740,12 @@
         label: modoExibicao === "medio" ? "Area coberta media" : "Area coberta (min/med/max)",
         value:
           modoExibicao === "medio"
-            ? `${n(areaCobertaHaMin.med, 3)} ha/min`
+            ? `${n(areaExibicao.med, 3)} ${unidadesEmUso().area}`
             : faixa3(
-                areaCobertaHaMin.min,
-                areaCobertaHaMin.med,
-                areaCobertaHaMin.max,
-                "ha/min",
+                areaExibicao.min,
+                areaExibicao.med,
+                areaExibicao.max,
+                unidadesEmUso().area,
                 3
               ),
       },
@@ -1471,12 +1753,12 @@
         label: modoExibicao === "medio" ? "Vazao total media" : "Vazao total (min/med/max)",
         value:
           modoExibicao === "medio"
-            ? `${n(demandaFaixa.vazaoTotalLMin.med, 2)} L/min`
+            ? `${n(vazaoTotalExibicao.med, 2)} ${unidadeVazao()}`
             : faixa3(
-                demandaFaixa.vazaoTotalLMin.min,
-                demandaFaixa.vazaoTotalLMin.med,
-                demandaFaixa.vazaoTotalLMin.max,
-                "L/min",
+                vazaoTotalExibicao.min,
+                vazaoTotalExibicao.med,
+                vazaoTotalExibicao.max,
+                unidadeVazao(),
                 2
               ),
       },
@@ -1484,12 +1766,12 @@
         label: modoExibicao === "medio" ? "Vazao por pulverizador media" : "Vazao por pulverizador (min/med/max)",
         value:
           modoExibicao === "medio"
-            ? `${n(demandaFaixa.vazaoPorPulverizadorLMin.med, 2)} L/min`
+            ? `${n(vazaoPorPulverizadorExibicao.med, 2)} ${unidadeVazao()}`
             : faixa3(
-                demandaFaixa.vazaoPorPulverizadorLMin.min,
-                demandaFaixa.vazaoPorPulverizadorLMin.med,
-                demandaFaixa.vazaoPorPulverizadorLMin.max,
-                "L/min",
+                vazaoPorPulverizadorExibicao.min,
+                vazaoPorPulverizadorExibicao.med,
+                vazaoPorPulverizadorExibicao.max,
+                unidadeVazao(),
                 2
               ),
       },
@@ -1520,21 +1802,21 @@
       if (node) node.textContent = value;
     };
 
-    set("res-vel-min", txt(demandaFaixa.velocidadesKmh.min, 2, ""));
-    set("res-vel-med", txt(demandaFaixa.velocidadesKmh.med, 2, ""));
-    set("res-vel-max", txt(demandaFaixa.velocidadesKmh.max, 2, ""));
+    set("res-vel-min", txt(velocidadeExibicao.min, 2, ""));
+    set("res-vel-med", txt(velocidadeExibicao.med, 2, ""));
+    set("res-vel-max", txt(velocidadeExibicao.max, 2, ""));
 
-    set("res-area-min", txt(areaCobertaHaMin.min, 3, ""));
-    set("res-area-med", txt(areaCobertaHaMin.med, 3, ""));
-    set("res-area-max", txt(areaCobertaHaMin.max, 3, ""));
+    set("res-area-min", txt(areaExibicao.min, 3, ""));
+    set("res-area-med", txt(areaExibicao.med, 3, ""));
+    set("res-area-max", txt(areaExibicao.max, 3, ""));
 
-    set("res-vt-min", txt(demandaFaixa.vazaoTotalLMin.min, 2, ""));
-    set("res-vt-med", txt(demandaFaixa.vazaoTotalLMin.med, 2, ""));
-    set("res-vt-max", txt(demandaFaixa.vazaoTotalLMin.max, 2, ""));
+    set("res-vt-min", txt(vazaoTotalExibicao.min, 2, ""));
+    set("res-vt-med", txt(vazaoTotalExibicao.med, 2, ""));
+    set("res-vt-max", txt(vazaoTotalExibicao.max, 2, ""));
 
-    set("res-vb-min", txt(demandaFaixa.vazaoPorPulverizadorLMin.min, 2, ""));
-    set("res-vb-med", txt(demandaFaixa.vazaoPorPulverizadorLMin.med, 2, ""));
-    set("res-vb-max", txt(demandaFaixa.vazaoPorPulverizadorLMin.max, 2, ""));
+    set("res-vb-min", txt(vazaoPorPulverizadorExibicao.min, 2, ""));
+    set("res-vb-med", txt(vazaoPorPulverizadorExibicao.med, 2, ""));
+    set("res-vb-max", txt(vazaoPorPulverizadorExibicao.max, 2, ""));
 
     set("res-psi-min", txt(psiTop && psiTop.min, 1, ""));
     set("res-psi-med", txt(psiTop && psiTop.med, 1, ""));
@@ -1587,19 +1869,26 @@
 
   function formatVelocidadeCabecalho(valor) {
     if (!Number.isFinite(valor)) return "-";
-    return Number.isInteger(valor) ? n(valor, 0) : n(valor, 1);
+    const valorExibicao = velocidadeParaExibicao(valor);
+    return Number.isInteger(valorExibicao) ? n(valorExibicao, 0) : n(valorExibicao, 1);
   }
 
   function atualizarCabecalhoDemanda(demandaFaixa) {
     if (!demandaFaixa || !demandaFaixa.velocidadesKmh) return;
+    const labels =
+      idiomaAtual() === "en"
+        ? { min: "minimum speed", med: "average speed", max: "maximum speed" }
+        : idiomaAtual() === "es"
+        ? { min: "velocidad minima", med: "velocidad media", max: "velocidad maxima" }
+        : { min: "Velocidade minima", med: "Velocidade media", max: "Velocidade maxima" };
     const set = (id, label, valor) => {
       const el = document.getElementById(id);
       if (!el) return;
-      el.textContent = `${label} (${formatVelocidadeCabecalho(valor)} km/h)`;
+      el.textContent = `${label} (${formatVelocidadeCabecalho(valor)} ${unidadeVelocidade()})`;
     };
-    set("th-demanda-min", "Velocidade minima", demandaFaixa.velocidadesKmh.min);
-    set("th-demanda-med", "Velocidade media", demandaFaixa.velocidadesKmh.med);
-    set("th-demanda-max", "Velocidade maxima", demandaFaixa.velocidadesKmh.max);
+    set("th-demanda-min", labels.min, demandaFaixa.velocidadesKmh.min);
+    set("th-demanda-med", labels.med, demandaFaixa.velocidadesKmh.med);
+    set("th-demanda-max", labels.max, demandaFaixa.velocidadesKmh.max);
   }
 
   function renderTable(recomendados, demandaFaixa, resultado, modoExibicao) {
@@ -1740,11 +2029,12 @@
     const blocoDemandaHtml = (vazao, psi, faixaRef, limiteMinBaixaPsi) => {
       const temPsi = Number.isFinite(psi);
       const psiExibivel = temPsi && psi >= LIMITE_MIN_PSI_EXIBICAO;
+      const vazaoExibicao = vazaoParaExibicao(vazao);
       const avisoBaixaPressao =
         psiExibivel && psi < limiteMinBaixaPsi
           ? `<small class="tag-psi-baixa">Abaixo de ${n(limiteMinBaixaPsi, 0)} psi: o bico pode fechar</small>`
           : "";
-      return `<div class="demanda-vazao">${n(vazao, 2)} L/min</div><small class="demanda-psi ${classePorPsi(
+      return `<div class="demanda-vazao">${n(vazaoExibicao, 2)} ${unidadeVazao()}</div><small class="demanda-psi ${classePorPsi(
         psiExibivel ? psi : NaN,
         faixaRef,
         limiteMinBaixaPsi
@@ -1814,7 +2104,10 @@
           tr.setAttribute("data-chaves-rec", chavesItens.join("||"));
         }
 
-        const faixa = `${n(itemBase.vazaoMinLMin, 2)} - ${n(itemBase.vazaoMaxLMin, 2)}`;
+        const faixa = `${n(vazaoParaExibicao(itemBase.vazaoMinLMin), 2)} - ${n(
+          vazaoParaExibicao(itemBase.vazaoMaxLMin),
+          2
+        )}`;
         const imagemProduto = resolverImagemProduto(itemBase);
         const imagemSrcAttr = escapeHtml(imagemProduto);
         const nomeProdutoExibicao = nomeExibicaoProduto(itemBase, imagemProduto);
@@ -1888,7 +2181,7 @@
                   itemBase.conexao || ""
                 )}</small>
               </div>
-              <span class="faixa-inline">${escapeHtml(faixa)} L/min</span>
+              <span class="faixa-inline">${escapeHtml(faixa)} ${unidadeVazao()}</span>
             </div>
           </td>
           <td>${familiaLabel(itemBase.familia)}</td>
@@ -1930,7 +2223,7 @@
       tr.className = `status-${item.status}${classeVru ? ` ${classeVru}` : ""}`;
       tr.setAttribute("data-chave-rec", chaveRecomendacao(item));
 
-      const faixa = `${n(item.vazaoMinLMin, 2)} - ${n(item.vazaoMaxLMin, 2)}`;
+      const faixa = `${n(vazaoParaExibicao(item.vazaoMinLMin), 2)} - ${n(vazaoParaExibicao(item.vazaoMaxLMin), 2)}`;
       const psiMin = obterPsiPorFaixa(item, "min");
       const psiMed = obterPsiPorFaixa(item, "med");
       const psiMax = obterPsiPorFaixa(item, "max");
@@ -1959,7 +2252,7 @@
             <div>
               <strong>${escapeHtml(nomeProdutoExibicao)}</strong><br><small>${escapeHtml(item.conexao || "")}</small>
             </div>
-            <span class="faixa-inline">${escapeHtml(faixa)} L/min</span>
+            <span class="faixa-inline">${escapeHtml(faixa)} ${unidadeVazao()}</span>
           </div>
         </td>
         <td>${familiaLabel(item.familia)}</td>
@@ -1979,6 +2272,32 @@
     });
 
     aplicarSelecaoVisual();
+  }
+
+  function configurarSistemaUnidades(catalogo) {
+    if (sistemaUnidadesSelect) {
+      sistemaUnidadesSelect.value = sistemaUnidadesAtual;
+      sistemaUnidadesSelect.addEventListener("change", function () {
+        const mudou = aplicarSistemaUnidades(String(sistemaUnidadesSelect.value || SISTEMA_UNIDADES_METRICO), true);
+        salvarDadosCompartilhados();
+        if (mudou && entradaInicialValidaParaCalculo()) {
+          executarCalculo(catalogo);
+        }
+      });
+    }
+
+    document.querySelectorAll(".lang-switch").forEach((sel) => {
+      sel.addEventListener("change", function () {
+        window.setTimeout(() => {
+          atualizarRotulosUnidadesUI();
+          atualizarOpcoesPresetAeronave();
+          if (entradaInicialValidaParaCalculo()) executarCalculo(catalogo);
+        }, 0);
+      });
+    });
+
+    atualizarRotulosUnidadesUI();
+    atualizarOpcoesPresetAeronave();
   }
 
   function configurarAutoCalculo(catalogo) {
@@ -2004,7 +2323,9 @@
       }
       salvarDadosCompartilhados();
       // Preset ja recalcula no handler proprio.
-      if (event && event.target && event.target.id === "preset-aeronave") return;
+      if (event && event.target && (event.target.id === "preset-aeronave" || event.target.id === "sistema-unidades")) {
+        return;
+      }
       executarCalculo(catalogo);
     });
   }
@@ -2043,11 +2364,11 @@
       ajustarFiltrosPorQuantidadePulverizadores();
       const numeroPulverizadores = validarQuantidadePulverizadores();
       const demandaFaixa = calculos.calcularDemandaFaixa({
-        velocidadeMinKmh: form["velocidade-min"].value,
-        velocidadeMedKmh: form["velocidade-med"].value,
-        velocidadeMaxKmh: form["velocidade-max"].value,
-        faixaM: form.faixa.value,
-        volumeLHa: form.vazao.value,
+        velocidadeMinKmh: velocidadeParaCalculo(Number(form["velocidade-min"].value)),
+        velocidadeMedKmh: velocidadeParaCalculo(Number(form["velocidade-med"].value)),
+        velocidadeMaxKmh: velocidadeParaCalculo(Number(form["velocidade-max"].value)),
+        faixaM: faixaParaCalculo(Number(form.faixa.value)),
+        volumeLHa: taxaParaCalculo(Number(form.vazao.value)),
         numeroPulverizadores,
       });
 
@@ -2197,7 +2518,7 @@
     aeronaves.forEach((item) => {
       const opt = document.createElement("option");
       opt.value = item.modelo;
-      opt.textContent = `${item.modelo} (${n(item.vminKmh, 0)}/${n(item.vmedKmh, 0)}/${n(item.vmaxKmh, 0)} km/h)`;
+      atualizarTextoOpcaoAeronave(opt, item);
       fragment.appendChild(opt);
     });
     presetAeronaveSelect.appendChild(fragment);
@@ -2210,9 +2531,9 @@
           : [];
         const preset = base.find((a) => a.modelo === model);
         if (!preset) return;
-        form["velocidade-min"].value = String(preset.vminKmh);
-        form["velocidade-med"].value = String(preset.vmedKmh);
-        form["velocidade-max"].value = String(preset.vmaxKmh);
+        form["velocidade-min"].value = formatInputNumber(velocidadeParaExibicao(Number(preset.vminKmh)), 2);
+        form["velocidade-med"].value = formatInputNumber(velocidadeParaExibicao(Number(preset.vmedKmh)), 2);
+        form["velocidade-max"].value = formatInputNumber(velocidadeParaExibicao(Number(preset.vmaxKmh)), 2);
         salvarDadosCompartilhados();
         executarCalculo(catalogo);
       });
@@ -2256,10 +2577,7 @@
       lista.forEach((item) => {
         const opt = document.createElement("option");
         opt.value = item.modelo;
-        const vmin = Number.isFinite(Number(item.vminKmh)) ? Number(item.vminKmh) : 0;
-        const vmed = Number.isFinite(Number(item.vmedKmh)) ? Number(item.vmedKmh) : 0;
-        const vmax = Number.isFinite(Number(item.vmaxKmh)) ? Number(item.vmaxKmh) : 0;
-        opt.textContent = `${item.modelo} (${Math.round(vmin)}/${Math.round(vmed)}/${Math.round(vmax)} km/h)`;
+        atualizarTextoOpcaoAeronave(opt, item);
         frag.appendChild(opt);
       });
       presetAeronaveSelect.appendChild(frag);
@@ -2355,6 +2673,7 @@
       dadosAeronaveFluxometro = await carregarAeronavesFluxometroJson();
       const catalogo = mesclarCatalogo(catalogoBase, complementoXls);
       catalogoAtivo = catalogo;
+      aplicarSistemaUnidades(SISTEMA_UNIDADES_METRICO, false);
       popularPresetAeronave(catalogo);
       await garantirPresetAeronaveCarregado(catalogo);
       window.setTimeout(() => {
@@ -2384,12 +2703,12 @@
 
       if (fillExampleBtn) {
         fillExampleBtn.addEventListener("click", function () {
-          form["velocidade-min"].value = "5.5";
-          form["velocidade-med"].value = "7.5";
-          form["velocidade-max"].value = "9.0";
+          form["velocidade-min"].value = formatInputNumber(velocidadeParaExibicao(5.5), 2);
+          form["velocidade-med"].value = formatInputNumber(velocidadeParaExibicao(7.5), 2);
+          form["velocidade-max"].value = formatInputNumber(velocidadeParaExibicao(9.0), 2);
           if (presetAeronaveSelect) presetAeronaveSelect.value = "";
-          form.faixa.value = "12";
-          form.vazao.value = "120";
+          form.faixa.value = formatInputNumber(faixaParaExibicao(12), 2);
+          form.vazao.value = formatInputNumber(taxaParaExibicao(120), 2);
           form.pulverizadores.value = paginaAtomizadores ? String(LIMITE_ATOMIZADORES_MAX) : "24";
           ajustarValorCampoQuantidade();
           if (modoExibicaoSelect) modoExibicaoSelect.value = modoExibicaoInicial;
@@ -2414,6 +2733,7 @@
       if (form["filtro-conico-core"]) form["filtro-conico-core"].checked = true;
       if (form["filtro-conico-eletro"]) form["filtro-conico-eletro"].checked = true;
       if (form["filtro-atomizador"]) form["filtro-atomizador"].checked = paginaAtomizadores;
+      configurarSistemaUnidades(catalogo);
       salvarDadosCompartilhados();
       ajustarFiltrosPorQuantidadePulverizadores();
       if (entradaInicialValidaParaCalculo()) {
