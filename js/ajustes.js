@@ -4,6 +4,7 @@
   const SISTEMA_UNIDADES_IMPERIAL = "imperial";
 
   const inputSistema = document.getElementById("ajustes-sistema-unidades");
+  const inputExibirSinal = document.getElementById("ajustes-exibir-sinal");
   const statusNode = document.getElementById("ajustes-status");
 
   if (!inputSistema) return;
@@ -25,20 +26,24 @@
     }
   }
 
+  function normalizarExibirSinal(value) {
+    const txt = String(value == null ? "" : value).toLowerCase().trim();
+    return txt === "sim" || txt === "true" || txt === "1" ? "sim" : "nao";
+  }
+
   function salvarSistema() {
     try {
       const atual = lerDados();
       const sistema = normalizarSistema(inputSistema.value);
+      const exibirSinal = normalizarExibirSinal(inputExibirSinal && inputExibirSinal.value);
       const payload = {
         ...atual,
         sistemaUnidades: sistema,
+        exibirSinalPercentual: exibirSinal === "sim",
       };
       localStorage.setItem(CHAVE_DADOS_COMPARTILHADOS, JSON.stringify(payload));
       if (statusNode) {
-        statusNode.textContent =
-          sistema === SISTEMA_UNIDADES_IMPERIAL
-            ? "Salvo: Imperial."
-            : "Salvo: Metrico.";
+        statusNode.textContent = "Ajustes salvos.";
       }
     } catch (_error) {
       if (statusNode) statusNode.textContent = "Nao foi possivel salvar.";
@@ -48,9 +53,15 @@
   function carregarSistema() {
     const dados = lerDados();
     inputSistema.value = normalizarSistema(dados.sistemaUnidades);
+    if (inputExibirSinal) {
+      inputExibirSinal.value = normalizarExibirSinal(dados.exibirSinalPercentual ? "sim" : "nao");
+    }
     if (statusNode) statusNode.textContent = "";
   }
 
   inputSistema.addEventListener("change", salvarSistema);
+  if (inputExibirSinal) {
+    inputExibirSinal.addEventListener("change", salvarSistema);
+  }
   carregarSistema();
 })();

@@ -19,7 +19,7 @@
       home_intro: "Escolha qual calculadora voce quer usar",
       home_card_bicos_title: "Calibração bicos hidráulicos",
       home_card_bicos_desc: "Recomendacoes e calibracao para bicos hidraulicos.",
-      home_card_atomizadores_title: "Calibracao geral - atomizadores",
+      home_card_atomizadores_title: "Calibracao atomizadores rotativos",
       home_card_atomizadores_desc: "Recomendacoes e calibracao para atomizadores rotativos.",
       home_card_configuracoes_title: "O que o seu bico pode fazer",
       home_card_configuracoes_desc: "Faixas de taxa e ajustes possiveis com o equipamento selecionado.",

@@ -30,6 +30,7 @@
   let chaveRecomendacaoSelecionada = "";
   let referenciaPsiPopup = null;
   let popupPsiNode = null;
+  let ultimoContextoCalculo = null;
   const modoPagina = String((document.body && document.body.dataset && document.body.dataset.pagina) || "geral")
     .toLowerCase()
     .trim();
@@ -344,13 +345,194 @@
   }
 
   function exportarPaginaParaPdf() {
+    if (!paginaAtomizadores) {
+      const gerou = montarRelatorioOperacionalBicos();
+      if (!gerou) {
+        if (formError) formError.textContent = "Execute um calculo antes de exportar o relatorio.";
+        return;
+      }
+      document.body.classList.add("print-report-bicos");
+    }
     const tituloAnterior = String(document.title || "");
     const prefixo = paginaAtomizadores ? "relatorio_atomizadores" : "relatorio_bicos_hidraulicos";
     document.title = `${prefixo}_${dataHoraParaNomeArquivo(new Date())}`;
     window.print();
     window.setTimeout(() => {
       document.title = tituloAnterior;
+      if (!paginaAtomizadores) {
+        document.body.classList.remove("print-report-bicos");
+      }
     }, 400);
+  }
+
+  function valorNumericoInput(name) {
+    const node = form && form[name];
+    const value = Number(node && node.value);
+    return Number.isFinite(value) ? value : NaN;
+  }
+
+  function textoOpcaoSelecionada(selectNode) {
+    if (!selectNode) return "";
+    const idx = Number(selectNode.selectedIndex);
+    const opt = idx >= 0 ? selectNode.options[idx] : null;
+    return String((opt && opt.textContent) || "").trim();
+  }
+
+  function psiDoItemPorFaixa(item, faixa) {
+    const psiFaixa = item && item.psiEstimadoFaixa ? item.psiEstimadoFaixa : null;
+    const temFaixaPressaoItem =
+      item && Number.isFinite(item.pressaoMinPsi) && Number.isFinite(item.pressaoMaxPsi);
+    if (faixa === "min") {
+      return psiFaixa && Number.isFinite(psiFaixa.min)
+        ? psiFaixa.min
+        : temFaixaPressaoItem
+        ? item.pressaoMinPsi
+        : NaN;
+    }
+    if (faixa === "med") {
+      return psiFaixa && Number.isFinite(psiFaixa.med)
+        ? psiFaixa.med
+        : temFaixaPressaoItem
+        ? (item.pressaoMinPsi + item.pressaoMaxPsi) / 2
+        : NaN;
+    }
+    return psiFaixa && Number.isFinite(psiFaixa.max)
+      ? psiFaixa.max
+      : temFaixaPressaoItem
+      ? item.pressaoMaxPsi
+      : NaN;
+  }
+
+  function blocoDemandaPdf(vazaoLMin, psi) {
+    const vazaoExibicao = vazaoParaExibicao(vazaoLMin);
+    const psiExibivel = Number.isFinite(psi) && psi >= LIMITE_MIN_PSI_EXIBICAO;
+    return `
+      <div class="pdf-op-demand-q">${n(vazaoExibicao, 2)} ${unidadeVazao()}</div>
+      <div class="pdf-op-demand-p">${psiExibivel ? `${n(psi, 1)} psi` : "n/d"}</div>
+    `;
+  }
+
+  function montarRelatorioOperacionalBicos() {
+    if (paginaAtomizadores) return false;
+    if (!ultimoContextoCalculo || !ultimoContextoCalculo.demandaFaixa || !ultimoContextoCalculo.resultado) {
+      return false;
+    }
+
+    const demandaFaixa = ultimoContextoCalculo.demandaFaixa;
+    const resultado = ultimoContextoCalculo.resultado;
+    const recomendados = Array.isArray(resultado.recomendados) ? resultado.recomendados : [];
+    if (!recomendados.length) return false;
+
+    const existente = document.getElementById("pdf-operacional-bicos");
+    const report = existente || document.createElement("section");
+    report.id = "pdf-operacional-bicos";
+    report.className = "pdf-op-report";
+
+    const faixaDisplay = valorNumericoInput("faixa");
+    const taxaDisplay = valorNumericoInput("vazao");
+    const nBicos = valorNumericoInput("pulverizadores");
+    const velMinDisplay = valorNumericoInput("velocidade-min");
+    const velMedDisplay = valorNumericoInput("velocidade-med");
+    const velMaxDisplay = valorNumericoInput("velocidade-max");
+    const aeronave = textoOpcaoSelecionada(presetAeronaveSelect) || "Manual";
+    const dataRel = new Date();
+    const dataRelTxt = dataRel.toLocaleString("pt-BR");
+
+    const top = recomendados.slice(0, 8);
+    const chaveSelecionada = String(chaveRecomendacaoSelecionada || "").trim();
+    const principalKey = chaveSelecionada || chaveRecomendacao(top[0]);
+    const vazaoReq = demandaFaixa.vazaoPorPulverizadorLMin;
+
+    const rows = top
+      .map((item, idx) => {
+        const key = chaveRecomendacao(item);
+        const isMain = key && key === principalKey;
+        const faixaVazao = `${n(vazaoParaExibicao(item.vazaoMinLMin), 2)} - ${n(
+          vazaoParaExibicao(item.vazaoMaxLMin),
+          2
+        )}`;
+        const cfg = String(item.configuracaoSugerida || "-").replace(/\s\|\s/g, " | ");
+        const demandaMin = blocoDemandaPdf(vazaoReq.min, psiDoItemPorFaixa(item, "min"));
+        const demandaMed = blocoDemandaPdf(vazaoReq.med, psiDoItemPorFaixa(item, "med"));
+        const demandaMax = blocoDemandaPdf(vazaoReq.max, psiDoItemPorFaixa(item, "max"));
+        return `
+          <tr class="${isMain ? "is-main" : ""}">
+            <td>${idx + 1}</td>
+            <td>${escapeHtml(String(item.id || item.nome || "-"))}</td>
+            <td>${escapeHtml(familiaLabel(item.familia))}</td>
+            <td>${faixaVazao}</td>
+            <td>${demandaMin}</td>
+            <td>${demandaMed}</td>
+            <td>${demandaMax}</td>
+            <td>${escapeHtml(cfg)}</td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    const areaMin = areaParaExibicao((demandaFaixa.velocidadesKmh.min * demandaFaixa.faixaM) / 600);
+    const areaMed = areaParaExibicao((demandaFaixa.velocidadesKmh.med * demandaFaixa.faixaM) / 600);
+    const areaMax = areaParaExibicao((demandaFaixa.velocidadesKmh.max * demandaFaixa.faixaM) / 600);
+    const totalMin = vazaoParaExibicao(demandaFaixa.vazaoTotalLMin.min);
+    const totalMed = vazaoParaExibicao(demandaFaixa.vazaoTotalLMin.med);
+    const totalMax = vazaoParaExibicao(demandaFaixa.vazaoTotalLMin.max);
+
+    report.innerHTML = `
+      <header class="pdf-op-header">
+        <div>
+          <h1>Relatorio Operacional - Bicos Hidraulicos</h1>
+          <p>Travicar | ${escapeHtml(dataRelTxt)}</p>
+        </div>
+        <div class="pdf-op-header-tag">1 pagina</div>
+      </header>
+
+      <section class="pdf-op-meta">
+        <div><strong>Aeronave:</strong> ${escapeHtml(aeronave)}</div>
+        <div><strong>Faixa:</strong> ${Number.isFinite(faixaDisplay) ? n(faixaDisplay, 2) : "-"} ${unidadesEmUso().faixa}</div>
+        <div><strong>Taxa alvo:</strong> ${Number.isFinite(taxaDisplay) ? n(taxaDisplay, 2) : "-"} ${unidadesEmUso().taxa}</div>
+        <div><strong>N de bicos:</strong> ${Number.isFinite(nBicos) ? n(nBicos, 0) : "-"}</div>
+        <div><strong>Vel. min/med/max:</strong> ${
+          Number.isFinite(velMinDisplay) && Number.isFinite(velMedDisplay) && Number.isFinite(velMaxDisplay)
+            ? `${n(velMinDisplay, 2)} / ${n(velMedDisplay, 2)} / ${n(velMaxDisplay, 2)} ${unidadeVelocidade()}`
+            : "-"
+        }</div>
+      </section>
+
+      <section class="pdf-op-kpis">
+        <article><span>Area coberta</span><strong>${n(areaMin, 3)} / ${n(areaMed, 3)} / ${n(areaMax, 3)} ${unidadesEmUso().area}</strong></article>
+        <article><span>Vazao total alvo</span><strong>${n(totalMin, 2)} / ${n(totalMed, 2)} / ${n(totalMax, 2)} ${unidadeVazao()}</strong></article>
+        <article><span>Vazao por bico alvo</span><strong>${n(vazaoParaExibicao(vazaoReq.min), 2)} / ${n(
+          vazaoParaExibicao(vazaoReq.med),
+          2
+        )} / ${n(vazaoParaExibicao(vazaoReq.max), 2)} ${unidadeVazao()}</strong></article>
+        <article><span>Compativeis</span><strong>${resultado.recomendados.length} exibidas (${resultado.totalCompativeis}/${resultado.totalCatalogo})</strong></article>
+      </section>
+
+      <section class="pdf-op-table-wrap">
+        <table class="pdf-op-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Modelo</th>
+              <th>Familia</th>
+              <th>Faixa vazao</th>
+              <th>Vel. minima</th>
+              <th>Vel. media</th>
+              <th>Vel. maxima</th>
+              <th>Configuracao</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </section>
+
+      <footer class="pdf-op-footer">
+        Referencia principal destacada em azul. Valores de PSI abaixo de ${LIMITE_MIN_PSI_EXIBICAO} exibidos como n/d.
+      </footer>
+    `;
+
+    if (!existente) document.body.appendChild(report);
+    return true;
   }
 
   function lerDadosCompartilhados() {
@@ -1002,8 +1184,10 @@
 
   function nomeExibicaoProduto(item, caminhoImagem) {
     const nomeArquivo = nomeBaseArquivo(caminhoImagem);
-    if (nomeArquivo) return nomeArquivo;
-    return String((item && item.nome) || "");
+    const base = nomeArquivo || String((item && item.nome) || "");
+    return base
+      .replace(/\b(NIPLE)\s+1\s+8\b/gi, "$1 1/8")
+      .replace(/\b(NIPLE)\s+1\s+4\b/gi, "$1 1/4");
   }
 
   function normalizarId(value) {
@@ -2394,6 +2578,12 @@
           : (Array.isArray(resultadoBase.recomendados) ? resultadoBase.recomendados : []).filter(
               itemRespeitaLimitePsiMaxBicos
             ),
+      };
+      ultimoContextoCalculo = {
+        demandaFaixa,
+        resultado,
+        modoExibicao,
+        calculadoEm: new Date().toISOString(),
       };
       const existeChaveSelecionada = resultado.recomendados.some(
         (item) => chaveRecomendacao(item) === chaveRecomendacaoSelecionada

@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   const ns = window.SoftwareBicos || {};
   const calculos = ns.calculos || {};
 
@@ -83,6 +83,14 @@
     } catch (_error) {
       return null;
     }
+  }
+
+  function preferenciaExibirSinalPercentual() {
+    const dados = lerDadosCompartilhados();
+    if (!dados || !Object.prototype.hasOwnProperty.call(dados, "exibirSinalPercentual")) {
+      return false;
+    }
+    return Boolean(dados.exibirSinalPercentual);
   }
 
   function salvarDadosCompartilhados() {
@@ -232,6 +240,34 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;");
+  }
+
+  function resolverImagemReferencia(item) {
+    if (!item || typeof item !== "object") return "";
+    if (typeof item.imagem === "string" && item.imagem.trim()) return item.imagem.trim();
+    if (typeof item.imagemUrl === "string" && item.imagemUrl.trim()) return item.imagemUrl.trim();
+    if (typeof item.foto === "string" && item.foto.trim()) return item.foto.trim();
+
+    const id = String(item.id || "").trim().toUpperCase();
+    const mapaPorId = {
+      "90088": "js/data/images/90088.png",
+      "90088A": "js/data/images/90088A.png",
+      TT90300: "js/data/images/TT03.png",
+      TT90900BZ: "js/data/images/TT09.png",
+      TT11: "js/data/images/TT11.png",
+      "90500": "js/data/images/ELETROSTATICO.png",
+      CORE25: "js/data/images/CORE/CORE25.png",
+      CORE45: "js/data/images/CORE/CORE45.png",
+      CORE46: "js/data/images/CORE/CORE46.png",
+      CORE56: "js/data/images/CORE/CORE56.png",
+    };
+    if (mapaPorId[id]) return mapaPorId[id];
+
+    if (String(item.categoria || "").toLowerCase() === "atomizador") {
+      return "js/data/images/ATOMIZADOR.png";
+    }
+
+    return "";
   }
 
   async function fetchJsonWithFallback(paths, required) {
@@ -714,9 +750,10 @@
     return null;
   }
 
-  function interpolarPsiPorVazao(pontos, vazaoAlvo, psiMinAceitavel) {
+  function interpolarPsiPorVazao(pontos, vazaoAlvo, psiMinAceitavel, psiMaxAceitavel) {
     if (!Array.isArray(pontos) || pontos.length < 2) return null;
     const psiMin = Number.isFinite(Number(psiMinAceitavel)) ? Number(psiMinAceitavel) : PSI_PADRAO_MIN;
+    const psiMax = Number.isFinite(Number(psiMaxAceitavel)) ? Number(psiMaxAceitavel) : PSI_LIMITE_MAX;
     const pontosPorVazao = pontos
       .map((p) => ({ psi: p.psi, vazao: p.vazao }))
       .sort((a, b) => a.vazao - b.vazao);
@@ -730,7 +767,13 @@
       return psiEstimada;
     }
     if (vazaoAlvo > pontosPorVazao[pontosPorVazao.length - 1].vazao) {
-      return null;
+      // Extrapolacao para cima invertendo Q ~ sqrt(P)
+      const pontoMax = pontosPorVazao[pontosPorVazao.length - 1];
+      if (pontoMax.vazao <= 0 || pontoMax.psi <= 0) return null;
+      const psiEstimada = Math.pow(vazaoAlvo / pontoMax.vazao, 2) * pontoMax.psi;
+      if (!Number.isFinite(psiEstimada)) return null;
+      if (psiEstimada < pontoMax.psi || psiEstimada > psiMax || psiEstimada > PSI_LIMITE_MAX) return null;
+      return psiEstimada;
     }
     for (let i = 0; i < pontosPorVazao.length - 1; i += 1) {
       const p1 = pontosPorVazao[i];
@@ -912,9 +955,9 @@
           ),
         };
         const psi = {
-          min: interpolarPsiPorVazao(curva.pontos, q.min, psiMinAceitavel),
-          med: interpolarPsiPorVazao(curva.pontos, q.med, psiMinAceitavel),
-          max: interpolarPsiPorVazao(curva.pontos, q.max, psiMinAceitavel),
+          min: interpolarPsiPorVazao(curva.pontos, q.min, psiMinAceitavel, psiMaxAceitavel),
+          med: interpolarPsiPorVazao(curva.pontos, q.med, psiMinAceitavel, psiMaxAceitavel),
+          max: interpolarPsiPorVazao(curva.pontos, q.max, psiMinAceitavel, psiMaxAceitavel),
         };
         if (!Number.isFinite(psi.min) || !Number.isFinite(psi.med) || !Number.isFinite(psi.max)) return;
         if (psi.min < psiMinAceitavel || psi.med < psiMinAceitavel || psi.max < psiMinAceitavel) return;
@@ -958,11 +1001,16 @@
     return resultados;
   }
 
-  function renderPassos(passos) {
+  function renderPassos(passos, inputAtual) {
     const psiMinAceitavel = Number(inputPsiMin && inputPsiMin.value);
     const psiMaxAceitavel = Number(inputPsiMax && inputPsiMax.value);
     const psiMin = Number.isFinite(psiMinAceitavel) ? psiMinAceitavel : PSI_PADRAO_MIN;
     const psiMax = Number.isFinite(psiMaxAceitavel) ? psiMaxAceitavel : PSI_PADRAO_MAX;
+    const mostrarSinal = preferenciaExibirSinalPercentual();
+    const equipamentoSelecionado = String(
+      (inputAtual && inputAtual.bicoSelecionado && (inputAtual.bicoSelecionado.nome || inputAtual.bicoSelecionado.id)) ||
+        ""
+    ).trim();
     if (!passos.length) {
       passosBody.innerHTML = `
         <tr>
@@ -977,8 +1025,9 @@
 
     function textoDeltaComp(passoAlvo) {
       const delta = passoAlvo - 100;
-      if (delta === 0) return "+/-0%";
-      return `${delta > 0 ? "+" : ""}${fmt(delta, 0)}%`;
+      if (delta === 0) return mostrarSinal ? "+/-0%" : "0%";
+      if (!mostrarSinal) return `${fmt(Math.abs(delta), 0)}%`;
+      return `${delta > 0 ? "+" : "-"}${fmt(Math.abs(delta), 0)}%`;
     }
 
     function celulaVel(vazao, psi) {
@@ -1004,6 +1053,26 @@
             ? "comp-med comp-centro-100"
             : "comp-ok comp-centro-100"
           : "comp-ok";
+        const imagemRef = ehCentro ? resolverImagemReferencia(inputAtual && inputAtual.bicoSelecionado) : "";
+        const configPrincipal = cand
+          ? escapeHtml(String(cand.configLabel || "-"))
+          : "Indisponivel nesta configuracao";
+        const configCellHtml =
+          ehCentro && equipamentoSelecionado
+            ? `<div class="comp-ref-row">
+                <div class="comp-ref-text">
+                  <div class="comp-ref-main">${configPrincipal}</div>
+                  <small class="comp-ref-equip">Equipamento: ${escapeHtml(equipamentoSelecionado)}</small>
+                </div>
+                ${
+                  imagemRef
+                    ? `<img class="comp-ref-thumb" src="${escapeHtml(imagemRef)}" alt="${escapeHtml(
+                        equipamentoSelecionado
+                      )}" loading="lazy" />`
+                    : ""
+                }
+              </div>`
+            : configPrincipal;
         return `
           <tr class="${rowClass}">
             <td>
@@ -1011,11 +1080,7 @@
               <small>${textoDeltaComp(item.passoAlvo)}</small>
             </td>
             <td>
-              ${
-                cand
-                  ? escapeHtml(String(cand.configLabel || "-"))
-                  : "Indisponivel nesta configuração"
-              }
+              ${configCellHtml}
             </td>
             <td>
               ${cand ? celulaVel(cand.vazaoBico.min, cand.psi.min) : '<small class="demanda-psi">n/d</small>'}
@@ -1049,7 +1114,7 @@
       const input = lerEntrada();
       atualizarResumo(input);
       const passos = calcularPassos(input);
-      renderPassos(passos);
+      renderPassos(passos, input);
     } catch (error) {
       setError(error.message);
       clearTabela();
