@@ -21,6 +21,14 @@ app.get("/ajustes_compacto", (req, res) => {
   res.sendFile(path.join(__dirname, "ajustes_compacto.html"));
 });
 
+app.get("/api/health", (req, res) => {
+  res.json({
+    ok: true,
+    app: "softwarebicos",
+    now: new Date().toISOString(),
+  });
+});
+
 function pad2(value) {
   const n = Number(value);
   if (!Number.isFinite(n)) return "00";

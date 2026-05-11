@@ -358,6 +358,45 @@
     return `${y}-${m}-${day}_${h}-${min}`;
   }
 
+  function endpointRelatorioPdfCandidatos() {
+    const pathApi = "/api/relatorio-pdf";
+    const vistos = new Set();
+    const out = [];
+
+    function add(base) {
+      const valorBase = String(base || "").trim();
+      let url = "";
+      if (!valorBase) {
+        url = pathApi;
+      } else if (/^https?:\/\//i.test(valorBase)) {
+        url = `${valorBase.replace(/\/+$/, "")}${pathApi}`;
+      } else {
+        const normalizado = valorBase.startsWith("/") ? valorBase : `/${valorBase}`;
+        url = `${normalizado.replace(/\/+$/, "")}${pathApi}`;
+      }
+      if (!vistos.has(url)) {
+        vistos.add(url);
+        out.push(url);
+      }
+    }
+
+    const cfgGlobal =
+      (window && window.SOFTWAREBICOS_API_BASE ? String(window.SOFTWAREBICOS_API_BASE) : "") ||
+      (document.body && document.body.dataset ? String(document.body.dataset.apiBase || "") : "");
+    add(cfgGlobal);
+
+    const pathname = String((window.location && window.location.pathname) || "");
+    const partes = pathname.split("/").filter(Boolean);
+    if (partes.length) {
+      const ultima = String(partes[partes.length - 1] || "");
+      if (/\.[a-z0-9]+$/i.test(ultima)) partes.pop();
+      if (partes.length) add(`/${partes.join("/")}`);
+    }
+
+    add("");
+    return out;
+  }
+
   function lerModeloRelatorioPdfAtual() {
     const valor = pdfModeloSelect ? pdfModeloSelect.value : "";
     const modelo = normalizarModeloRelatorioPdf(valor);
@@ -384,29 +423,47 @@
       if (reportHtml) {
         try {
           if (formError) formError.textContent = "";
-          const resp = await fetch("/api/relatorio-pdf", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ reportHtml, prefixo }),
-          });
-          const contentType = String(resp.headers.get("content-type") || "").toLowerCase();
-          if (!resp.ok || !contentType.includes("application/pdf")) {
+          const endpoints = endpointRelatorioPdfCandidatos();
+          let respOk = null;
+          let erroDetalhe = "";
+
+          for (let i = 0; i < endpoints.length; i += 1) {
+            const endpoint = endpoints[i];
+            const resp = await fetch(endpoint, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ reportHtml, prefixo }),
+            });
+            const contentType = String(resp.headers.get("content-type") || "").toLowerCase();
+
+            if (resp.ok && contentType.includes("application/pdf")) {
+              respOk = resp;
+              break;
+            }
+
             let detalhes = "";
             try {
               if (contentType.includes("application/json")) {
                 const body = await resp.json();
-                detalhes = body && body.error ? ` (${body.error})` : "";
+                detalhes = body && body.error ? body.error : "";
               } else {
                 const txt = await resp.text();
                 const sample = String(txt || "").slice(0, 140).replace(/\s+/g, " ").trim();
-                if (sample) detalhes = ` (resposta: ${sample})`;
+                if (sample) detalhes = sample;
               }
-            } catch (_e) {
+            } catch (_erroParse) {
               detalhes = "";
             }
-            throw new Error(`Falha ao gerar PDF via Puppeteer${detalhes}`);
+
+            erroDetalhe = `endpoint ${endpoint} retornou ${resp.status}${
+              detalhes ? ` (${detalhes})` : ""
+            }`;
           }
-          const blob = await resp.blob();
+
+          if (!respOk) {
+            throw new Error(`Falha ao gerar PDF via Puppeteer (${erroDetalhe || "sem resposta valida"})`);
+          }
+          const blob = await respOk.blob();
           const url = URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
