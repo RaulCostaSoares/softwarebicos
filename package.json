@@ -1,0 +1,14 @@
+{
+  "name": "softwarebicos",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Calculadoras de calibracao e relatorio PDF A4 com Puppeteer",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "puppeteer": "^24.9.0"
+  }
+}

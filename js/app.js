@@ -11,6 +11,7 @@
   const warnings = document.getElementById("warnings");
   const resultsMeta = document.getElementById("results-meta");
   const exportPdfBtn = document.getElementById("export-pdf-btn");
+  const pdfModeloSelect = document.getElementById("pdf-modelo-select");
   const tableBody = document.querySelector("#results-table tbody");
   const presetAeronaveSelect = document.getElementById("preset-aeronave");
   const pulverizadorSelecionadoInput = document.getElementById("pulverizador-selecionado");
@@ -40,6 +41,12 @@
   const LIMITE_MIN_PSI_EXIBICAO = 15;
   const LIMITE_MAX_PSI_BICOS_HIDRAULICOS = 100;
   const CHAVE_DADOS_COMPARTILHADOS = "softwarebicos_shared_form_v1";
+  const MODELO_RELATORIO_PADRAO = "operacional-1p";
+  const MODELOS_RELATORIO_VALIDOS = new Set([
+    "operacional-1p",
+    "comparativo-1p",
+    "visual-1p",
+  ]);
   const SISTEMA_UNIDADES_METRICO = "metrico";
   const SISTEMA_UNIDADES_IMPERIAL = "imperial";
   const CONV_KMH_TO_MPH = 0.6213711922;
@@ -80,6 +87,13 @@
     return String(value || "").toLowerCase().trim() === SISTEMA_UNIDADES_IMPERIAL
       ? SISTEMA_UNIDADES_IMPERIAL
       : SISTEMA_UNIDADES_METRICO;
+  }
+
+  function normalizarModeloRelatorioPdf(value) {
+    const modelo = String(value || "").toLowerCase().trim();
+    if (modelo === "operacional-2p") return "operacional-1p";
+    if (modelo === "checklist-2p") return "visual-1p";
+    return MODELOS_RELATORIO_VALIDOS.has(modelo) ? modelo : MODELO_RELATORIO_PADRAO;
   }
 
   function idiomaAtual() {
@@ -344,24 +358,79 @@
     return `${y}-${m}-${day}_${h}-${min}`;
   }
 
-  function exportarPaginaParaPdf() {
+  function lerModeloRelatorioPdfAtual() {
+    const valor = pdfModeloSelect ? pdfModeloSelect.value : "";
+    const modelo = normalizarModeloRelatorioPdf(valor);
+    if (pdfModeloSelect && pdfModeloSelect.value !== modelo) {
+      pdfModeloSelect.value = modelo;
+    }
+    return modelo;
+  }
+
+  async function exportarPaginaParaPdf() {
+    const modeloPdf = lerModeloRelatorioPdfAtual();
+    const sufixoModelo = modeloPdf.replace(/[^a-z0-9-]/gi, "");
+    const prefixoBase = paginaAtomizadores ? "relatorio_atomizadores" : "relatorio_bicos_hidraulicos";
+    const prefixo = `${prefixoBase}_${sufixoModelo}`;
     if (!paginaAtomizadores) {
-      const gerou = montarRelatorioOperacionalBicos();
+      const gerou = montarRelatorioOperacionalBicos(modeloPdf);
       if (!gerou) {
         if (formError) formError.textContent = "Execute um calculo antes de exportar o relatorio.";
         return;
       }
+
+      const reportNode = document.getElementById("pdf-operacional-bicos");
+      const reportHtml = reportNode ? reportNode.outerHTML : "";
+      if (reportHtml) {
+        try {
+          if (formError) formError.textContent = "";
+          const resp = await fetch("/api/relatorio-pdf", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ reportHtml, prefixo }),
+          });
+          const contentType = String(resp.headers.get("content-type") || "").toLowerCase();
+          if (!resp.ok || !contentType.includes("application/pdf")) {
+            let detalhes = "";
+            try {
+              if (contentType.includes("application/json")) {
+                const body = await resp.json();
+                detalhes = body && body.error ? ` (${body.error})` : "";
+              } else {
+                const txt = await resp.text();
+                const sample = String(txt || "").slice(0, 140).replace(/\s+/g, " ").trim();
+                if (sample) detalhes = ` (resposta: ${sample})`;
+              }
+            } catch (_e) {
+              detalhes = "";
+            }
+            throw new Error(`Falha ao gerar PDF via Puppeteer${detalhes}`);
+          }
+          const blob = await resp.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `${prefixo}_${dataHoraParaNomeArquivo(new Date())}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+          return;
+        } catch (error) {
+          if (formError) {
+            formError.textContent = `${error.message || "Falha ao exportar via Puppeteer."} Usando impressao local.`;
+          }
+        }
+      }
       document.body.classList.add("print-report-bicos");
     }
+
     const tituloAnterior = String(document.title || "");
-    const prefixo = paginaAtomizadores ? "relatorio_atomizadores" : "relatorio_bicos_hidraulicos";
     document.title = `${prefixo}_${dataHoraParaNomeArquivo(new Date())}`;
     window.print();
     window.setTimeout(() => {
       document.title = tituloAnterior;
-      if (!paginaAtomizadores) {
-        document.body.classList.remove("print-report-bicos");
-      }
+      if (!paginaAtomizadores) document.body.classList.remove("print-report-bicos");
     }, 400);
   }
 
@@ -412,7 +481,7 @@
     `;
   }
 
-  function montarRelatorioOperacionalBicos() {
+  function montarRelatorioOperacionalBicos(modeloEscolhido) {
     if (paginaAtomizadores) return false;
     if (!ultimoContextoCalculo || !ultimoContextoCalculo.demandaFaixa || !ultimoContextoCalculo.resultado) {
       return false;
@@ -423,6 +492,7 @@
     const recomendados = Array.isArray(resultado.recomendados) ? resultado.recomendados : [];
     if (!recomendados.length) return false;
 
+    const modeloPdf = normalizarModeloRelatorioPdf(modeloEscolhido);
     const existente = document.getElementById("pdf-operacional-bicos");
     const report = existente || document.createElement("section");
     report.id = "pdf-operacional-bicos";
@@ -431,19 +501,28 @@
     const faixaDisplay = valorNumericoInput("faixa");
     const taxaDisplay = valorNumericoInput("vazao");
     const nBicos = valorNumericoInput("pulverizadores");
-    const velMinDisplay = valorNumericoInput("velocidade-min");
     const velMedDisplay = valorNumericoInput("velocidade-med");
-    const velMaxDisplay = valorNumericoInput("velocidade-max");
     const aeronave = textoOpcaoSelecionada(presetAeronaveSelect) || "Manual";
     const dataRel = new Date();
     const dataRelTxt = dataRel.toLocaleString("pt-BR");
 
     const top = recomendados.slice(0, 8);
+    const topExtenso = recomendados.slice(0, 12);
     const chaveSelecionada = String(chaveRecomendacaoSelecionada || "").trim();
     const principalKey = chaveSelecionada || chaveRecomendacao(top[0]);
     const vazaoReq = demandaFaixa.vazaoPorPulverizadorLMin;
+    const origem = window.location.origin || "";
 
-    const rows = top
+    function normalizarSrcImagemPdf(src) {
+      const valor = String(src || "").trim();
+      if (!valor) return "";
+      if (valor.startsWith("data:image/")) return valor;
+      if (/^https?:\/\//i.test(valor)) return valor;
+      const limpo = valor.replace(/^\.?\//, "");
+      return `${origem}/${limpo}`;
+    }
+
+    const rowsResumo = top
       .map((item, idx) => {
         const key = chaveRecomendacao(item);
         const isMain = key && key === principalKey;
@@ -452,84 +531,222 @@
           2
         )}`;
         const cfg = String(item.configuracaoSugerida || "-").replace(/\s\|\s/g, " | ");
-        const demandaMin = blocoDemandaPdf(vazaoReq.min, psiDoItemPorFaixa(item, "min"));
         const demandaMed = blocoDemandaPdf(vazaoReq.med, psiDoItemPorFaixa(item, "med"));
-        const demandaMax = blocoDemandaPdf(vazaoReq.max, psiDoItemPorFaixa(item, "max"));
         return `
           <tr class="${isMain ? "is-main" : ""}">
             <td>${idx + 1}</td>
             <td>${escapeHtml(String(item.id || item.nome || "-"))}</td>
             <td>${escapeHtml(familiaLabel(item.familia))}</td>
             <td>${faixaVazao}</td>
-            <td>${demandaMin}</td>
             <td>${demandaMed}</td>
-            <td>${demandaMax}</td>
             <td>${escapeHtml(cfg)}</td>
           </tr>
         `;
       })
       .join("");
 
-    const areaMin = areaParaExibicao((demandaFaixa.velocidadesKmh.min * demandaFaixa.faixaM) / 600);
     const areaMed = areaParaExibicao((demandaFaixa.velocidadesKmh.med * demandaFaixa.faixaM) / 600);
-    const areaMax = areaParaExibicao((demandaFaixa.velocidadesKmh.max * demandaFaixa.faixaM) / 600);
-    const totalMin = vazaoParaExibicao(demandaFaixa.vazaoTotalLMin.min);
     const totalMed = vazaoParaExibicao(demandaFaixa.vazaoTotalLMin.med);
-    const totalMax = vazaoParaExibicao(demandaFaixa.vazaoTotalLMin.max);
 
-    report.innerHTML = `
-      <header class="pdf-op-header">
-        <div>
-          <h1>Relatorio Operacional - Bicos Hidraulicos</h1>
-          <p>Travicar | ${escapeHtml(dataRelTxt)}</p>
-        </div>
-        <div class="pdf-op-header-tag">1 pagina</div>
-      </header>
-
+    const blocoCabecalhoComum = `
       <section class="pdf-op-meta">
         <div><strong>Aeronave:</strong> ${escapeHtml(aeronave)}</div>
         <div><strong>Faixa:</strong> ${Number.isFinite(faixaDisplay) ? n(faixaDisplay, 2) : "-"} ${unidadesEmUso().faixa}</div>
         <div><strong>Taxa alvo:</strong> ${Number.isFinite(taxaDisplay) ? n(taxaDisplay, 2) : "-"} ${unidadesEmUso().taxa}</div>
         <div><strong>N de bicos:</strong> ${Number.isFinite(nBicos) ? n(nBicos, 0) : "-"}</div>
-        <div><strong>Vel. min/med/max:</strong> ${
-          Number.isFinite(velMinDisplay) && Number.isFinite(velMedDisplay) && Number.isFinite(velMaxDisplay)
-            ? `${n(velMinDisplay, 2)} / ${n(velMedDisplay, 2)} / ${n(velMaxDisplay, 2)} ${unidadeVelocidade()}`
+        <div><strong>Vel. media:</strong> ${
+          Number.isFinite(velMedDisplay)
+            ? `${n(velMedDisplay, 2)} ${unidadeVelocidade()}`
             : "-"
         }</div>
       </section>
 
       <section class="pdf-op-kpis">
-        <article><span>Area coberta</span><strong>${n(areaMin, 3)} / ${n(areaMed, 3)} / ${n(areaMax, 3)} ${unidadesEmUso().area}</strong></article>
-        <article><span>Vazao total alvo</span><strong>${n(totalMin, 2)} / ${n(totalMed, 2)} / ${n(totalMax, 2)} ${unidadeVazao()}</strong></article>
-        <article><span>Vazao por bico alvo</span><strong>${n(vazaoParaExibicao(vazaoReq.min), 2)} / ${n(
+        <article><span>Area coberta (media)</span><strong>${n(areaMed, 3)} ${unidadesEmUso().area}</strong></article>
+        <article><span>Vazao total alvo (media)</span><strong>${n(totalMed, 2)} ${unidadeVazao()}</strong></article>
+        <article><span>Vazao por bico alvo (media)</span><strong>${n(
           vazaoParaExibicao(vazaoReq.med),
           2
-        )} / ${n(vazaoParaExibicao(vazaoReq.max), 2)} ${unidadeVazao()}</strong></article>
+        )} ${unidadeVazao()}</strong></article>
         <article><span>Compativeis</span><strong>${resultado.recomendados.length} exibidas (${resultado.totalCompativeis}/${resultado.totalCatalogo})</strong></article>
       </section>
-
-      <section class="pdf-op-table-wrap">
-        <table class="pdf-op-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Modelo</th>
-              <th>Familia</th>
-              <th>Faixa vazao</th>
-              <th>Vel. minima</th>
-              <th>Vel. media</th>
-              <th>Vel. maxima</th>
-              <th>Configuracao</th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-      </section>
-
-      <footer class="pdf-op-footer">
-        Referencia principal destacada em azul. Valores de PSI abaixo de ${LIMITE_MIN_PSI_EXIBICAO} exibidos como n/d.
-      </footer>
     `;
+
+    const rowsComparativo = topExtenso
+      .map((item, idx) => {
+        const key = chaveRecomendacao(item);
+        const isMain = key && key === principalKey;
+        const faixaVazao = `${n(vazaoParaExibicao(item.vazaoMinLMin), 2)} - ${n(
+          vazaoParaExibicao(item.vazaoMaxLMin),
+          2
+        )}`;
+        const cfg = String(item.configuracaoSugerida || "-").replace(/\s\|\s/g, " | ");
+        return `
+          <tr class="${isMain ? "is-main" : ""}">
+            <td>${idx + 1}</td>
+            <td>${escapeHtml(String(item.id || item.nome || "-"))}</td>
+            <td>${faixaVazao}</td>
+            <td>${blocoDemandaPdf(vazaoReq.min, psiDoItemPorFaixa(item, "min"))}</td>
+            <td>${blocoDemandaPdf(vazaoReq.med, psiDoItemPorFaixa(item, "med"))}</td>
+            <td>${blocoDemandaPdf(vazaoReq.max, psiDoItemPorFaixa(item, "max"))}</td>
+            <td>${escapeHtml(cfg)}</td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    const rowsVisual = topExtenso
+      .map((item, idx) => {
+        const key = chaveRecomendacao(item);
+        const isMain = key && key === principalKey;
+        const familia = familiaLabel(item.familia);
+        const nome = String(item.id || item.nome || "-");
+        const nomeDetalhe = nomeExibicaoProduto(item, resolverImagemProduto(item));
+        const faixaVazao = `${n(vazaoParaExibicao(item.vazaoMinLMin), 2)} - ${n(
+          vazaoParaExibicao(item.vazaoMaxLMin),
+          2
+        )} ${unidadeVazao()}`;
+        const imgSrc = normalizarSrcImagemPdf(resolverImagemProduto(item));
+        const cfg = String(item.configuracaoSugerida || "-").replace(/\s\|\s/g, " | ");
+        const med = blocoDemandaPdf(vazaoReq.med, psiDoItemPorFaixa(item, "med"));
+        const min = blocoDemandaPdf(vazaoReq.min, psiDoItemPorFaixa(item, "min"));
+        const max = blocoDemandaPdf(vazaoReq.max, psiDoItemPorFaixa(item, "max"));
+        return `
+          <article class="pdf-visual-card ${isMain ? "is-main" : ""}">
+            <div class="pdf-visual-idx">${pad2(idx + 1)}</div>
+            <div class="pdf-visual-model">
+              <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(nome)}" />
+              <div>
+                <h4>${escapeHtml(nome)}</h4>
+                <p>${escapeHtml(nomeDetalhe)}</p>
+                <small>${escapeHtml(familia)}</small>
+              </div>
+            </div>
+            <div class="pdf-visual-spec">
+              <div><strong>Faixa:</strong> ${faixaVazao}</div>
+              <div><strong>Config:</strong> ${escapeHtml(cfg)}</div>
+            </div>
+            <div class="pdf-visual-demand">
+              <div><span>Min</span>${min}</div>
+              <div><span>Med</span>${med}</div>
+              <div><span>Max</span>${max}</div>
+            </div>
+          </article>
+        `;
+      })
+      .join("");
+
+    if (modeloPdf === "comparativo-1p") {
+      report.innerHTML = `
+        <section class="pdf-op-page">
+          <header class="pdf-op-header">
+            <div>
+              <h1>Relatorio Comparativo - Bicos Hidraulicos</h1>
+              <p>Travicar | ${escapeHtml(dataRelTxt)}</p>
+            </div>
+            <div class="pdf-op-header-tag">Comparativo 1 pagina</div>
+          </header>
+
+          ${blocoCabecalhoComum}
+
+          <section class="pdf-op-table-wrap">
+            <table class="pdf-op-table pdf-op-table-sec">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Modelo</th>
+                  <th>Faixa vazao</th>
+                  <th>Vel. minima</th>
+                  <th>Vel. media</th>
+                  <th>Vel. maxima</th>
+                  <th>Configuracao</th>
+                </tr>
+              </thead>
+              <tbody>${rowsComparativo}</tbody>
+            </table>
+          </section>
+
+          <footer class="pdf-op-footer">
+            Comparativo rapido para ajuste em campo com foco no intervalo min/med/max.
+          </footer>
+        </section>
+      `;
+    } else if (modeloPdf === "visual-1p") {
+      report.innerHTML = `
+        <section class="pdf-op-page">
+          <header class="pdf-op-header pdf-visual-header">
+            <div>
+              <h1>Relatorio Visual de Bicos Compativeis</h1>
+              <p>Travicar | ${escapeHtml(dataRelTxt)}</p>
+            </div>
+            <div class="pdf-op-header-tag">Visual 1 pagina</div>
+          </header>
+
+          <section class="pdf-visual-grid">
+            <div class="pdf-visual-params">
+              <h3>Parametros informados</h3>
+              <div><strong>Aeronave:</strong> ${escapeHtml(aeronave)}</div>
+              <div><strong>Faixa:</strong> ${Number.isFinite(faixaDisplay) ? n(faixaDisplay, 2) : "-"} ${unidadesEmUso().faixa}</div>
+              <div><strong>Taxa alvo:</strong> ${Number.isFinite(taxaDisplay) ? n(taxaDisplay, 2) : "-"} ${unidadesEmUso().taxa}</div>
+              <div><strong>N de bicos:</strong> ${Number.isFinite(nBicos) ? n(nBicos, 0) : "-"}</div>
+              <div><strong>Velocidade media:</strong> ${
+                Number.isFinite(velMedDisplay)
+                  ? `${n(velMedDisplay, 2)} ${unidadeVelocidade()}`
+                  : "-"
+              }</div>
+              <div><strong>Vazao media alvo por bico:</strong> ${n(vazaoParaExibicao(vazaoReq.med), 2)} ${unidadeVazao()}</div>
+            </div>
+            <aside class="pdf-visual-summary">
+              <h3>Resumo</h3>
+              <p>Foram encontradas <strong>${resultado.recomendados.length}</strong> recomendacoes compativeis.</p>
+              <p>Referencia principal destacada em azul.</p>
+            </aside>
+          </section>
+
+          <section class="pdf-visual-list">
+            ${rowsVisual}
+          </section>
+
+          <footer class="pdf-op-footer">
+            Relatorio visual para apresentacao e aprovacao rapida em campo.
+          </footer>
+        </section>
+      `;
+    } else {
+      report.innerHTML = `
+        <section class="pdf-op-page">
+          <header class="pdf-op-header">
+            <div>
+              <h1>Relatorio Operacional - Bicos Hidraulicos</h1>
+              <p>Travicar | ${escapeHtml(dataRelTxt)}</p>
+            </div>
+            <div class="pdf-op-header-tag">Operacional 1 pagina</div>
+          </header>
+
+          ${blocoCabecalhoComum}
+
+          <section class="pdf-op-table-wrap">
+            <table class="pdf-op-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Modelo</th>
+                  <th>Familia</th>
+                  <th>Faixa vazao</th>
+                  <th>Vel. media</th>
+                  <th>Configuracao</th>
+                </tr>
+              </thead>
+              <tbody>${rowsResumo}</tbody>
+            </table>
+          </section>
+
+          <footer class="pdf-op-footer">
+            Referencia principal destacada em azul. Valores de PSI abaixo de ${LIMITE_MIN_PSI_EXIBICAO} exibidos como n/d.
+          </footer>
+        </section>
+      `;
+    }
 
     if (!existente) document.body.appendChild(report);
     return true;
@@ -559,6 +776,7 @@
         velMed: String((form && form["velocidade-med"] && form["velocidade-med"].value) || ""),
         velMax: String((form && form["velocidade-max"] && form["velocidade-max"].value) || ""),
         sistemaUnidades: String(sistemaUnidadesAtual || SISTEMA_UNIDADES_METRICO),
+        pdfModelo: lerModeloRelatorioPdfAtual(),
       };
       localStorage.setItem(CHAVE_DADOS_COMPARTILHADOS, JSON.stringify(payload));
     } catch (_error) {
@@ -607,6 +825,10 @@
       form["velocidade-max"].value = String(dados.velMax || "0");
       aplicou = true;
     }
+    if (Object.prototype.hasOwnProperty.call(dados, "pdfModelo") && pdfModeloSelect) {
+      pdfModeloSelect.value = normalizarModeloRelatorioPdf(dados.pdfModelo);
+      aplicou = true;
+    }
 
     if (
       Object.prototype.hasOwnProperty.call(dados, "presetAeronave") &&
@@ -634,6 +856,7 @@
     if (form && form.vazao) form.vazao.value = "0";
     if (form && form.pulverizadores) form.pulverizadores.value = "0";
     if (maxRecPorModeloInput) maxRecPorModeloInput.value = "5";
+    if (pdfModeloSelect) pdfModeloSelect.value = MODELO_RELATORIO_PADRAO;
   }
 
   function lerMaxRecomendacoesPorModelo() {
@@ -673,9 +896,10 @@
     campo.removeAttribute("max");
   }
 
-  function ajustarValorCampoQuantidade() {
+  function ajustarValorCampoQuantidade(aplicarMinimoGeral) {
     const campo = form && form.pulverizadores;
     if (!campo) return;
+    const deveAplicarMinimoGeral = aplicarMinimoGeral !== false;
     const bruto = String(campo.value || "").trim();
     if (!bruto) return;
     const valor = Number(bruto);
@@ -688,7 +912,7 @@
       campo.value = "1";
       return;
     }
-    if (!paginaAtomizadores && valor < LIMITE_BICOS_MIN) {
+    if (!paginaAtomizadores && deveAplicarMinimoGeral && valor < LIMITE_BICOS_MIN) {
       campo.value = String(LIMITE_BICOS_MIN);
     }
   }
@@ -2493,7 +2717,7 @@
 
     form.addEventListener("input", function (event) {
       if (event && event.target && event.target.id === "pulverizadores") {
-        ajustarValorCampoQuantidade();
+        ajustarValorCampoQuantidade(false);
         ajustarFiltrosPorQuantidadePulverizadores();
       }
       salvarDadosCompartilhados();
@@ -2502,7 +2726,7 @@
 
     form.addEventListener("change", function (event) {
       if (event && event.target && event.target.id === "pulverizadores") {
-        ajustarValorCampoQuantidade();
+        ajustarValorCampoQuantidade(false);
         ajustarFiltrosPorQuantidadePulverizadores();
       }
       salvarDadosCompartilhados();
@@ -2544,7 +2768,7 @@
     formError.textContent = "";
     salvarDadosCompartilhados();
     try {
-      ajustarValorCampoQuantidade();
+      ajustarValorCampoQuantidade(false);
       ajustarFiltrosPorQuantidadePulverizadores();
       const numeroPulverizadores = validarQuantidadePulverizadores();
       const demandaFaixa = calculos.calcularDemandaFaixa({
@@ -2886,6 +3110,13 @@
       });
       if (exportPdfBtn) {
         exportPdfBtn.addEventListener("click", exportarPaginaParaPdf);
+      }
+      if (pdfModeloSelect) {
+        pdfModeloSelect.value = normalizarModeloRelatorioPdf(pdfModeloSelect.value);
+        pdfModeloSelect.addEventListener("change", function () {
+          pdfModeloSelect.value = normalizarModeloRelatorioPdf(pdfModeloSelect.value);
+          salvarDadosCompartilhados();
+        });
       }
       configurarCamposNumericosSemExpo();
       configurarAutoCalculo(catalogo);
