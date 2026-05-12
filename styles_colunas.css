@@ -854,6 +854,10 @@ button:focus {
   font-size: 0.8rem;
 }
 
+#results-meta {
+  display: none !important;
+}
+
 .results-head-meta {
   display: flex;
   align-items: center;

@@ -3147,9 +3147,11 @@
       renderWarnings(resultado, resultado.recomendados);
       renderTable(resultado.recomendados, demandaFaixa, resultado, modoExibicao);
 
-      resultsMeta.textContent =
-        `${resultado.recomendados.length} recomendacoes exibidas ` +
-        `(compativeis na faixa completa: ${resultado.totalCompativeis} de ${resultado.totalCatalogo}).`;
+      if (resultsMeta) {
+        resultsMeta.textContent =
+          `${resultado.recomendados.length} recomendacoes exibidas ` +
+          `(compativeis na faixa completa: ${resultado.totalCompativeis} de ${resultado.totalCatalogo}).`;
+      }
     } catch (error) {
       formError.textContent = error.message || "Erro ao calcular.";
     }
