@@ -1057,13 +1057,14 @@ tr.familia-separador td {
 }
 
 .produto-cell.atomizador-bloco {
+  --atom-row-height: 246px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   gap: 8px;
   padding: 8px 8px 28px;
-  min-height: 246px;
-  height: 246px;
+  min-height: var(--atom-row-height);
+  height: var(--atom-row-height);
 }
 
 .faixa-inline {
@@ -1195,8 +1196,8 @@ tr.familia-separador td {
 .atom-sublist.atom-sublist-equal {
   display: grid;
   grid-template-rows: repeat(var(--subcount, 3), minmax(0, 1fr));
-  min-height: 228px;
-  height: 228px;
+  min-height: var(--atom-row-height, 246px);
+  height: var(--atom-row-height, 246px);
 }
 
 .atom-sublist.atom-sublist-equal .atom-subitem {
