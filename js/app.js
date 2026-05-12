@@ -425,83 +425,83 @@
     const sufixoModelo = modeloPdf.replace(/[^a-z0-9-]/gi, "");
     const prefixoBase = paginaAtomizadores ? "relatorio_atomizadores" : "relatorio_bicos_hidraulicos";
     const prefixo = `${prefixoBase}_${sufixoModelo}`;
-    if (!paginaAtomizadores) {
-      const gerou = montarRelatorioOperacionalBicos(modeloPdf);
-      if (!gerou) {
-        if (formError) formError.textContent = "Execute um calculo antes de exportar o relatorio.";
+    const gerou = paginaAtomizadores
+      ? montarRelatorioOperacionalAtomizadores(modeloPdf)
+      : montarRelatorioOperacionalBicos(modeloPdf);
+    if (!gerou) {
+      if (formError) formError.textContent = "Execute um calculo antes de exportar o relatorio.";
+      return;
+    }
+
+    const reportNode = document.getElementById("pdf-operacional-bicos");
+    const reportHtml = reportNode ? reportNode.outerHTML : "";
+    if (reportHtml) {
+      try {
+        if (formError) formError.textContent = "";
+        const endpoints = endpointRelatorioPdfCandidatos();
+        let respOk = null;
+        let erroDetalhe = "";
+
+        for (let i = 0; i < endpoints.length; i += 1) {
+          const endpoint = endpoints[i];
+          const resp = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ reportHtml, prefixo }),
+          });
+          const contentType = String(resp.headers.get("content-type") || "").toLowerCase();
+
+          if (resp.ok && contentType.includes("application/pdf")) {
+            respOk = resp;
+            break;
+          }
+
+          let detalhes = "";
+          try {
+            if (contentType.includes("application/json")) {
+              const body = await resp.json();
+              detalhes = body && body.error ? body.error : "";
+            } else {
+              const txt = await resp.text();
+              const sample = String(txt || "").slice(0, 140).replace(/\s+/g, " ").trim();
+              if (sample) detalhes = sample;
+            }
+          } catch (_erroParse) {
+            detalhes = "";
+          }
+
+          erroDetalhe = `endpoint ${endpoint} retornou ${resp.status}${
+            detalhes ? ` (${detalhes})` : ""
+          }`;
+        }
+
+        if (!respOk) {
+          throw new Error(`Falha ao gerar PDF via Puppeteer (${erroDetalhe || "sem resposta valida"})`);
+        }
+        const blob = await respOk.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${prefixo}_${dataHoraParaNomeArquivo(new Date())}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
         return;
-      }
-
-      const reportNode = document.getElementById("pdf-operacional-bicos");
-      const reportHtml = reportNode ? reportNode.outerHTML : "";
-      if (reportHtml) {
-        try {
-          if (formError) formError.textContent = "";
-          const endpoints = endpointRelatorioPdfCandidatos();
-          let respOk = null;
-          let erroDetalhe = "";
-
-          for (let i = 0; i < endpoints.length; i += 1) {
-            const endpoint = endpoints[i];
-            const resp = await fetch(endpoint, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ reportHtml, prefixo }),
-            });
-            const contentType = String(resp.headers.get("content-type") || "").toLowerCase();
-
-            if (resp.ok && contentType.includes("application/pdf")) {
-              respOk = resp;
-              break;
-            }
-
-            let detalhes = "";
-            try {
-              if (contentType.includes("application/json")) {
-                const body = await resp.json();
-                detalhes = body && body.error ? body.error : "";
-              } else {
-                const txt = await resp.text();
-                const sample = String(txt || "").slice(0, 140).replace(/\s+/g, " ").trim();
-                if (sample) detalhes = sample;
-              }
-            } catch (_erroParse) {
-              detalhes = "";
-            }
-
-            erroDetalhe = `endpoint ${endpoint} retornou ${resp.status}${
-              detalhes ? ` (${detalhes})` : ""
-            }`;
-          }
-
-          if (!respOk) {
-            throw new Error(`Falha ao gerar PDF via Puppeteer (${erroDetalhe || "sem resposta valida"})`);
-          }
-          const blob = await respOk.blob();
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `${prefixo}_${dataHoraParaNomeArquivo(new Date())}.pdf`;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          URL.revokeObjectURL(url);
-          return;
-        } catch (error) {
-          if (formError) {
-            formError.textContent = `${error.message || "Falha ao exportar via Puppeteer."} Usando impressao local.`;
-          }
+      } catch (error) {
+        if (formError) {
+          formError.textContent = `${error.message || "Falha ao exportar via Puppeteer."} Usando impressao local.`;
         }
       }
-      document.body.classList.add("print-report-bicos");
     }
+    document.body.classList.add("print-report-bicos");
 
     const tituloAnterior = String(document.title || "");
     document.title = `${prefixo}_${dataHoraParaNomeArquivo(new Date())}`;
     window.print();
     window.setTimeout(() => {
       document.title = tituloAnterior;
-      if (!paginaAtomizadores) document.body.classList.remove("print-report-bicos");
+      document.body.classList.remove("print-report-bicos");
     }, 400);
   }
 
@@ -815,6 +815,257 @@
           <footer class="pdf-op-footer">
             Referencia principal destacada em azul. Valores de PSI abaixo de ${LIMITE_MIN_PSI_EXIBICAO} exibidos como n/d.
           </footer>
+        </section>
+      `;
+    }
+
+    if (!existente) document.body.appendChild(report);
+    return true;
+  }
+
+  function montarRelatorioOperacionalAtomizadores(modeloEscolhido) {
+    if (!paginaAtomizadores) return false;
+    if (!ultimoContextoCalculo || !ultimoContextoCalculo.demandaFaixa || !ultimoContextoCalculo.resultado) {
+      return false;
+    }
+
+    const demandaFaixa = ultimoContextoCalculo.demandaFaixa;
+    const resultado = ultimoContextoCalculo.resultado;
+    const recomendados = Array.isArray(resultado.recomendados) ? resultado.recomendados : [];
+    if (!recomendados.length) return false;
+
+    const modeloPdf = normalizarModeloRelatorioPdf(modeloEscolhido);
+    const existente = document.getElementById("pdf-operacional-bicos");
+    const report = existente || document.createElement("section");
+    report.id = "pdf-operacional-bicos";
+    report.className = "pdf-op-report";
+
+    const faixaDisplay = valorNumericoInput("faixa");
+    const taxaDisplay = valorNumericoInput("vazao");
+    const nAtomizadores = valorNumericoInput("pulverizadores");
+    const velMedDisplay = valorNumericoInput("velocidade-med");
+    const aeronave = textoOpcaoSelecionada(presetAeronaveSelect) || "Manual";
+    const dataRel = new Date();
+    const dataRelTxt = dataRel.toLocaleString("pt-BR");
+    const top = recomendados.slice(0, 10);
+    const topExtenso = recomendados.slice(0, 12);
+    const vazaoReq = demandaFaixa.vazaoPorPulverizadorLMin;
+    const chaveSelecionada = String(chaveRecomendacaoSelecionada || "").trim();
+    const principalKey = chaveSelecionada || chaveRecomendacao(top[0]);
+    const origem = window.location.origin || "";
+
+    function normalizarSrcImagemPdf(src) {
+      const valor = String(src || "").trim();
+      if (!valor) return "";
+      if (valor.startsWith("data:image/")) return valor;
+      if (/^https?:\/\//i.test(valor)) return valor;
+      const limpo = valor.replace(/^\.?\//, "");
+      return `${origem}/${limpo}`;
+    }
+
+    const rowsSimplificado = top
+      .map((item, idx) => {
+        const key = chaveRecomendacao(item);
+        const isMain = key && key === principalKey;
+        const faixaVazao = `${n(vazaoParaExibicao(item.vazaoMinLMin), 2)} - ${n(
+          vazaoParaExibicao(item.vazaoMaxLMin),
+          2
+        )}`;
+        const demandaMed = blocoDemandaPdf(vazaoReq.med, psiDoItemPorFaixa(item, "med"));
+        const cfg = String(item.configuracaoSugerida || "-").replace(/\s\|\s/g, " | ");
+        return `
+          <tr class="${isMain ? "is-main" : ""}">
+            <td>${idx + 1}</td>
+            <td>${escapeHtml(String(item.id || item.nome || "-"))}</td>
+            <td>${escapeHtml(familiaLabel(item.familia))}</td>
+            <td>${faixaVazao}</td>
+            <td>${demandaMed}</td>
+            <td>${escapeHtml(cfg)}</td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    const rowsComparativo = topExtenso
+      .map((item, idx) => {
+        const key = chaveRecomendacao(item);
+        const isMain = key && key === principalKey;
+        const faixaVazao = `${n(vazaoParaExibicao(item.vazaoMinLMin), 2)} - ${n(
+          vazaoParaExibicao(item.vazaoMaxLMin),
+          2
+        )}`;
+        const cfg = String(item.configuracaoSugerida || "-").replace(/\s\|\s/g, " | ");
+        return `
+          <tr class="${isMain ? "is-main" : ""}">
+            <td>${idx + 1}</td>
+            <td>${escapeHtml(String(item.id || item.nome || "-"))}</td>
+            <td>${faixaVazao}</td>
+            <td>${blocoDemandaPdf(vazaoReq.min, psiDoItemPorFaixa(item, "min"))}</td>
+            <td>${blocoDemandaPdf(vazaoReq.med, psiDoItemPorFaixa(item, "med"))}</td>
+            <td>${blocoDemandaPdf(vazaoReq.max, psiDoItemPorFaixa(item, "max"))}</td>
+            <td>${escapeHtml(cfg)}</td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    const rowsVisual = topExtenso
+      .map((item, idx) => {
+        const key = chaveRecomendacao(item);
+        const isMain = key && key === principalKey;
+        const nome = String(item.id || item.nome || "-");
+        const nomeDetalhe = nomeExibicaoProduto(item, resolverImagemProduto(item));
+        const faixaVazao = `${n(vazaoParaExibicao(item.vazaoMinLMin), 2)} - ${n(
+          vazaoParaExibicao(item.vazaoMaxLMin),
+          2
+        )} ${unidadeVazao()}`;
+        const imgSrc = normalizarSrcImagemPdf(resolverImagemProduto(item));
+        const cfg = String(item.configuracaoSugerida || "-").replace(/\s\|\s/g, " | ");
+        const min = blocoDemandaPdf(vazaoReq.min, psiDoItemPorFaixa(item, "min"));
+        const med = blocoDemandaPdf(vazaoReq.med, psiDoItemPorFaixa(item, "med"));
+        const max = blocoDemandaPdf(vazaoReq.max, psiDoItemPorFaixa(item, "max"));
+        return `
+          <article class="pdf-visual-card ${isMain ? "is-main" : ""}">
+            <div class="pdf-visual-idx">${pad2(idx + 1)}</div>
+            <div class="pdf-visual-model">
+              <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(nome)}" />
+              <div>
+                <h4>${escapeHtml(nome)}</h4>
+                <p>${escapeHtml(nomeDetalhe)}</p>
+                <small>${escapeHtml(familiaLabel(item.familia))}</small>
+              </div>
+            </div>
+            <div class="pdf-visual-spec">
+              <div><strong>Faixa:</strong> ${faixaVazao}</div>
+              <div><strong>Config:</strong> ${escapeHtml(cfg)}</div>
+            </div>
+            <div class="pdf-visual-demand">
+              <div><span>Min</span>${min}</div>
+              <div><span>Med</span>${med}</div>
+              <div><span>Max</span>${max}</div>
+            </div>
+          </article>
+        `;
+      })
+      .join("");
+
+    const areaMed = areaParaExibicao((demandaFaixa.velocidadesKmh.med * demandaFaixa.faixaM) / 600);
+    const totalMed = vazaoParaExibicao(demandaFaixa.vazaoTotalLMin.med);
+
+    const blocoCabecalhoComum = `
+      <section class="pdf-op-meta">
+        <div><strong>Aeronave:</strong> ${escapeHtml(aeronave)}</div>
+        <div><strong>Faixa:</strong> ${Number.isFinite(faixaDisplay) ? n(faixaDisplay, 2) : "-"} ${unidadesEmUso().faixa}</div>
+        <div><strong>Taxa alvo:</strong> ${Number.isFinite(taxaDisplay) ? n(taxaDisplay, 2) : "-"} ${unidadesEmUso().taxa}</div>
+        <div><strong>N de atomizadores:</strong> ${Number.isFinite(nAtomizadores) ? n(nAtomizadores, 0) : "-"}</div>
+        <div><strong>Vel. media:</strong> ${
+          Number.isFinite(velMedDisplay)
+            ? `${n(velMedDisplay, 2)} ${unidadeVelocidade()}`
+            : "-"
+        }</div>
+      </section>
+      <section class="pdf-op-kpis">
+        <article><span>Area coberta (media)</span><strong>${n(areaMed, 3)} ${unidadesEmUso().area}</strong></article>
+        <article><span>Vazao total alvo (media)</span><strong>${n(totalMed, 2)} ${unidadeVazao()}</strong></article>
+        <article><span>Vazao por atomizador alvo (media)</span><strong>${n(
+          vazaoParaExibicao(vazaoReq.med),
+          2
+        )} ${unidadeVazao()}</strong></article>
+        <article><span>Compativeis</span><strong>${resultado.recomendados.length} exibidas (${resultado.totalCompativeis}/${resultado.totalCatalogo})</strong></article>
+      </section>
+    `;
+
+    if (modeloPdf === "comparativo-1p") {
+      report.innerHTML = `
+        <section class="pdf-op-page">
+          <header class="pdf-op-header">
+            <div>
+              <h1>Relatorio Comparativo - Atomizadores</h1>
+              <p>Travicar | ${escapeHtml(dataRelTxt)}</p>
+            </div>
+            <div class="pdf-op-header-tag">Comparativo 1 pagina</div>
+          </header>
+          ${blocoCabecalhoComum}
+          <section class="pdf-op-table-wrap">
+            <table class="pdf-op-table pdf-op-table-sec">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Modelo</th>
+                  <th>Faixa vazao</th>
+                  <th>Vel. minima</th>
+                  <th>Vel. media</th>
+                  <th>Vel. maxima</th>
+                  <th>Configuracao</th>
+                </tr>
+              </thead>
+              <tbody>${rowsComparativo}</tbody>
+            </table>
+          </section>
+          <footer class="pdf-op-footer">Comparativo rapido para ajuste em campo.</footer>
+        </section>
+      `;
+    } else if (modeloPdf === "visual-1p") {
+      report.innerHTML = `
+        <section class="pdf-op-page">
+          <header class="pdf-op-header pdf-visual-header">
+            <div>
+              <h1>Relatorio Visual de Atomizadores Compativeis</h1>
+              <p>Travicar | ${escapeHtml(dataRelTxt)}</p>
+            </div>
+            <div class="pdf-op-header-tag">Visual 1 pagina</div>
+          </header>
+          <section class="pdf-visual-grid">
+            <div class="pdf-visual-params">
+              <h3>Parametros informados</h3>
+              <div><strong>Aeronave:</strong> ${escapeHtml(aeronave)}</div>
+              <div><strong>Faixa:</strong> ${Number.isFinite(faixaDisplay) ? n(faixaDisplay, 2) : "-"} ${unidadesEmUso().faixa}</div>
+              <div><strong>Taxa alvo:</strong> ${Number.isFinite(taxaDisplay) ? n(taxaDisplay, 2) : "-"} ${unidadesEmUso().taxa}</div>
+              <div><strong>N de atomizadores:</strong> ${Number.isFinite(nAtomizadores) ? n(nAtomizadores, 0) : "-"}</div>
+              <div><strong>Velocidade media:</strong> ${
+                Number.isFinite(velMedDisplay)
+                  ? `${n(velMedDisplay, 2)} ${unidadeVelocidade()}`
+                  : "-"
+              }</div>
+              <div><strong>Vazao media alvo por atomizador:</strong> ${n(vazaoParaExibicao(vazaoReq.med), 2)} ${unidadeVazao()}</div>
+            </div>
+            <aside class="pdf-visual-summary">
+              <h3>Resumo</h3>
+              <p>Foram encontradas <strong>${resultado.recomendados.length}</strong> recomendacoes compativeis.</p>
+              <p>Referencia principal destacada em azul.</p>
+            </aside>
+          </section>
+          <section class="pdf-visual-list">${rowsVisual}</section>
+          <footer class="pdf-op-footer">Relatorio visual para apresentacao e aprovacao rapida em campo.</footer>
+        </section>
+      `;
+    } else {
+      report.innerHTML = `
+        <section class="pdf-op-page">
+          <header class="pdf-op-header">
+            <div>
+              <h1>Relatorio Operacional - Atomizadores</h1>
+              <p>Travicar | ${escapeHtml(dataRelTxt)}</p>
+            </div>
+            <div class="pdf-op-header-tag">Operacional 1 pagina</div>
+          </header>
+          ${blocoCabecalhoComum}
+          <section class="pdf-op-table-wrap">
+            <table class="pdf-op-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Modelo</th>
+                  <th>Familia</th>
+                  <th>Faixa vazao</th>
+                  <th>Vel. media</th>
+                  <th>Configuracao</th>
+                </tr>
+              </thead>
+              <tbody>${rowsSimplificado}</tbody>
+            </table>
+          </section>
+          <footer class="pdf-op-footer">Valores de PSI abaixo de ${LIMITE_MIN_PSI_EXIBICAO} exibidos como n/d.</footer>
         </section>
       `;
     }
