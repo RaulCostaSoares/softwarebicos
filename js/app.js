@@ -1625,6 +1625,8 @@
       if (!(el instanceof HTMLImageElement)) return false;
       if (!el.src) return false;
       if (preview.contains(el)) return false;
+      if (el.closest(".trav-header")) return false;
+      if (el.classList.contains("trav-logo-img")) return false;
       return true;
     }
 

@@ -1048,11 +1048,12 @@ tr.familia-separador td {
 
 .produto-cell {
   display: grid;
-  grid-template-columns: 56px minmax(0, 1fr);
+  grid-template-columns: 120px minmax(0, 1fr);
   align-items: stretch;
-  gap: 8px;
+  gap: 10px;
   position: relative;
   padding-bottom: 24px;
+  min-height: 104px;
 }
 
 .produto-cell.atomizador-bloco {
@@ -1061,8 +1062,8 @@ tr.familia-separador td {
   justify-content: flex-start;
   gap: 8px;
   padding: 8px 8px 28px;
-  min-height: 228px;
-  height: 228px;
+  min-height: 246px;
+  height: 246px;
 }
 
 .faixa-inline {
@@ -1104,9 +1105,9 @@ tr.familia-separador td {
 
 .produto-cell.atomizador-bloco .produto-thumb {
   order: 2;
-  width: 60%;
-  height: 160px;
-  max-height: 160px;
+  width: 72%;
+  height: 182px;
+  max-height: 182px;
 }
 
 .produto-cell.atomizador-bloco > div {
@@ -1290,7 +1291,7 @@ tr.familia-separador td {
 .config-cell .orificio-demo-img {
   display: inline-block;
   width: auto;
-  height: 43px;
+  height: 52px;
   margin-left: 8px;
   vertical-align: top;
   background: #ffffff;
@@ -1306,7 +1307,7 @@ tr.familia-separador td {
 .config-cell .disco-demo-img {
   display: inline-block;
   width: auto;
-  height: 43px;
+  height: 52px;
   margin-left: 8px;
   vertical-align: top;
   background: #ffffff;
@@ -1316,7 +1317,7 @@ tr.familia-separador td {
 .config-cell .ponta-demo-img {
   display: inline-block;
   width: auto;
-  height: 43px;
+  height: 52px;
   vertical-align: top;
   background: #ffffff;
   object-fit: contain;
@@ -1332,11 +1333,27 @@ tr.familia-separador td {
 
 .montagem-item-img {
   width: auto;
-  height: 43px;
-  max-width: 84px;
+  height: 52px;
+  max-width: 108px;
   object-fit: contain;
   background: #ffffff;
   border-radius: 4px;
+}
+
+body[data-pagina="geral"] .config-cell .orificio-demo-img,
+body[data-pagina="geral"] .config-cell .disco-demo-img,
+body[data-pagina="geral"] .config-cell .ponta-demo-img {
+  height: 62px;
+}
+
+body[data-pagina="geral"] .config-cell .orificio-line-text,
+body[data-pagina="geral"] .config-cell .disco-line-text {
+  max-width: calc(100% - 76px);
+}
+
+body[data-pagina="geral"] .config-cell .montagem-item-img {
+  height: 62px;
+  max-width: 128px;
 }
 
 .image-hover-preview {
