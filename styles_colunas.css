@@ -871,6 +871,52 @@ button:focus {
   font-weight: 600;
 }
 
+.pdf-model-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pdf-model-btn {
+  border: 1px solid var(--line-strong);
+  background: #ffffff;
+  color: #111827;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 7px 10px;
+  cursor: pointer;
+  border-radius: 999px;
+  line-height: 1.15;
+}
+
+.pdf-model-btn:hover {
+  background: #f3f4f6;
+}
+
+.pdf-model-btn.is-active {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1e3a8a;
+}
+
+@media (max-width: 720px) {
+  .results-head-meta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pdf-model-group {
+    width: 100%;
+  }
+
+  .pdf-model-btn {
+    flex: 1 1 calc(50% - 6px);
+    min-height: 36px;
+    text-align: center;
+  }
+}
+
 .table-wrap {
   margin-top: 8px;
   overflow-x: auto;

@@ -12,6 +12,7 @@
   const resultsMeta = document.getElementById("results-meta");
   const exportPdfBtn = document.getElementById("export-pdf-btn");
   const pdfModeloSelect = document.getElementById("pdf-modelo-select");
+  const pdfModeloGroup = document.getElementById("pdf-modelo-group");
   const tableBody = document.querySelector("#results-table tbody");
   const presetAeronaveSelect = document.getElementById("preset-aeronave");
   const pulverizadorSelecionadoInput = document.getElementById("pulverizador-selecionado");
@@ -403,7 +404,20 @@
     if (pdfModeloSelect && pdfModeloSelect.value !== modelo) {
       pdfModeloSelect.value = modelo;
     }
+    atualizarBotoesModeloPdf(modelo);
     return modelo;
+  }
+
+  function atualizarBotoesModeloPdf(modeloSelecionado) {
+    if (!pdfModeloGroup) return;
+    const modelo = normalizarModeloRelatorioPdf(modeloSelecionado);
+    const botoes = pdfModeloGroup.querySelectorAll("[data-pdf-modelo]");
+    botoes.forEach((btn) => {
+      const atual = normalizarModeloRelatorioPdf(btn.getAttribute("data-pdf-modelo"));
+      const ativo = atual === modelo;
+      btn.classList.toggle("is-active", ativo);
+      btn.setAttribute("aria-pressed", ativo ? "true" : "false");
+    });
   }
 
   async function exportarPaginaParaPdf() {
@@ -884,6 +898,7 @@
     }
     if (Object.prototype.hasOwnProperty.call(dados, "pdfModelo") && pdfModeloSelect) {
       pdfModeloSelect.value = normalizarModeloRelatorioPdf(dados.pdfModelo);
+      atualizarBotoesModeloPdf(pdfModeloSelect.value);
       aplicou = true;
     }
 
@@ -913,7 +928,10 @@
     if (form && form.vazao) form.vazao.value = "0";
     if (form && form.pulverizadores) form.pulverizadores.value = "0";
     if (maxRecPorModeloInput) maxRecPorModeloInput.value = "5";
-    if (pdfModeloSelect) pdfModeloSelect.value = MODELO_RELATORIO_PADRAO;
+    if (pdfModeloSelect) {
+      pdfModeloSelect.value = MODELO_RELATORIO_PADRAO;
+      atualizarBotoesModeloPdf(pdfModeloSelect.value);
+    }
   }
 
   function lerMaxRecomendacoesPorModelo() {
@@ -3170,8 +3188,23 @@
       }
       if (pdfModeloSelect) {
         pdfModeloSelect.value = normalizarModeloRelatorioPdf(pdfModeloSelect.value);
+        atualizarBotoesModeloPdf(pdfModeloSelect.value);
         pdfModeloSelect.addEventListener("change", function () {
           pdfModeloSelect.value = normalizarModeloRelatorioPdf(pdfModeloSelect.value);
+          atualizarBotoesModeloPdf(pdfModeloSelect.value);
+          salvarDadosCompartilhados();
+        });
+      }
+      if (pdfModeloGroup) {
+        pdfModeloGroup.addEventListener("click", function (event) {
+          const alvo =
+            event && event.target instanceof Element
+              ? event.target.closest("[data-pdf-modelo]")
+              : null;
+          if (!alvo) return;
+          const modelo = normalizarModeloRelatorioPdf(alvo.getAttribute("data-pdf-modelo"));
+          if (pdfModeloSelect) pdfModeloSelect.value = modelo;
+          atualizarBotoesModeloPdf(modelo);
           salvarDadosCompartilhados();
         });
       }
