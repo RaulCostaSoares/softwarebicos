@@ -1594,6 +1594,16 @@ body[data-pagina="geral"] .config-cell .montagem-item-img {
   color: #ffffff;
 }
 
+.comp-check-vru-cor span {
+  border-color: #9ca3af;
+}
+
+.comp-check-vru-cor input:checked + span {
+  background: var(--comp-vru-bg, #1f2937);
+  color: var(--comp-vru-fg, #ffffff);
+  border-color: var(--comp-vru-bg, #1f2937);
+}
+
 #comp-results-table th:nth-child(2),
 #comp-results-table td:nth-child(2) {
   min-width: 260px;

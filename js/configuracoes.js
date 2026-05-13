@@ -357,6 +357,28 @@
       .replace(/'/g, "&#39;");
   }
 
+  function corVruHex(corNome) {
+    const chave = String(corNome || "").trim().toLowerCase();
+    const mapa = {
+      preto: "#111827",
+      vermelho: "#dc2626",
+      verde: "#16a34a",
+      d5: "#dc2626",
+      d7: "#16a34a",
+    };
+    return mapa[chave] || "#374151";
+  }
+
+  function corTextoContraste(hexColor) {
+    const hex = String(hexColor || "").replace("#", "");
+    if (hex.length !== 6) return "#ffffff";
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+    const luminancia = (r * 299 + g * 587 + b * 114) / 1000;
+    return luminancia >= 140 ? "#111827" : "#ffffff";
+  }
+
   function resolverImagemReferencia(item) {
     if (!item || typeof item !== "object") return "";
     if (typeof item.imagem === "string" && item.imagem.trim()) return item.imagem.trim();
@@ -652,9 +674,17 @@
     }
 
     configOpcoes.innerHTML = opcoes
-      .map(
-        (opcao) => `
-          <label class="comp-check">
+      .map((opcao) => {
+        const isVruCor = tipo === "vru-cor";
+        const corNome = isVruCor ? String(opcao.key || "").replace(/^vru-cor:/, "") : "";
+        const corHex = corVruHex(corNome);
+        const corFg = corTextoContraste(corHex);
+        const styleAttr = isVruCor
+          ? ` style="--comp-vru-bg:${escapeHtml(corHex)};--comp-vru-fg:${escapeHtml(corFg)};"`
+          : "";
+        const classe = isVruCor ? "comp-check comp-check-vru-cor" : "comp-check";
+        return `
+          <label class="${classe}"${styleAttr}>
             <input type="${tipo === "disco" ? "radio" : "checkbox"}" class="comp-config-check" ${
               tipo === "disco" ? 'name="comp-config-radio"' : ""
             } value="${escapeHtml(opcao.key)}" ${
@@ -662,8 +692,8 @@
             } />
             <span>${escapeHtml(opcao.label)}</span>
           </label>
-        `
-      )
+        `;
+      })
       .join("");
   }
 
