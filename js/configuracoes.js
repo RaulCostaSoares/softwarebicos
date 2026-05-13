@@ -469,11 +469,6 @@
             `<option value="${escapeHtml(String(item.id || ""))}">${escapeHtml(String(item.nome || item.id || ""))}</option>`
         )
         .join("");
-
-    const padrao = bicosConfiguracao.find((item) => String(item.id) === "TT90300") || bicosConfiguracao[0];
-    if (padrao) {
-      inputEquipamento.value = String(padrao.id);
-    }
   }
 
   function preencherAtomizadoresConfiguracao() {

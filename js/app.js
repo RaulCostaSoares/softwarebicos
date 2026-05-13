@@ -600,7 +600,9 @@
     const top = recomendados.slice(0, 8);
     const topExtenso = recomendados.slice(0, 12);
     const chaveSelecionada = String(chaveRecomendacaoSelecionada || "").trim();
-    const principalKey = chaveSelecionada || chaveRecomendacao(top[0]);
+    const principalKey = recomendados.some((item) => chaveRecomendacao(item) === chaveSelecionada)
+      ? chaveSelecionada
+      : "";
     const vazaoReq = demandaFaixa.vazaoPorPulverizadorLMin;
     const origem = window.location.origin || "";
 
@@ -790,7 +792,11 @@
             <aside class="pdf-visual-summary">
               <h3>Resumo</h3>
               <p>Foram encontradas <strong>${resultado.recomendados.length}</strong> recomendacoes compativeis.</p>
-              <p>Referencia principal destacada em azul.</p>
+              <p>${
+                principalKey
+                  ? "Referencia selecionada destacada em azul."
+                  : "Nenhuma referencia selecionada manualmente."
+              }</p>
             </aside>
           </section>
 
@@ -833,7 +839,7 @@
           </section>
 
           <footer class="pdf-op-footer">
-            Referencia principal destacada em azul. Valores de PSI abaixo de ${LIMITE_MIN_PSI_EXIBICAO} exibidos como n/d.
+            Valores de PSI abaixo de ${LIMITE_MIN_PSI_EXIBICAO} exibidos como n/d.
           </footer>
         </section>
       `;
@@ -871,7 +877,9 @@
     const topExtenso = recomendados.slice(0, 12);
     const vazaoReq = demandaFaixa.vazaoPorPulverizadorLMin;
     const chaveSelecionada = String(chaveRecomendacaoSelecionada || "").trim();
-    const principalKey = chaveSelecionada || chaveRecomendacao(top[0]);
+    const principalKey = recomendados.some((item) => chaveRecomendacao(item) === chaveSelecionada)
+      ? chaveSelecionada
+      : "";
     const origem = window.location.origin || "";
 
     function normalizarSrcImagemPdf(src) {
@@ -1052,7 +1060,11 @@
             <aside class="pdf-visual-summary">
               <h3>Resumo</h3>
               <p>Foram encontradas <strong>${resultado.recomendados.length}</strong> recomendacoes compativeis.</p>
-              <p>Referencia principal destacada em azul.</p>
+              <p>${
+                principalKey
+                  ? "Referencia selecionada destacada em azul."
+                  : "Nenhuma referencia selecionada manualmente."
+              }</p>
             </aside>
           </section>
           <section class="pdf-visual-list">${rowsVisual}</section>
