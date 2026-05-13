@@ -11,6 +11,9 @@
   const inputAtomizador = document.getElementById("atomizador-comp");
   const passosBody = document.querySelector("#comp-steps-table tbody");
   const passosMeta = document.getElementById("comp-steps-meta");
+  const exportPdfBtn = document.getElementById("export-pdf-btn");
+  const pdfModeloSelect = document.getElementById("pdf-modelo-select");
+  const pdfModeloGroup = document.getElementById("pdf-modelo-group");
 
   const inputFaixa = document.getElementById("faixa-comp");
   const inputTaxa = document.getElementById("taxa-comp");
@@ -58,6 +61,9 @@
   const CHAVE_DADOS_COMPARTILHADOS = "softwarebicos_shared_form_v1";
   const SISTEMA_UNIDADES_METRICO = "metrico";
   const SISTEMA_UNIDADES_IMPERIAL = "imperial";
+  const MODELO_RELATORIO_PADRAO = "operacional-1p";
+  const MODELOS_RELATORIO_VALIDOS = new Set(["operacional-1p", "comparativo-1p", "visual-1p"]);
+  let ultimoContextoCalculo = null;
 
   function normalizarSistemaUnidades(value) {
     return String(value || "").toLowerCase().trim() === SISTEMA_UNIDADES_IMPERIAL
@@ -71,6 +77,114 @@
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
     }).format(value);
+  }
+
+  function normalizarModeloRelatorioPdf(value) {
+    const modelo = String(value || "").toLowerCase().trim();
+    if (modelo === "operacional-2p") return "operacional-1p";
+    if (modelo === "checklist-2p") return "visual-1p";
+    return MODELOS_RELATORIO_VALIDOS.has(modelo) ? modelo : MODELO_RELATORIO_PADRAO;
+  }
+
+  function normalizarSrcImagemPdf(src) {
+    const valor = String(src || "").trim();
+    if (!valor) return "";
+    if (valor.startsWith("data:image/")) return valor;
+    if (/^https?:\/\//i.test(valor)) return valor;
+    const origem = window.location.origin || "";
+    const limpo = valor.replace(/^\.?\//, "");
+    return `${origem}/${limpo}`;
+  }
+
+  function atualizarBotoesModeloPdf(modeloSelecionado) {
+    if (!pdfModeloGroup) return;
+    const modelo = normalizarModeloRelatorioPdf(modeloSelecionado);
+    const botoes = pdfModeloGroup.querySelectorAll("[data-pdf-modelo]");
+    botoes.forEach((btn) => {
+      const atual = normalizarModeloRelatorioPdf(btn.getAttribute("data-pdf-modelo"));
+      const ativo = atual === modelo;
+      btn.classList.toggle("is-active", ativo);
+      btn.setAttribute("aria-pressed", ativo ? "true" : "false");
+    });
+  }
+
+  function lerModeloRelatorioPdfAtual() {
+    const valor = pdfModeloSelect ? pdfModeloSelect.value : "";
+    const modelo = normalizarModeloRelatorioPdf(valor);
+    if (pdfModeloSelect && pdfModeloSelect.value !== modelo) {
+      pdfModeloSelect.value = modelo;
+    }
+    atualizarBotoesModeloPdf(modelo);
+    return modelo;
+  }
+
+  function setExportPdfBusy(isBusy) {
+    if (!exportPdfBtn) return;
+    if (isBusy) {
+      exportPdfBtn.dataset.idleText = String(exportPdfBtn.textContent || "Exportar PDF").trim();
+      exportPdfBtn.disabled = true;
+      exportPdfBtn.setAttribute("aria-busy", "true");
+      exportPdfBtn.textContent = "Gerando PDF...";
+      return;
+    }
+    exportPdfBtn.disabled = false;
+    exportPdfBtn.setAttribute("aria-busy", "false");
+    exportPdfBtn.textContent = exportPdfBtn.dataset.idleText || "Exportar PDF";
+  }
+
+  function pad2(value) {
+    const nValue = Number(value);
+    if (!Number.isFinite(nValue)) return "00";
+    return String(Math.floor(nValue)).padStart(2, "0");
+  }
+
+  function dataHoraParaNomeArquivo(dateObj) {
+    const d = dateObj instanceof Date ? dateObj : new Date();
+    const y = d.getFullYear();
+    const m = pad2(d.getMonth() + 1);
+    const day = pad2(d.getDate());
+    const h = pad2(d.getHours());
+    const min = pad2(d.getMinutes());
+    return `${y}-${m}-${day}_${h}-${min}`;
+  }
+
+  function endpointRelatorioPdfCandidatos() {
+    const pathApi = "/api/relatorio-pdf";
+    const vistos = new Set();
+    const out = [];
+
+    function add(base) {
+      const valorBase = String(base || "").trim();
+      let url = "";
+      if (!valorBase) {
+        url = pathApi;
+      } else if (/^https?:\/\//i.test(valorBase)) {
+        url = `${valorBase.replace(/\/+$/, "")}${pathApi}`;
+      } else {
+        const normalizado = valorBase.startsWith("/") ? valorBase : `/${valorBase}`;
+        url = `${normalizado.replace(/\/+$/, "")}${pathApi}`;
+      }
+      if (!vistos.has(url)) {
+        vistos.add(url);
+        out.push(url);
+      }
+    }
+
+    const cfgGlobal =
+      (window && window.SOFTWAREBICOS_API_BASE ? String(window.SOFTWAREBICOS_API_BASE) : "") ||
+      (document.body && document.body.dataset ? String(document.body.dataset.apiBase || "") : "");
+    add(cfgGlobal);
+
+    const pathname = String((window.location && window.location.pathname) || "");
+    const partes = pathname.split("/").filter(Boolean);
+    if (partes.length) {
+      const ultima = String(partes[partes.length - 1] || "");
+      if (/\.[a-z0-9]+$/i.test(ultima)) partes.pop();
+      if (partes.length) add(`/${partes.join("/")}`);
+    }
+
+    add("");
+    return out;
   }
 
   function lerDadosCompartilhados() {
@@ -227,6 +341,7 @@
   function clearTabela() {
     passosBody.innerHTML = "";
     passosMeta.textContent = "";
+    ultimoContextoCalculo = null;
   }
 
   function setError(msg) {
@@ -712,6 +827,8 @@
     resumoIds.vbMin.textContent = fmt(vb.min, 2);
     resumoIds.vbMed.textContent = fmt(vb.med, 2);
     resumoIds.vbMax.textContent = fmt(vb.max, 2);
+
+    return { area, vt, vb };
   }
 
   function calcularTaxa(vazaoTotalLMin, velocidadeKmh, faixaM) {
@@ -920,16 +1037,10 @@
     const curvasSelecionadas = curvasDoBico(input.bicoSelecionado, input.configuracoesSelecionadas);
     if (!curvasSelecionadas.length) return [];
 
-    const totalFaixas = passosBaixo + passosCima + 1;
-    const alvos = [];
-    const inicio = 100 - passosBaixo * passo;
-    const fim = 100 + passosCima * passo;
-    for (let p = inicio; p <= fim; p += passo) {
-      alvos.push(p);
-    }
+    const totalFaixasSolicitadas = passosBaixo + passosCima + 1;
+    const MAX_ITER_BUSCA = 1000;
 
-    const resultados = [];
-    alvos.forEach((passoAlvo) => {
+    function avaliarPassoAlvo(passoAlvo) {
       const taxaCompAlvo = input.taxaAlvoLHa * (passoAlvo / 100);
       const candidatos = [];
 
@@ -974,28 +1085,55 @@
       });
 
       if (!candidatos.length) {
-        const ehReferencialZero = Math.abs(passoAlvo - 100) < 0.001;
-        if (ehReferencialZero) {
-          resultados.push({
-            passoComp: passo,
-            totalFaixas,
-            passoAlvo,
-            taxaCompAlvo,
-            candidato: null,
-            referencialIndisponivel: true,
-          });
-        }
-        return;
+        return null;
       }
       candidatos.sort((a, b) => a.score - b.score);
-      resultados.push({
+      return {
         passoComp: passo,
-        totalFaixas,
+        totalFaixas: totalFaixasSolicitadas,
         passoAlvo,
         taxaCompAlvo,
         candidato: candidatos[0],
         referencialIndisponivel: false,
-      });
+      };
+    }
+
+    const resultadosBaixoDesc = [];
+    for (let i = 1; i <= MAX_ITER_BUSCA && resultadosBaixoDesc.length < passosBaixo; i += 1) {
+      const passoAlvo = 100 - i * passo;
+      if (passoAlvo <= 0) break;
+      const avaliacao = avaliarPassoAlvo(passoAlvo);
+      if (avaliacao && avaliacao.candidato) {
+        resultadosBaixoDesc.push(avaliacao);
+      }
+    }
+
+    const resultadosCima = [];
+    for (let i = 1; i <= MAX_ITER_BUSCA && resultadosCima.length < passosCima; i += 1) {
+      const passoAlvo = 100 + i * passo;
+      const avaliacao = avaliarPassoAlvo(passoAlvo);
+      if (avaliacao && avaliacao.candidato) {
+        resultadosCima.push(avaliacao);
+      }
+    }
+
+    const centro = avaliarPassoAlvo(100) || {
+      passoComp: passo,
+      totalFaixas: totalFaixasSolicitadas,
+      passoAlvo: 100,
+      taxaCompAlvo: input.taxaAlvoLHa,
+      candidato: null,
+      referencialIndisponivel: true,
+    };
+
+    const resultados = [...resultadosBaixoDesc.reverse(), centro, ...resultadosCima];
+
+    resultados.forEach((item) => {
+      item.totalFaixas = totalFaixasSolicitadas;
+      item.totalSolicitadoBaixo = passosBaixo;
+      item.totalSolicitadoCima = passosCima;
+      item.totalEncontradoBaixo = resultadosBaixoDesc.length;
+      item.totalEncontradoCima = resultadosCima.length;
     });
 
     return resultados;
@@ -1021,13 +1159,6 @@
       `;
       passosMeta.textContent = "0 configuracoes mapeadas";
       return;
-    }
-
-    function textoDeltaComp(passoAlvo) {
-      const delta = passoAlvo - 100;
-      if (delta === 0) return mostrarSinal ? "+/-0%" : "0%";
-      if (!mostrarSinal) return `${fmt(Math.abs(delta), 0)}%`;
-      return `${delta > 0 ? "+" : "-"}${fmt(Math.abs(delta), 0)}%`;
     }
 
     function celulaVel(vazao, psi) {
@@ -1077,7 +1208,7 @@
           <tr class="${rowClass}">
             <td>
               <div class="comp-taxa-evidencia">${fmt(item.taxaCompAlvo, 2)} L/ha</div>
-              <small>${textoDeltaComp(item.passoAlvo)}</small>
+              <small>${textoDeltaComp(item.passoAlvo, mostrarSinal)}</small>
             </td>
             <td>
               ${configCellHtml}
@@ -1097,24 +1228,317 @@
       .join("");
 
     const passoAtual = Number(passos[0] && passos[0].passoComp) || Number(inputPasso && inputPasso.value) || 5;
-    const totalFaixas =
+    const totalFaixasSolicitadas =
       Number(passos[0] && passos[0].totalFaixas) ||
       (Number(inputPassosBaixo && inputPassosBaixo.value) || 0) +
         (Number(inputPassosCima && inputPassosCima.value) || 0) +
         1;
-    passosMeta.textContent = `${passos.length} de ${fmt(totalFaixas, 0)} faixas exibidas (passo ${fmt(
+    const encontradoBaixo = Number(passos[0] && passos[0].totalEncontradoBaixo);
+    const encontradoCima = Number(passos[0] && passos[0].totalEncontradoCima);
+    const solicitadoBaixo = Number(passos[0] && passos[0].totalSolicitadoBaixo);
+    const solicitadoCima = Number(passos[0] && passos[0].totalSolicitadoCima);
+    const detalheLados =
+      Number.isFinite(encontradoBaixo) &&
+      Number.isFinite(encontradoCima) &&
+      Number.isFinite(solicitadoBaixo) &&
+      Number.isFinite(solicitadoCima)
+        ? ` | baixo ${fmt(encontradoBaixo, 0)}/${fmt(solicitadoBaixo, 0)} | cima ${fmt(
+            encontradoCima,
+            0
+          )}/${fmt(solicitadoCima, 0)}`
+        : "";
+    passosMeta.textContent = `${passos.length} de ${fmt(totalFaixasSolicitadas, 0)} faixas exibidas (passo ${fmt(
       passoAtual,
       0
-    )}%, PSI ${fmt(psiMin, 0)}-${fmt(psiMax, 0)})`;
+    )}%, PSI ${fmt(psiMin, 0)}-${fmt(psiMax, 0)})${detalheLados}`;
+  }
+
+  function textoOpcaoSelecionada(selectNode) {
+    if (!selectNode) return "";
+    const idx = Number(selectNode.selectedIndex);
+    const opt = idx >= 0 ? selectNode.options[idx] : null;
+    return String((opt && opt.textContent) || "").trim();
+  }
+
+  function textoDeltaComp(passoAlvo, mostrarSinal) {
+    const delta = Number(passoAlvo) - 100;
+    if (delta === 0) return mostrarSinal ? "+/-0%" : "0%";
+    if (delta > 0) {
+      return `-${fmt(Math.abs(delta), 0)}%`;
+    }
+    if (!mostrarSinal) return `${fmt(Math.abs(delta), 0)}%`;
+    return `+${fmt(Math.abs(delta), 0)}%`;
+  }
+
+  function blocoDemandaPdf(vazao, psi) {
+    const psiExibivel = Number.isFinite(psi) && psi >= PSI_LIMITE_MIN;
+    return `
+      <div class="pdf-op-demand-q">${Number.isFinite(vazao) ? `${fmt(vazao, 2)} L/min` : "n/d"}</div>
+      <div class="pdf-op-demand-p">${psiExibivel ? `${fmt(psi, 1)} psi` : "n/d"}</div>
+    `;
+  }
+
+  function montarRelatorioConfiguracoes(modeloEscolhido) {
+    if (!ultimoContextoCalculo || !ultimoContextoCalculo.input || !Array.isArray(ultimoContextoCalculo.passos)) {
+      return false;
+    }
+    const input = ultimoContextoCalculo.input;
+    const passos = ultimoContextoCalculo.passos;
+    if (!passos.length) return false;
+
+    const modelo = normalizarModeloRelatorioPdf(modeloEscolhido);
+    const existente = document.getElementById("pdf-operacional-bicos");
+    const report = existente || document.createElement("section");
+    report.id = "pdf-operacional-bicos";
+    report.className = "pdf-op-report";
+
+    const dataRel = new Date();
+    const dataRelTxt = dataRel.toLocaleString("pt-BR");
+    const mostrarSinal = preferenciaExibirSinalPercentual();
+    const equipamento = input && input.bicoSelecionado ? input.bicoSelecionado : null;
+    const nomeEquipamento = String((equipamento && (equipamento.nome || equipamento.id)) || "-");
+    const imagemEquipamento = normalizarSrcImagemPdf(resolverImagemReferencia(equipamento));
+    const aeronave = textoOpcaoSelecionada(presetAeronave) || "Manual";
+    const metaFaixas = String((passosMeta && passosMeta.textContent) || "").trim();
+    const limiteLinhas = modelo === "operacional-1p" ? 16 : modelo === "comparativo-1p" ? 22 : 14;
+    const linhas = passos.slice(0, limiteLinhas);
+
+    const resumo = ultimoContextoCalculo.resumo || { area: {}, vt: {}, vb: {} };
+    const areaMed = Number(resumo && resumo.area ? resumo.area.med : NaN);
+    const vtMed = Number(resumo && resumo.vt ? resumo.vt.med : NaN);
+    const vbMed = Number(resumo && resumo.vb ? resumo.vb.med : NaN);
+
+    const rowsHtml = linhas
+      .map((item, idx) => {
+        const cand = item && item.candidato ? item.candidato : null;
+        const classe = Math.abs(Number(item && item.passoAlvo) - 100) < 0.001 ? "is-main" : "";
+        const taxa = `${fmt(Number(item && item.taxaCompAlvo), 2)} L/ha`;
+        const delta = textoDeltaComp(Number(item && item.passoAlvo), mostrarSinal);
+        const config = cand ? escapeHtml(String(cand.configLabel || "-")) : "Indisponivel";
+
+        if (modelo === "operacional-1p") {
+          return `
+            <tr class="${classe}">
+              <td>${idx + 1}</td>
+              <td><strong>${taxa}</strong><br><small>${delta}</small></td>
+              <td>${config}</td>
+              <td>${cand ? blocoDemandaPdf(cand.vazaoBico.med, cand.psi.med) : "n/d"}</td>
+            </tr>
+          `;
+        }
+
+        return `
+          <tr class="${classe}">
+            <td>${idx + 1}</td>
+            <td><strong>${taxa}</strong><br><small>${delta}</small></td>
+            <td>${config}</td>
+            <td>${cand ? blocoDemandaPdf(cand.vazaoBico.min, cand.psi.min) : "n/d"}</td>
+            <td>${cand ? blocoDemandaPdf(cand.vazaoBico.med, cand.psi.med) : "n/d"}</td>
+            <td>${cand ? blocoDemandaPdf(cand.vazaoBico.max, cand.psi.max) : "n/d"}</td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    const tabelaOperacional = `
+      <div class="pdf-op-table-wrap">
+        <table class="pdf-op-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Compensacao</th>
+              <th>Configuracao</th>
+              <th>Velocidade media</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </div>
+    `;
+
+    const tabelaCompleta = `
+      <div class="pdf-op-table-wrap">
+        <table class="pdf-op-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Compensacao</th>
+              <th>Configuracao</th>
+              <th>Velocidade minima</th>
+              <th>Velocidade media</th>
+              <th>Velocidade maxima</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </div>
+    `;
+
+    const blocoVisualImagem =
+      modelo === "visual-1p" && imagemEquipamento
+        ? `
+          <div style="margin:8px 0 10px; border:1px solid #cbd5e1; border-radius:8px; background:#f8fafc; padding:8px; display:flex; gap:10px; align-items:center;">
+            <img src="${escapeHtml(imagemEquipamento)}" alt="${escapeHtml(nomeEquipamento)}" style="width:92px;height:92px;object-fit:contain;background:#fff;border:1px solid #cbd5e1;border-radius:8px;" />
+            <div>
+              <strong style="font-size:9.5pt;">${escapeHtml(nomeEquipamento)}</strong><br>
+              <small style="color:#475569;">Relatorio com referencia visual do equipamento selecionado.</small>
+            </div>
+          </div>
+        `
+        : "";
+
+    const tabelaHtml = modelo === "operacional-1p" ? tabelaOperacional : tabelaCompleta;
+
+    report.innerHTML = `
+      <div class="pdf-op-page">
+        <header class="pdf-op-header">
+          <div>
+            <h1>RELATORIO DE CONFIGURACOES DISPONIVEIS</h1>
+            <p>Gerado em ${escapeHtml(dataRelTxt)}</p>
+          </div>
+          <span class="pdf-op-header-tag">${escapeHtml(modelo)}</span>
+        </header>
+
+        <section class="pdf-op-meta">
+          <div><strong>Aeronave:</strong> ${escapeHtml(aeronave)}</div>
+          <div><strong>Equipamento:</strong> ${escapeHtml(nomeEquipamento)}</div>
+          <div><strong>Faixa:</strong> ${fmt(input.faixaM, 2)} m</div>
+          <div><strong>Taxa alvo:</strong> ${fmt(input.taxaAlvoLHa, 2)} L/ha</div>
+          <div><strong>N de bicos:</strong> ${fmt(input.pulverizadores, 0)}</div>
+          <div><strong>Vel. min/med/max:</strong> ${fmt(input.velocidades.min, 0)} / ${fmt(
+            input.velocidades.med,
+            0
+          )} / ${fmt(input.velocidades.max, 0)} km/h</div>
+          <div><strong>Passo:</strong> ${fmt(input.passoComp, 0)}%</div>
+          <div><strong>Faixa de PSI:</strong> ${fmt(input.psiFaixa.min, 0)} - ${fmt(input.psiFaixa.max, 0)} psi</div>
+          <div><strong>Passos:</strong> -${fmt(input.passosBaixo, 0)} / +${fmt(input.passosCima, 0)}</div>
+          <div><strong>Faixas exibidas:</strong> ${escapeHtml(metaFaixas || `${passos.length} opcoes`)}</div>
+        </section>
+
+        <section class="pdf-op-kpis">
+          <article>
+            <span>Area coberta (media)</span>
+            <strong>${Number.isFinite(areaMed) ? `${fmt(areaMed, 2)} ha/min` : "n/d"}</strong>
+          </article>
+          <article>
+            <span>Vazao total alvo (media)</span>
+            <strong>${Number.isFinite(vtMed) ? `${fmt(vtMed, 2)} L/min` : "n/d"}</strong>
+          </article>
+          <article>
+            <span>Vazao por bico alvo (media)</span>
+            <strong>${Number.isFinite(vbMed) ? `${fmt(vbMed, 2)} L/min` : "n/d"}</strong>
+          </article>
+          <article>
+            <span>Configuracoes mapeadas</span>
+            <strong>${fmt(passos.length, 0)}</strong>
+          </article>
+        </section>
+
+        ${blocoVisualImagem}
+        ${tabelaHtml}
+      </div>
+    `;
+
+    if (!report.parentNode) {
+      document.body.appendChild(report);
+    }
+    return true;
+  }
+
+  async function exportarPaginaParaPdf() {
+    if (exportPdfBtn && exportPdfBtn.disabled) return;
+    setExportPdfBusy(true);
+    try {
+      const modeloPdf = lerModeloRelatorioPdfAtual();
+      const sufixoModelo = modeloPdf.replace(/[^a-z0-9-]/gi, "");
+      const prefixo = `relatorio_configuracoes_${sufixoModelo}`;
+      const gerou = montarRelatorioConfiguracoes(modeloPdf);
+      if (!gerou) {
+        setError("Execute um calculo antes de exportar o relatorio.");
+        return;
+      }
+
+      const reportNode = document.getElementById("pdf-operacional-bicos");
+      const reportHtml = reportNode ? reportNode.outerHTML : "";
+
+      if (reportHtml) {
+        try {
+          setError("");
+          const endpoints = endpointRelatorioPdfCandidatos();
+          let respOk = null;
+          let erroDetalhe = "";
+
+          for (let i = 0; i < endpoints.length; i += 1) {
+            const endpoint = endpoints[i];
+            const resp = await fetch(endpoint, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ reportHtml, prefixo }),
+            });
+            const contentType = String(resp.headers.get("content-type") || "").toLowerCase();
+
+            if (resp.ok && contentType.includes("application/pdf")) {
+              respOk = resp;
+              break;
+            }
+
+            let detalhes = "";
+            try {
+              if (contentType.includes("application/json")) {
+                const body = await resp.json();
+                detalhes = body && body.error ? body.error : "";
+              } else {
+                const txt = await resp.text();
+                const sample = String(txt || "").slice(0, 140).replace(/\s+/g, " ").trim();
+                if (sample) detalhes = sample;
+              }
+            } catch (_erroParse) {
+              detalhes = "";
+            }
+
+            erroDetalhe = `endpoint ${endpoint} retornou ${resp.status}${detalhes ? ` (${detalhes})` : ""}`;
+          }
+
+          if (!respOk) {
+            throw new Error(`Falha ao gerar PDF via Puppeteer (${erroDetalhe || "sem resposta valida"})`);
+          }
+
+          const blob = await respOk.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `${prefixo}_${dataHoraParaNomeArquivo(new Date())}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+          return;
+        } catch (error) {
+          setError(`${error.message || "Falha ao exportar via Puppeteer."} Usando impressao local.`);
+        }
+      }
+
+      document.body.classList.add("print-report-bicos");
+      const tituloAnterior = String(document.title || "");
+      document.title = `${prefixo}_${dataHoraParaNomeArquivo(new Date())}`;
+      window.print();
+      window.setTimeout(() => {
+        document.title = tituloAnterior;
+        document.body.classList.remove("print-report-bicos");
+      }, 400);
+    } finally {
+      setExportPdfBusy(false);
+    }
   }
 
   function recalc() {
     try {
       setError("");
       const input = lerEntrada();
-      atualizarResumo(input);
+      const resumo = atualizarResumo(input);
       const passos = calcularPassos(input);
       renderPassos(passos, input);
+      ultimoContextoCalculo = { input, passos, resumo };
     } catch (error) {
       setError(error.message);
       clearTabela();
@@ -1218,6 +1642,26 @@
         recalc();
       });
     }
+
+    if (exportPdfBtn) {
+      exportPdfBtn.addEventListener("click", function () {
+        exportarPaginaParaPdf();
+      });
+    }
+    if (pdfModeloGroup) {
+      pdfModeloGroup.addEventListener("click", function (event) {
+        const alvo =
+          event && event.target && typeof event.target.closest === "function"
+            ? event.target.closest("[data-pdf-modelo]")
+            : null;
+        if (!alvo) return;
+        const modelo = normalizarModeloRelatorioPdf(alvo.getAttribute("data-pdf-modelo"));
+        if (pdfModeloSelect) {
+          pdfModeloSelect.value = modelo;
+        }
+        atualizarBotoesModeloPdf(modelo);
+      });
+    }
   }
 
   async function init() {
@@ -1251,6 +1695,7 @@
       harmonizarSelecaoEquipamento();
       atualizarSeletorConfiguracao();
       bindEvents();
+      lerModeloRelatorioPdfAtual();
       salvarDadosCompartilhados();
       if (entradaInicialValidaParaCalculo()) {
         recalc();

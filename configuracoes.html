@@ -147,6 +147,9 @@
     .hover\:text-emerald-600:hover { color: var(--brand) !important; }
     .hover\:bg-emerald-600:hover { background-color: var(--brand) !important; }
     .focus\:ring-emerald-500:focus { --tw-ring-color: var(--brand) !important; }
+    #comp-steps-meta {
+      display: none !important;
+    }
     @media (max-width: 1024px) {
       .content-wrap {
         padding: 0 12px;
@@ -339,7 +342,24 @@
     <section class="panel">
       <div class="results-head">
         <h2 data-i18n="h2_cfg_disponiveis">Configuracoes disponiveis (passo ajustavel)</h2>
-        <p id="comp-steps-meta"></p>
+        <div class="results-head-meta">
+          <p id="comp-steps-meta"></p>
+          <div id="pdf-modelo-group" class="pdf-model-group no-print" role="group" aria-label="Modelo de relatorio PDF">
+            <button type="button" class="pdf-model-btn is-active" data-pdf-modelo="operacional-1p">
+              Relatorio simplificado
+            </button>
+            <button type="button" class="pdf-model-btn" data-pdf-modelo="comparativo-1p">
+              Relatorio normal
+            </button>
+            <button type="button" class="pdf-model-btn" data-pdf-modelo="visual-1p">
+              Relatorio com imagens
+            </button>
+          </div>
+          <input id="pdf-modelo-select" type="hidden" value="operacional-1p" />
+          <button id="export-pdf-btn" class="btn no-print" type="button" data-i18n="btn_export_pdf">
+            Exportar PDF
+          </button>
+        </div>
       </div>
       <div class="table-wrap">
         <table id="comp-steps-table">

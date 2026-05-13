@@ -420,89 +420,109 @@
     });
   }
 
-  async function exportarPaginaParaPdf() {
-    const modeloPdf = lerModeloRelatorioPdfAtual();
-    const sufixoModelo = modeloPdf.replace(/[^a-z0-9-]/gi, "");
-    const prefixoBase = paginaAtomizadores ? "relatorio_atomizadores" : "relatorio_bicos_hidraulicos";
-    const prefixo = `${prefixoBase}_${sufixoModelo}`;
-    const gerou = paginaAtomizadores
-      ? montarRelatorioOperacionalAtomizadores(modeloPdf)
-      : montarRelatorioOperacionalBicos(modeloPdf);
-    if (!gerou) {
-      if (formError) formError.textContent = "Execute um calculo antes de exportar o relatorio.";
+  function setExportPdfBusy(isBusy) {
+    if (!exportPdfBtn) return;
+    if (isBusy) {
+      exportPdfBtn.dataset.idleText = String(exportPdfBtn.textContent || "Exportar PDF").trim();
+      exportPdfBtn.disabled = true;
+      exportPdfBtn.setAttribute("aria-busy", "true");
+      exportPdfBtn.textContent = "Gerando PDF...";
       return;
     }
+    exportPdfBtn.disabled = false;
+    exportPdfBtn.setAttribute("aria-busy", "false");
+    exportPdfBtn.textContent = exportPdfBtn.dataset.idleText || "Exportar PDF";
+  }
 
-    const reportNode = document.getElementById("pdf-operacional-bicos");
-    const reportHtml = reportNode ? reportNode.outerHTML : "";
-    if (reportHtml) {
-      try {
-        if (formError) formError.textContent = "";
-        const endpoints = endpointRelatorioPdfCandidatos();
-        let respOk = null;
-        let erroDetalhe = "";
-
-        for (let i = 0; i < endpoints.length; i += 1) {
-          const endpoint = endpoints[i];
-          const resp = await fetch(endpoint, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ reportHtml, prefixo }),
-          });
-          const contentType = String(resp.headers.get("content-type") || "").toLowerCase();
-
-          if (resp.ok && contentType.includes("application/pdf")) {
-            respOk = resp;
-            break;
-          }
-
-          let detalhes = "";
-          try {
-            if (contentType.includes("application/json")) {
-              const body = await resp.json();
-              detalhes = body && body.error ? body.error : "";
-            } else {
-              const txt = await resp.text();
-              const sample = String(txt || "").slice(0, 140).replace(/\s+/g, " ").trim();
-              if (sample) detalhes = sample;
-            }
-          } catch (_erroParse) {
-            detalhes = "";
-          }
-
-          erroDetalhe = `endpoint ${endpoint} retornou ${resp.status}${
-            detalhes ? ` (${detalhes})` : ""
-          }`;
-        }
-
-        if (!respOk) {
-          throw new Error(`Falha ao gerar PDF via Puppeteer (${erroDetalhe || "sem resposta valida"})`);
-        }
-        const blob = await respOk.blob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `${prefixo}_${dataHoraParaNomeArquivo(new Date())}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
+  async function exportarPaginaParaPdf() {
+    if (exportPdfBtn && exportPdfBtn.disabled) return;
+    setExportPdfBusy(true);
+    try {
+      const modeloPdf = lerModeloRelatorioPdfAtual();
+      const sufixoModelo = modeloPdf.replace(/[^a-z0-9-]/gi, "");
+      const prefixoBase = paginaAtomizadores ? "relatorio_atomizadores" : "relatorio_bicos_hidraulicos";
+      const prefixo = `${prefixoBase}_${sufixoModelo}`;
+      const gerou = paginaAtomizadores
+        ? montarRelatorioOperacionalAtomizadores(modeloPdf)
+        : montarRelatorioOperacionalBicos(modeloPdf);
+      if (!gerou) {
+        if (formError) formError.textContent = "Execute um calculo antes de exportar o relatorio.";
         return;
-      } catch (error) {
-        if (formError) {
-          formError.textContent = `${error.message || "Falha ao exportar via Puppeteer."} Usando impressao local.`;
+      }
+
+      const reportNode = document.getElementById("pdf-operacional-bicos");
+      const reportHtml = reportNode ? reportNode.outerHTML : "";
+      if (reportHtml) {
+        try {
+          if (formError) formError.textContent = "";
+          const endpoints = endpointRelatorioPdfCandidatos();
+          let respOk = null;
+          let erroDetalhe = "";
+
+          for (let i = 0; i < endpoints.length; i += 1) {
+            const endpoint = endpoints[i];
+            const resp = await fetch(endpoint, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ reportHtml, prefixo }),
+            });
+            const contentType = String(resp.headers.get("content-type") || "").toLowerCase();
+
+            if (resp.ok && contentType.includes("application/pdf")) {
+              respOk = resp;
+              break;
+            }
+
+            let detalhes = "";
+            try {
+              if (contentType.includes("application/json")) {
+                const body = await resp.json();
+                detalhes = body && body.error ? body.error : "";
+              } else {
+                const txt = await resp.text();
+                const sample = String(txt || "").slice(0, 140).replace(/\s+/g, " ").trim();
+                if (sample) detalhes = sample;
+              }
+            } catch (_erroParse) {
+              detalhes = "";
+            }
+
+            erroDetalhe = `endpoint ${endpoint} retornou ${resp.status}${
+              detalhes ? ` (${detalhes})` : ""
+            }`;
+          }
+
+          if (!respOk) {
+            throw new Error(`Falha ao gerar PDF via Puppeteer (${erroDetalhe || "sem resposta valida"})`);
+          }
+          const blob = await respOk.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `${prefixo}_${dataHoraParaNomeArquivo(new Date())}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+          return;
+        } catch (error) {
+          if (formError) {
+            formError.textContent = `${error.message || "Falha ao exportar via Puppeteer."} Usando impressao local.`;
+          }
         }
       }
-    }
-    document.body.classList.add("print-report-bicos");
+      document.body.classList.add("print-report-bicos");
 
-    const tituloAnterior = String(document.title || "");
-    document.title = `${prefixo}_${dataHoraParaNomeArquivo(new Date())}`;
-    window.print();
-    window.setTimeout(() => {
-      document.title = tituloAnterior;
-      document.body.classList.remove("print-report-bicos");
-    }, 400);
+      const tituloAnterior = String(document.title || "");
+      document.title = `${prefixo}_${dataHoraParaNomeArquivo(new Date())}`;
+      window.print();
+      window.setTimeout(() => {
+        document.title = tituloAnterior;
+        document.body.classList.remove("print-report-bicos");
+      }, 400);
+    } finally {
+      setExportPdfBusy(false);
+    }
   }
 
   function valorNumericoInput(name) {
