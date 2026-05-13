@@ -1346,8 +1346,8 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>Compensacao</th>
-              <th>Configuracao</th>
+              <th>Configuracao disponivel</th>
+              <th>Detalhe tecnico</th>
               <th>Velocidade media</th>
             </tr>
           </thead>
@@ -1362,8 +1362,8 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>Compensacao</th>
-              <th>Configuracao</th>
+              <th>Configuracao disponivel</th>
+              <th>Detalhe tecnico</th>
               <th>Velocidade minima</th>
               <th>Velocidade media</th>
               <th>Velocidade maxima</th>
